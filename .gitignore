@@ -1,0 +1,68 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# local tooling state
+.bkit/
+.idea/
+.mcp.json
+.pdca-status.json
+firebase-debug.log
+
+# Firebase config (contains API keys) — per-flavor, not committed
+app/android/app/src/*/google-services.json
+
+# Android release signing (NEVER commit — losing these or leaking them is bad)
+app/android/key.properties
+app/android/app/*.jks
+
+app/android/fastlane/play-store-key.json
+app/ios/fastlane/AuthKey_*.p8
+
+# fastlane generated
+app/*/fastlane/README.md
+app/*/fastlane/report.xml
+app/*/fastlane/Fastfile.tmp
+
+# iOS build artifacts & signing (large binaries / secrets — never commit)
+app/ios/*.ipa
+app/ios/*.dSYM.zip
+app/ios/*.mobileprovision

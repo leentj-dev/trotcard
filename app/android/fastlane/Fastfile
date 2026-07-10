@@ -1,0 +1,22 @@
+default_platform(:android)
+
+AAB = File.expand_path("../../build/app/outputs/bundle/kpopRelease/app-kpop-release.aab", __dir__)
+
+platform :android do
+  # Play Console's "closed testing" maps to the `alpha` track (verified via the
+  # androidpublisher tracks API — internal/alpha/beta/production are the only ids).
+  desc "Upload AAB to the closed testing (alpha) track as a draft"
+  lane :closed do
+    upload_to_play_store(
+      track: "alpha",
+      aab: AAB,
+      json_key: "fastlane/play-store-key.json",
+      package_name: "dev.leentj.kpop_hangul",
+      release_status: "draft",
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+      skip_upload_changelogs: true
+    )
+  end
+end

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>K-pop Hangul · Learn Korean through K-pop</title>
+  <meta name="description" content="Learn Hangul and Korean words through the K-pop songs you love. Lyric words flip into cards in sync with the YouTube video." />
+  <meta property="og:title" content="K-pop Hangul" />
+  <meta property="og:description" content="Learn Korean through K-pop · K-pop으로 배우는 한글" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", sans-serif;
+      background: #0B0710; color: #F5F3F7; line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: #F0ABFC; text-decoration: none; }
+    .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px; }
+
+    /* language toggle */
+    .langtoggle {
+      position: fixed; top: 16px; right: 16px; z-index: 10;
+      display: flex; gap: 2px; padding: 3px;
+      background: rgba(28,22,32,.7); border: 1px solid #3A3145; border-radius: 10px;
+      backdrop-filter: blur(8px);
+    }
+    .langtoggle button {
+      border: 0; background: transparent; color: #A79FB8; cursor: pointer;
+      font-size: 13px; font-weight: 700; padding: 6px 11px; border-radius: 7px;
+      font-family: inherit;
+    }
+    .langtoggle button.active { background: linear-gradient(135deg, #7c3aed, #ec4899); color: #fff; }
+
+    /* hero */
+    .hero {
+      text-align: center; padding: 88px 20px 72px;
+      background:
+        radial-gradient(60% 80% at 30% 0%, rgba(124,58,237,.35), transparent),
+        radial-gradient(60% 80% at 90% 20%, rgba(236,72,153,.30), transparent);
+    }
+    .logo {
+      width: 92px; height: 92px; border-radius: 22px; margin: 0 auto 22px;
+      background: linear-gradient(135deg, #7c3aed, #ec4899);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: #fff; box-shadow: 0 16px 40px rgba(236,72,153,.35);
+    }
+    .logo .ko { font-size: 26px; font-weight: 800; letter-spacing: 2px; }
+    .logo .en { font-size: 15px; font-weight: 800; opacity: .95; }
+    h1 {
+      font-size: 40px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 14px;
+      background: linear-gradient(90deg, #F0ABFC, #C4B5FD, #F9A8D4);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .tagline { color: #C9C3D6; font-size: 17px; max-width: 540px; margin: 0 auto 32px; }
+    .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px;
+      border-radius: 12px; font-size: 15px; font-weight: 700;
+    }
+    .btn-play { background: linear-gradient(135deg, #7c3aed, #ec4899); color: #fff; }
+    .btn-ios { background: #1C1620; color: #fff; border: 1px solid #3A3145; }
+    .btn.disabled { opacity: .5; pointer-events: none; }
+
+    /* features */
+    section { padding: 64px 0; }
+    h2 { font-size: 26px; font-weight: 800; text-align: center; margin-bottom: 40px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .card {
+      background: #14101B; border: 1px solid #251E30; border-radius: 18px; padding: 26px 22px;
+    }
+    .card .ico { font-size: 30px; margin-bottom: 14px; }
+    .card h3 { font-size: 17px; font-weight: 800; margin-bottom: 8px; }
+    .card p { font-size: 14px; color: #A79FB8; }
+
+    .how { text-align: center; }
+    .steps { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-top: 8px; }
+    .step {
+      background: #14101B; border: 1px solid #251E30; border-radius: 14px;
+      padding: 18px 20px; min-width: 150px;
+    }
+    .step .n {
+      width: 30px; height: 30px; border-radius: 50%; margin: 0 auto 10px;
+      background: linear-gradient(135deg, #7c3aed, #ec4899); color: #fff;
+      display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px;
+    }
+    .step p { font-size: 14px; color: #C9C3D6; }
+
+    footer {
+      text-align: center; padding: 40px 20px 60px; color: #6E6680; font-size: 13px;
+      border-top: 1px solid #1C1724;
+    }
+    footer a { color: #A79FB8; }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 32px; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="langtoggle">
+    <button data-lang="en">EN</button>
+    <button data-lang="ko">한국어</button>
+  </div>
+
+  <div class="hero">
+    <div class="logo"><span class="ko">ㄱㄴㄷ</span><span class="en">K-pop</span></div>
+    <h1 data-en="Learn Korean through K-pop" data-ko="K-pop으로 배우는 한글">Learn Korean through K-pop</h1>
+    <p class="tagline"
+       data-en="Pick up Korean words from the K-pop songs you love. Word cards flip in sync with the video as it plays."
+       data-ko="좋아하는 K-pop 노래를 들으며 가사 속 한국어 단어를 자연스럽게 익혀요. 영상에 맞춰 단어 카드가 넘어갑니다.">Pick up Korean words from the K-pop songs you love. Word cards flip in sync with the video as it plays.</p>
+    <div class="cta">
+      <a class="btn btn-play disabled" href="#" data-en="▶ Google Play (coming soon)" data-ko="▶ Google Play (준비 중)">▶ Google Play (coming soon)</a>
+      <a class="btn btn-ios disabled" href="#" data-en=" App Store (coming soon)" data-ko=" App Store (준비 중)"> App Store (coming soon)</a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <section>
+      <h2 data-en="Why K-pop Hangul" data-ko="왜 K-pop Hangul인가요">Why K-pop Hangul</h2>
+      <div class="grid">
+        <div class="card">
+          <div class="ico">🎬</div>
+          <h3 data-en="Auto-synced to the video" data-ko="영상에 맞춰 자동 싱크">Auto-synced to the video</h3>
+          <p data-en="As the song plays, the word from the current lyric line flips into view automatically."
+             data-ko="노래가 흐르는 동안 지금 나오는 가사 속 단어가 카드로 자동으로 넘어가요.">As the song plays, the word from the current lyric line flips into view automatically.</p>
+        </div>
+        <div class="card">
+          <div class="ico">🔤</div>
+          <h3 data-en="Every word, broken down" data-ko="단어를 쪼개서">Every word, broken down</h3>
+          <p data-en="Hangul letter breakdown, romanized pronunciation, meaning, and an example — really learn each word."
+             data-ko="한글 자모 분해, 로마자 발음, 뜻, 예문까지 — 단어 하나를 제대로 배워요.">Hangul letter breakdown, romanized pronunciation, meaning, and an example — really learn each word.</p>
+        </div>
+        <div class="card">
+          <div class="ico">🌏</div>
+          <h3 data-en="7 languages" data-ko="7개 언어 지원">7 languages</h3>
+          <p data-en="Study with meanings in your own language — English, Spanish, Japanese and more."
+             data-ko="영어·스페인어·일본어 등 모국어로 뜻을 확인하며 공부할 수 있어요.">Study with meanings in your own language — English, Spanish, Japanese and more.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="how">
+      <h2 data-en="How it works" data-ko="이렇게 배워요">How it works</h2>
+      <div class="steps">
+        <div class="step"><div class="n">1</div><p data-en="Pick a song you love" data-ko="좋아하는 곡을 고르고">Pick a song you love</p></div>
+        <div class="step"><div class="n">2</div><p data-en="Watch the video, flip through word cards" data-ko="영상을 보며 단어 카드를 넘기고">Watch the video, flip through word cards</p></div>
+        <div class="step"><div class="n">3</div><p data-en="Hear the pronunciation, learn the meaning" data-ko="발음을 듣고 뜻을 익혀요">Hear the pronunciation, learn the meaning</p></div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>© 2026 K-pop Hangul · TwoThree</p>
+    <p style="margin-top:8px">
+      <a href="/privacy" data-en="Privacy Policy" data-ko="개인정보처리방침">Privacy Policy</a> ·
+      <a href="mailto:leentj.dev@gmail.com" data-en="Contact" data-ko="문의">Contact</a>
+    </p>
+  </footer>
+
+  <script>
+    (function () {
+      var toggle = document.querySelector('.langtoggle');
+      function apply(lang) {
+        document.documentElement.lang = lang;
+        document.querySelectorAll('[data-' + lang + ']').forEach(function (el) {
+          el.textContent = el.getAttribute('data-' + lang);
+        });
+        toggle.querySelectorAll('button').forEach(function (b) {
+          b.classList.toggle('active', b.getAttribute('data-lang') === lang);
+        });
+        try { localStorage.setItem('lang', lang); } catch (e) {}
+      }
+      var saved = null;
+      try { saved = localStorage.getItem('lang'); } catch (e) {}
+      var initial = saved || ((navigator.language || 'en').toLowerCase().indexOf('ko') === 0 ? 'ko' : 'en');
+      apply(initial);
+      toggle.addEventListener('click', function (e) {
+        var b = e.target.closest('button');
+        if (b) apply(b.getAttribute('data-lang'));
+      });
+    })();
+  </script>
+</body>
+</html>

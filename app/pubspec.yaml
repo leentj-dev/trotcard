@@ -1,0 +1,46 @@
+name: kpop_hangul
+description: "Learn Korean through K-pop songs — word cards synced to YouTube."
+publish_to: 'none'
+
+version: 1.0.0+43
+
+environment:
+  sdk: ^3.11.1
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  youtube_player_iframe: ^6.0.2
+  flutter_tts: ^4.2.0
+  shared_preferences: ^2.3.0
+  http: ^1.2.0
+  path_provider: ^2.1.0
+  google_mobile_ads: ^5.2.0
+  firebase_core: ^3.6.0
+  firebase_remote_config: ^5.1.3
+  package_info_plus: ^10.2.0
+  url_launcher: ^6.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.3
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: assets/icon/icon.png
+  adaptive_icon_background: assets/icon/icon_bg.png
+  adaptive_icon_foreground: assets/icon/icon_fg.png
+  remove_alpha_ios: true
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/songs/
+    - assets/songs_jpop/
+    - assets/icon/icon.png
+    - assets/icon_jpop/icon.png

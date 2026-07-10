@@ -1,0 +1,11 @@
+#!/bin/sh
+# Keep the song manifest (and its content hashes) in sync with the song files,
+# so ANY edit to a song re-syncs to users via SongRepository._changed().
+# Enable once per clone:  git config core.hooksPath .githooks
+if git diff --cached --name-only | grep -q '^app/assets/songs/.*\.json$'; then
+  python3 app/scripts/build_manifest.py || {
+    echo "pre-commit: build_manifest.py failed" >&2
+    exit 1
+  }
+  git add app/assets/songs/manifest.json
+fi

@@ -1,0 +1,51 @@
+default_platform(:ios)
+
+APP_ID = "dev.leentj.kpopHangul"
+TEAM_ID = "2U6RJTHK3V"
+
+platform :ios do
+  before_all do
+    app_store_connect_api_key(
+      key_id: "DPCWVWG2NC",
+      issuer_id: "940731f5-e618-431d-921d-cc336fd1682a",
+      key_filepath: "fastlane/AuthKey_DPCWVWG2NC.p8"
+    )
+  end
+
+  desc "Build a signed IPA and upload to TestFlight"
+  lane :beta do
+    sh("cd .. && flutter build ios --release --no-codesign --config-only")
+    get_provisioning_profile(app_identifier: APP_ID, readonly: false)
+    update_code_signing_settings(
+      use_automatic_signing: false, path: "Runner.xcodeproj",
+      team_id: TEAM_ID, bundle_identifier: APP_ID,
+      code_sign_identity: "Apple Distribution",
+      profile_name: lane_context[SharedValues::SIGH_NAME]
+    )
+    build_app(
+      workspace: "Runner.xcworkspace", scheme: "Runner", export_method: "app-store",
+      export_options: { provisioningProfiles: { APP_ID => lane_context[SharedValues::SIGH_NAME] } }
+    )
+    upload_to_testflight(skip_waiting_for_build_processing: true)
+  end
+
+  desc "Upload only screenshots"
+  lane :shots do
+    deliver(
+      app_identifier: APP_ID,
+      skip_binary_upload: true, skip_metadata: true,
+      skip_screenshots: false, overwrite_screenshots: true,
+      submit_for_review: false, force: true, run_precheck_before_submit: false
+    )
+  end
+
+  desc "Upload only text metadata"
+  lane :text do
+    deliver(
+      app_identifier: APP_ID,
+      skip_binary_upload: true, skip_metadata: false,
+      skip_screenshots: true, submit_for_review: false,
+      force: true, run_precheck_before_submit: false
+    )
+  end
+end
