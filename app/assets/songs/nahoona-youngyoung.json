@@ -1,0 +1,129 @@
+{
+  "id": "nahoona-youngyoung",
+  "title": "영영",
+  "artist": "나훈아",
+  "youtubeId": "V6bW69nRzBE",
+  "mood": "이별의 그리움, 애절한",
+  "cards": [
+    {
+      "text": "잊지 못할 사람\n가슴에 있다는 건\n깊이 사랑한 까닭이죠",
+      "emoji": "💜",
+      "gradient": "lavender",
+      "category": "위로"
+    },
+    {
+      "text": "세월이 흘러도\n소중한 마음은\n지워지지 않지요",
+      "emoji": "⭐",
+      "gradient": "night",
+      "category": "명언"
+    },
+    {
+      "text": "보고 싶은 날엔\n마음껏 그리워해도\n괜찮답니다",
+      "emoji": "🌙",
+      "gradient": "calm",
+      "category": "위로"
+    },
+    {
+      "text": "노을이 물드는 저녁\n오늘도 잘 견뎌낸\n당신을 안아드려요",
+      "emoji": "🌇",
+      "gradient": "sunset",
+      "category": "인사"
+    },
+    {
+      "text": "그리운 마음도\n시간이 지나면\n잔잔해진답니다",
+      "emoji": "🍃",
+      "gradient": "lavender",
+      "category": "위로"
+    },
+    {
+      "text": "당신 마음에\n따뜻한 위로가\n찾아오길 바라요",
+      "emoji": "🌿",
+      "gradient": "calm",
+      "category": "축복"
+    },
+    {
+      "text": "마음 아픈 날일수록\n끼니 거르지 말고\n잘 챙겨 드세요",
+      "emoji": "🌾",
+      "gradient": "calm",
+      "category": "건강"
+    },
+    {
+      "text": "그리움은\n사랑이 남긴\n아름다운 흔적이에요",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "명언"
+    },
+    {
+      "text": "혼자라 느껴질 때\n제 마음이\n곁에 있음을 기억해요",
+      "emoji": "🌆",
+      "gradient": "sunset",
+      "category": "위로"
+    },
+    {
+      "text": "오늘 하루도\n잘 버텨낸 당신\n참 애쓰셨어요",
+      "emoji": "🍃",
+      "gradient": "calm",
+      "category": "응원"
+    },
+    {
+      "text": "함께한 시간들\n오래도록\n고마운 마음입니다",
+      "emoji": "💐",
+      "gradient": "lavender",
+      "category": "감사"
+    },
+    {
+      "text": "잠 못 드는 밤엔\n따뜻한 생각\n하나씩 떠올려봐요",
+      "emoji": "⭐",
+      "gradient": "night",
+      "category": "위로"
+    },
+    {
+      "text": "계절이 바뀌듯\n마음의 겨울도\n지나가기 마련이에요",
+      "emoji": "🍂",
+      "gradient": "calm",
+      "category": "계절"
+    },
+    {
+      "text": "사랑했던 기억은\n삶을 지탱하는\n힘이 된답니다",
+      "emoji": "🌷",
+      "gradient": "lavender",
+      "category": "명언"
+    },
+    {
+      "text": "슬픔도 언젠가\n따뜻한 추억으로\n남을 거예요",
+      "emoji": "🌅",
+      "gradient": "sunset",
+      "category": "위로"
+    },
+    {
+      "text": "마음이 무거울 땐\n따뜻한 차 한잔\n천천히 드세요",
+      "emoji": "🍵",
+      "gradient": "calm",
+      "category": "건강"
+    },
+    {
+      "text": "오늘도 수고했어요\n편안히 잠드시고\n좋은 꿈 꾸세요",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "인사"
+    },
+    {
+      "text": "당신 마음에\n평안이 깃들기를\n진심으로 바라요",
+      "emoji": "🌿",
+      "gradient": "lavender",
+      "category": "축복"
+    },
+    {
+      "text": "힘든 마음\n혼자 안고 있지 말고\n기대셔도 돼요",
+      "emoji": "🍃",
+      "gradient": "calm",
+      "category": "위로"
+    },
+    {
+      "text": "사랑한 만큼\n그리운 법이니\n그 마음도 귀합니다",
+      "emoji": "🌇",
+      "gradient": "sunset",
+      "category": "명언"
+    }
+  ]
+}

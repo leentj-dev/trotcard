@@ -1,0 +1,129 @@
+{
+  "id": "parkgun-hanjanhae",
+  "title": "한잔해",
+  "artist": "박군",
+  "youtubeId": "NO68HH3655k",
+  "mood": "흥겹고 위로되는",
+  "cards": [
+    {
+      "text": "오늘 하루도\n수고 많으셨어요\n따뜻한 저녁 되세요",
+      "emoji": "🌅",
+      "gradient": "sunset",
+      "category": "인사"
+    },
+    {
+      "text": "힘든 하루 끝에\n마음 편히 쉬세요\n내일은 더 좋을 거예요",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "위로"
+    },
+    {
+      "text": "좋은 사람들과\n함께하는 시간\n그것이 큰 행복입니다",
+      "emoji": "🍶",
+      "gradient": "warm",
+      "category": "명언"
+    },
+    {
+      "text": "활기찬 아침입니다\n오늘도 즐거운 일\n가득하시길 바랍니다",
+      "emoji": "☀️",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "고단한 하루였지만\n당신은 참 잘 견뎠어요\n토닥토닥",
+      "emoji": "🌷",
+      "gradient": "lavender",
+      "category": "위로"
+    },
+    {
+      "text": "오늘도 건강 챙기시고\n과음 마시고\n몸 잘 돌보세요",
+      "emoji": "🌿",
+      "gradient": "calm",
+      "category": "건강"
+    },
+    {
+      "text": "당신의 하루가\n웃음으로 가득하기를\n진심으로 바랍니다",
+      "emoji": "😊",
+      "gradient": "warm",
+      "category": "축복"
+    },
+    {
+      "text": "기운 내세요\n오늘 하루도\n당신은 최선을 다했어요",
+      "emoji": "🌻",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "함께 웃고 나눌\n벗이 있다는 것\n참으로 감사한 일입니다",
+      "emoji": "💐",
+      "gradient": "rose",
+      "category": "감사"
+    },
+    {
+      "text": "봄날처럼 따뜻한\n하루 되시길\n두 손 모아 빕니다",
+      "emoji": "🌸",
+      "gradient": "spring",
+      "category": "계절"
+    },
+    {
+      "text": "한 주의 끝\n오늘만큼은\n마음 편히 즐기세요",
+      "emoji": "🌈",
+      "gradient": "warm",
+      "category": "인사"
+    },
+    {
+      "text": "세상살이 고단해도\n웃으며 넘어가요\n다 지나갑니다",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "위로"
+    },
+    {
+      "text": "당신 곁에\n좋은 인연만\n가득하기를 바랍니다",
+      "emoji": "🌺",
+      "gradient": "rose",
+      "category": "축복"
+    },
+    {
+      "text": "오늘도 잘 챙겨드시고\n활기차게\n하루 보내세요",
+      "emoji": "🍃",
+      "gradient": "calm",
+      "category": "건강"
+    },
+    {
+      "text": "인생은 함께 걷는 것\n좋은 벗과\n오래오래 함께해요",
+      "emoji": "⭐",
+      "gradient": "warm",
+      "category": "명언"
+    },
+    {
+      "text": "고운 아침 햇살처럼\n당신의 하루도\n환하게 빛나길",
+      "emoji": "🌄",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "늘 곁에 있어주셔서\n참으로 고맙습니다\n건강하세요",
+      "emoji": "🌹",
+      "gradient": "rose",
+      "category": "감사"
+    },
+    {
+      "text": "지친 어깨\n오늘은 내려놓고\n푹 쉬어가세요",
+      "emoji": "🌷",
+      "gradient": "lavender",
+      "category": "위로"
+    },
+    {
+      "text": "당신은 충분히\n잘하고 있습니다\n스스로를 응원해주세요",
+      "emoji": "🌻",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "복된 하루하루가\n늘 함께하기를\n진심으로 빕니다",
+      "emoji": "🏵️",
+      "gradient": "spring",
+      "category": "축복"
+    }
+  ]
+}

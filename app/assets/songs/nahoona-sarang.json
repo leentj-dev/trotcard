@@ -1,0 +1,129 @@
+{
+  "id": "nahoona-sarang",
+  "title": "사랑",
+  "artist": "나훈아",
+  "youtubeId": "crP3nY5LFbw",
+  "mood": "깊고 진한 사랑, 애틋한",
+  "cards": [
+    {
+      "text": "오늘도 당신\n따뜻한 하루\n보내시길 바라요",
+      "emoji": "🌹",
+      "gradient": "warm",
+      "category": "인사"
+    },
+    {
+      "text": "당신을 아끼는 마음\n늘 곁에 있음을\n잊지 마세요",
+      "emoji": "💐",
+      "gradient": "rose",
+      "category": "축복"
+    },
+    {
+      "text": "곁에 있어 주는 것\n그것이 가장 큰\n사랑이랍니다",
+      "emoji": "🌿",
+      "gradient": "warm",
+      "category": "명언"
+    },
+    {
+      "text": "힘든 날엔\n제 어깨에\n기대셔도 돼요",
+      "emoji": "🍃",
+      "gradient": "calm",
+      "category": "위로"
+    },
+    {
+      "text": "변함없는 당신 마음\n참으로\n고맙습니다",
+      "emoji": "🌹",
+      "gradient": "rose",
+      "category": "감사"
+    },
+    {
+      "text": "사랑하는 당신\n오늘도 건강히\n잘 지내시길 바라요",
+      "emoji": "🌻",
+      "gradient": "warm",
+      "category": "건강"
+    },
+    {
+      "text": "봄볕처럼\n따스한 마음\n늘 나누며 살아요",
+      "emoji": "🌸",
+      "gradient": "spring",
+      "category": "계절"
+    },
+    {
+      "text": "당신은 소중한 사람\n오늘도\n힘내시길 바라요",
+      "emoji": "⭐",
+      "gradient": "sunrise",
+      "category": "응원"
+    },
+    {
+      "text": "하루 잘 보내셨어요\n따뜻한 저녁\n맞이하세요",
+      "emoji": "🌇",
+      "gradient": "sunset",
+      "category": "인사"
+    },
+    {
+      "text": "당신 가는 길마다\n좋은 인연이\n함께하길 바라요",
+      "emoji": "💖",
+      "gradient": "warm",
+      "category": "축복"
+    },
+    {
+      "text": "진심은\n언젠가 반드시\n통한다고 믿어요",
+      "emoji": "🌿",
+      "gradient": "calm",
+      "category": "명언"
+    },
+    {
+      "text": "외로운 날에도\n당신은 혼자가\n아니랍니다",
+      "emoji": "🌙",
+      "gradient": "lavender",
+      "category": "위로"
+    },
+    {
+      "text": "늘 내 편이 되어줘서\n마음 깊이\n감사드려요",
+      "emoji": "🌹",
+      "gradient": "rose",
+      "category": "감사"
+    },
+    {
+      "text": "무리하지 마시고\n몸도 마음도\n편안히 쉬세요",
+      "emoji": "🍵",
+      "gradient": "calm",
+      "category": "건강"
+    },
+    {
+      "text": "어느 계절이든\n당신과 함께라면\n따뜻합니다",
+      "emoji": "🍂",
+      "gradient": "warm",
+      "category": "계절"
+    },
+    {
+      "text": "지금처럼만\n걸어가면 돼요\n제가 응원할게요",
+      "emoji": "🌈",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "좋은 아침이에요\n오늘도 당신께\n좋은 일 가득하길",
+      "emoji": "🌅",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "당신의 사랑이\n주변을\n환히 밝히길 바라요",
+      "emoji": "🌷",
+      "gradient": "rose",
+      "category": "축복"
+    },
+    {
+      "text": "사랑은 주는 만큼\n되돌아온다고\n하지요",
+      "emoji": "💝",
+      "gradient": "warm",
+      "category": "명언"
+    },
+    {
+      "text": "지친 마음\n잠시 내려놓고\n오늘은 푹 쉬세요",
+      "emoji": "🌿",
+      "gradient": "calm",
+      "category": "위로"
+    }
+  ]
+}

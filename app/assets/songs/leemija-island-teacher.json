@@ -1,0 +1,129 @@
+{
+  "id": "leemija-island-teacher",
+  "title": "섬마을 선생님",
+  "artist": "이미자",
+  "youtubeId": "uEsXf9SzO_8",
+  "mood": "순수하고 애틋한",
+  "cards": [
+    {
+      "text": "맑은 아침입니다\n오늘 하루도\n순하게 시작하세요",
+      "emoji": "🌄",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "바닷가 해당화처럼\n당신의 하루도\n곱게 피어나기를",
+      "emoji": "🌺",
+      "gradient": "spring",
+      "category": "축복"
+    },
+    {
+      "text": "순수한 마음 하나면\n세상은 늘\n따뜻합니다",
+      "emoji": "🌷",
+      "gradient": "warm",
+      "category": "명언"
+    },
+    {
+      "text": "그리운 이가 있다면\n오늘 안부 한번\n전해보세요",
+      "emoji": "🌸",
+      "gradient": "lavender",
+      "category": "인사"
+    },
+    {
+      "text": "힘든 마음\n잠시 내려놓고\n오늘은 편히 쉬세요",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "위로"
+    },
+    {
+      "text": "몸도 마음도\n건강히 챙기시길\n진심으로 바랍니다",
+      "emoji": "🌿",
+      "gradient": "calm",
+      "category": "건강"
+    },
+    {
+      "text": "파도 소리처럼\n잔잔한 평안이\n당신께 깃들기를",
+      "emoji": "🌊",
+      "gradient": "calm",
+      "category": "축복"
+    },
+    {
+      "text": "저무는 노을 아래\n오늘 하루도\n곱게 마무리하세요",
+      "emoji": "🌅",
+      "gradient": "sunset",
+      "category": "인사"
+    },
+    {
+      "text": "지나온 시절 모두\n소중한 추억입니다\n스스로를 아껴주세요",
+      "emoji": "⭐",
+      "gradient": "lavender",
+      "category": "명언"
+    },
+    {
+      "text": "외로운 날엔\n제가 함께할게요\n혼자가 아니에요",
+      "emoji": "🌹",
+      "gradient": "rose",
+      "category": "위로"
+    },
+    {
+      "text": "철따라 피는 꽃처럼\n계절의 정취를\n마음껏 누리세요",
+      "emoji": "🌼",
+      "gradient": "spring",
+      "category": "계절"
+    },
+    {
+      "text": "오래 함께해주셔서\n참으로 고맙습니다\n늘 건강하세요",
+      "emoji": "💐",
+      "gradient": "rose",
+      "category": "감사"
+    },
+    {
+      "text": "당신 앞날에\n고운 날들이\n이어지기를 빕니다",
+      "emoji": "🌷",
+      "gradient": "spring",
+      "category": "축복"
+    },
+    {
+      "text": "기운 내세요\n당신은 생각보다\n훨씬 강한 사람입니다",
+      "emoji": "🌻",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "고요한 밤\n마음까지 편안한\n하루 되세요",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "인사"
+    },
+    {
+      "text": "맑은 순정 하나\n간직하고 사는 것\n참으로 귀한 일입니다",
+      "emoji": "💖",
+      "gradient": "lavender",
+      "category": "명언"
+    },
+    {
+      "text": "오늘도 따뜻하게\n잘 챙겨드시고\n평안히 지내세요",
+      "emoji": "🍃",
+      "gradient": "calm",
+      "category": "건강"
+    },
+    {
+      "text": "당신은 참\n소중한 사람입니다\n늘 응원합니다",
+      "emoji": "🌸",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "고운 아침 햇살\n당신의 하루에\n따스히 스미기를",
+      "emoji": "☀️",
+      "gradient": "sunrise",
+      "category": "축복"
+    },
+    {
+      "text": "지친 하루 끝에\n포근한 위로가\n함께하기를 바랍니다",
+      "emoji": "🌹",
+      "gradient": "lavender",
+      "category": "위로"
+    }
+  ]
+}

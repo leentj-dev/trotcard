@@ -1,0 +1,129 @@
+{
+  "id": "seolundo-love-twist",
+  "title": "사랑의 트위스트",
+  "artist": "설운도",
+  "youtubeId": "M8flkwov0WA",
+  "mood": "신나고 흥겨운",
+  "cards": [
+    {
+      "text": "신나는 아침이에요\n오늘도 흥겹게\n하루 시작해봐요",
+      "emoji": "🌅",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "어깨 들썩\n기분 좋게\n오늘도 힘차게 가봐요",
+      "emoji": "🌻",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "즐겁게 사는 사람이\n가장 젊게\n산다고 하지요",
+      "emoji": "🌸",
+      "gradient": "spring",
+      "category": "명언"
+    },
+    {
+      "text": "오늘 하루\n웃음꽃이\n활짝 피어나길 바라요",
+      "emoji": "🌹",
+      "gradient": "rose",
+      "category": "축복"
+    },
+    {
+      "text": "함께 웃던 추억\n생각만 해도\n마음이 따뜻해요",
+      "emoji": "💐",
+      "gradient": "warm",
+      "category": "감사"
+    },
+    {
+      "text": "흥얼흥얼 노래하며\n가볍게 몸도 풀고\n활기차게 지내세요",
+      "emoji": "🌼",
+      "gradient": "sunrise",
+      "category": "건강"
+    },
+    {
+      "text": "꽃 피는 계절\n신나는 마음으로\n나들이 한번 어때요",
+      "emoji": "🌷",
+      "gradient": "spring",
+      "category": "계절"
+    },
+    {
+      "text": "당신 안에\n아직도 청춘이\n반짝이고 있어요",
+      "emoji": "⭐",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "오늘 하루 어땠나요\n저녁엔 흥겨운 노래\n한 곡 어떠세요",
+      "emoji": "🌇",
+      "gradient": "sunset",
+      "category": "인사"
+    },
+    {
+      "text": "당신의 하루가\n춤추듯\n즐겁기를 바라요",
+      "emoji": "💖",
+      "gradient": "rose",
+      "category": "축복"
+    },
+    {
+      "text": "웃음은\n돈 안 드는\n최고의 보약이래요",
+      "emoji": "😄",
+      "gradient": "warm",
+      "category": "명언"
+    },
+    {
+      "text": "늘 밝은 당신 덕에\n주변까지\n환해집니다",
+      "emoji": "🌻",
+      "gradient": "spring",
+      "category": "감사"
+    },
+    {
+      "text": "오늘도\n신나게 한판\n멋지게 살아봐요",
+      "emoji": "🌈",
+      "gradient": "sunrise",
+      "category": "응원"
+    },
+    {
+      "text": "즐겁게 움직이면\n몸도 마음도\n건강해진답니다",
+      "emoji": "🌿",
+      "gradient": "spring",
+      "category": "건강"
+    },
+    {
+      "text": "힘든 일 있어도\n노래 한 곡에\n툭툭 털어봐요",
+      "emoji": "🍃",
+      "gradient": "warm",
+      "category": "위로"
+    },
+    {
+      "text": "좋은 계절\n좋은 사람들과\n즐겁게 보내세요",
+      "emoji": "🌺",
+      "gradient": "sunrise",
+      "category": "계절"
+    },
+    {
+      "text": "좋은 아침\n오늘도 흥이 나는\n하루 되시길",
+      "emoji": "🌷",
+      "gradient": "spring",
+      "category": "인사"
+    },
+    {
+      "text": "당신 삶에\n신나는 일들이\n가득하길 바라요",
+      "emoji": "🎉",
+      "gradient": "rose",
+      "category": "축복"
+    },
+    {
+      "text": "지금 이 순간을\n마음껏\n즐기며 살아요",
+      "emoji": "⭐",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "추억은\n함께 웃을 때\n가장 빛난답니다",
+      "emoji": "🌸",
+      "gradient": "spring",
+      "category": "명언"
+    }
+  ]
+}

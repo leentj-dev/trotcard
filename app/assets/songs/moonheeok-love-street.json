@@ -1,0 +1,129 @@
+{
+  "id": "moonheeok-love-street",
+  "title": "사랑의 거리",
+  "artist": "문희옥",
+  "youtubeId": "OM6YzuCNRAE",
+  "mood": "정겹고 밝은",
+  "cards": [
+    {
+      "text": "정다운 아침이에요\n오늘도 웃음꽃\n활짝 피우며 시작해요",
+      "emoji": "🌅",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "당신 가는 길마다\n웃음꽃이\n가득 피어나길 바라요",
+      "emoji": "🌹",
+      "gradient": "rose",
+      "category": "축복"
+    },
+    {
+      "text": "사람 사이 오가는 정이\n삶을 가장\n따뜻하게 한대요",
+      "emoji": "🌻",
+      "gradient": "warm",
+      "category": "명언"
+    },
+    {
+      "text": "쓸쓸한 날엔\n따뜻한 사람 곁으로\n마음을 기대봐요",
+      "emoji": "🍃",
+      "gradient": "calm",
+      "category": "위로"
+    },
+    {
+      "text": "정겨운 당신 덕에\n제 하루가\n환해집니다",
+      "emoji": "💐",
+      "gradient": "rose",
+      "category": "감사"
+    },
+    {
+      "text": "가벼운 산책 한번\n오늘 하루\n상쾌하게 보내세요",
+      "emoji": "🌷",
+      "gradient": "spring",
+      "category": "건강"
+    },
+    {
+      "text": "봄봄봄 오는 소리\n당신 마음에도\n봄이 오길 바라요",
+      "emoji": "🌸",
+      "gradient": "spring",
+      "category": "계절"
+    },
+    {
+      "text": "당신은 참\n다정한 사람이에요\n오늘도 응원해요",
+      "emoji": "⭐",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "하루 잘 보내셨어요\n정겨운 저녁\n맞이하세요",
+      "emoji": "🌇",
+      "gradient": "sunset",
+      "category": "인사"
+    },
+    {
+      "text": "당신 곁에 늘\n좋은 사람들이\n머물기를 바라요",
+      "emoji": "💖",
+      "gradient": "warm",
+      "category": "축복"
+    },
+    {
+      "text": "함께 나눌 사람이 있으면\n외로움도\n반이 된대요",
+      "emoji": "🌿",
+      "gradient": "spring",
+      "category": "명언"
+    },
+    {
+      "text": "늘 따뜻하게\n대해 주셔서\n고맙습니다",
+      "emoji": "🌹",
+      "gradient": "rose",
+      "category": "감사"
+    },
+    {
+      "text": "새 하루가 왔어요\n오늘도 정답게\n걸어봐요",
+      "emoji": "🌈",
+      "gradient": "sunrise",
+      "category": "응원"
+    },
+    {
+      "text": "물 한잔 챙겨 드시고\n오늘도\n건강하게 보내세요",
+      "emoji": "🌻",
+      "gradient": "spring",
+      "category": "건강"
+    },
+    {
+      "text": "지친 날엔\n따뜻한 말 한마디\n제가 건네드릴게요",
+      "emoji": "🍃",
+      "gradient": "warm",
+      "category": "위로"
+    },
+    {
+      "text": "좋은 계절\n좋은 사람들과\n정답게 보내세요",
+      "emoji": "🌺",
+      "gradient": "sunrise",
+      "category": "계절"
+    },
+    {
+      "text": "좋은 아침\n오늘도 당신께\n좋은 일 가득하길",
+      "emoji": "🌷",
+      "gradient": "spring",
+      "category": "인사"
+    },
+    {
+      "text": "소소한 행복이\n당신 하루에\n가득하기를 바라요",
+      "emoji": "💐",
+      "gradient": "rose",
+      "category": "축복"
+    },
+    {
+      "text": "오늘도 당신\n충분히 잘하고 있어요\n토닥토닥",
+      "emoji": "👏",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "웃으며 나누는 정이\n세상을 살 만하게\n한답니다",
+      "emoji": "🌼",
+      "gradient": "spring",
+      "category": "명언"
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "id": "kimyeonja-mercury-lamp",
+  "title": "수은등",
+  "artist": "김연자",
+  "youtubeId": "62WLDHByBOg",
+  "mood": "그리움과 쓸쓸함",
+  "cards": [
+    {
+      "text": "쓸쓸한 저녁엔\n따뜻한 불빛 하나\n마음에 켜두세요",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "위로"
+    },
+    {
+      "text": "외로움도\n삶의 한 자락이니\n너무 미워 마세요",
+      "emoji": "🍃",
+      "gradient": "calm",
+      "category": "명언"
+    },
+    {
+      "text": "그리운 마음\n밀려오는 밤엔\n혼자가 아니에요",
+      "emoji": "💜",
+      "gradient": "lavender",
+      "category": "위로"
+    },
+    {
+      "text": "노을 지는 거리\n천천히 걸으며\n하루를 마무리해요",
+      "emoji": "🌇",
+      "gradient": "sunset",
+      "category": "인사"
+    },
+    {
+      "text": "마음이 허전한 날\n따뜻한 차 한잔이\n큰 위로가 돼요",
+      "emoji": "🍵",
+      "gradient": "calm",
+      "category": "위로"
+    },
+    {
+      "text": "당신 마음에\n포근한 온기가\n스미길 바라요",
+      "emoji": "🌿",
+      "gradient": "lavender",
+      "category": "축복"
+    },
+    {
+      "text": "밤길 쌀쌀하니\n따뜻하게 입으시고\n감기 조심하세요",
+      "emoji": "🧣",
+      "gradient": "calm",
+      "category": "건강"
+    },
+    {
+      "text": "홀로 걷는 길에도\n별빛은 늘\n함께한답니다",
+      "emoji": "⭐",
+      "gradient": "night",
+      "category": "명언"
+    },
+    {
+      "text": "지나온 시간들\n쓸쓸해도\n다 소중했답니다",
+      "emoji": "🌆",
+      "gradient": "sunset",
+      "category": "위로"
+    },
+    {
+      "text": "오늘 하루도\n조용히 잘 견뎌낸\n당신, 애쓰셨어요",
+      "emoji": "🍃",
+      "gradient": "calm",
+      "category": "응원"
+    },
+    {
+      "text": "함께 걷던 길들\n오래도록\n고마운 기억이에요",
+      "emoji": "💐",
+      "gradient": "lavender",
+      "category": "감사"
+    },
+    {
+      "text": "잠 못 드는 밤엔\n좋은 생각\n하나씩 세어봐요",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "위로"
+    },
+    {
+      "text": "쌀쌀한 계절에도\n마음만은\n따뜻하게 지내세요",
+      "emoji": "🍂",
+      "gradient": "calm",
+      "category": "계절"
+    },
+    {
+      "text": "그리움은\n사랑했던\n마음의 증표랍니다",
+      "emoji": "🌷",
+      "gradient": "lavender",
+      "category": "명언"
+    },
+    {
+      "text": "쓸쓸함도\n시간이 지나면\n잔잔해진답니다",
+      "emoji": "🌅",
+      "gradient": "sunset",
+      "category": "위로"
+    },
+    {
+      "text": "마음이 무거운 날\n산책 한번이\n큰 힘이 돼요",
+      "emoji": "🌿",
+      "gradient": "calm",
+      "category": "건강"
+    },
+    {
+      "text": "고요한 밤\n오늘도 수고했어요\n편안히 쉬세요",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "인사"
+    },
+    {
+      "text": "당신 마음에\n평안한 불빛이\n오래 머물길 바라요",
+      "emoji": "🕯️",
+      "gradient": "lavender",
+      "category": "축복"
+    },
+    {
+      "text": "외로운 마음\n혼자 안고 있지 말고\n조금 기대세요",
+      "emoji": "🍃",
+      "gradient": "calm",
+      "category": "위로"
+    },
+    {
+      "text": "쓸쓸한 저녁이\n지나면 아침이\n꼭 온답니다",
+      "emoji": "🌄",
+      "gradient": "sunset",
+      "category": "명언"
+    }
+  ]
+}
