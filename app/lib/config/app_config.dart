@@ -43,9 +43,9 @@ class AppConfig {
 /// Set once by the flavor entrypoint (main*.dart) before runApp().
 late AppConfig appConfig;
 
-/// 트롯 퀴즈 — 시니어용 트롯트 두뇌 게임 (단일 앱).
+/// 트로트 카드 — 트롯을 들으며 마음 카드를 나누는 시니어용 앱 (단일 앱).
 const trotConfig = AppConfig(
-  appTitle: '트롯 퀴즈',
+  appTitle: '트로트 카드',
   logoAsset: 'assets/icon/icon.png',
   seedColor: Color(0xFFE11D48), // 트롯 레드
   assetDir: 'assets/songs',

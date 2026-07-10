@@ -58,7 +58,7 @@ class GreetingCardView extends StatelessWidget {
                     if (showBrand) ...[
                       const SizedBox(height: 22),
                       Text(
-                        '💌 트롯 퀴즈',
+                        '💌 트로트 카드',
                         style: TextStyle(
                           color: g.foreground.withValues(alpha: 0.55),
                           fontSize: 13,
