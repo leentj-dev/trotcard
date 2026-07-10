@@ -46,6 +46,10 @@ class Song {
   /// 곡 분위기 메모 (예: "밝고 사랑스러운", "그리움"). 카드 큐레이션 참고용.
   final String mood;
 
+  /// 이 곡을 알린 음악 프로그램 (예: "미스터트롯", "미스트롯"). 정통 트로트
+  /// 등 프로그램과 무관한 곡은 빈 문자열.
+  final String program;
+
   final List<GreetingCard> cards;
 
   const Song({
@@ -54,6 +58,7 @@ class Song {
     required this.artist,
     required this.youtubeId,
     this.mood = '',
+    this.program = '',
     required this.cards,
   });
 
@@ -63,6 +68,7 @@ class Song {
         artist: json['artist'] as String? ?? '',
         youtubeId: json['youtubeId'] as String? ?? '',
         mood: json['mood'] as String? ?? '',
+        program: json['program'] as String? ?? '',
         cards: (json['cards'] as List<dynamic>? ?? [])
             .map((c) => GreetingCard.fromJson(c as Map<String, dynamic>))
             .toList(),
@@ -77,6 +83,10 @@ class SongSummary {
   final String youtubeId;
   final int cardCount;
 
+  /// 이 곡을 알린 음악 프로그램 (예: "미스터트롯"). 없으면 빈 문자열.
+  /// 피드에서 프로그램별 그룹핑에 쓰이며, 곡 파일을 받지 않고 판별한다.
+  final String program;
+
   /// 추가 시각(unix 초). 클수록 최신 → 피드 상단.
   final int order;
 
@@ -89,6 +99,7 @@ class SongSummary {
     required this.artist,
     required this.youtubeId,
     this.cardCount = 0,
+    this.program = '',
     this.order = 0,
     this.hash = '',
   });
@@ -99,6 +110,7 @@ class SongSummary {
         artist: json['artist'] as String? ?? '',
         youtubeId: json['youtubeId'] as String? ?? '',
         cardCount: json['cardCount'] as int? ?? 0,
+        program: json['program'] as String? ?? '',
         order: json['order'] as int? ?? 0,
         hash: json['hash'] as String? ?? '',
       );

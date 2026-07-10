@@ -41,7 +41,7 @@ def main() -> None:
         else:
             order = next_order
             next_order += 1
-        entries.append({
+        entry = {
             "id": sid,
             "title": song.get("title", ""),
             "artist": song.get("artist", ""),
@@ -49,7 +49,13 @@ def main() -> None:
             "cardCount": len(song.get("cards", [])),
             "order": order,
             "hash": hashlib.sha256(raw).hexdigest()[:16],
-        })
+        }
+        # 프로그램 소속 곡만 program 키를 실어 프로그램별 그룹핑을 지원.
+        # (정통 트로트 등 미지정 곡은 키 없음 → 기존 항목 그대로.)
+        program = song.get("program", "")
+        if program:
+            entry["program"] = program
+        entries.append(entry)
 
     entries.sort(key=lambda e: e["id"])
     with open(MANIFEST, "w") as f:

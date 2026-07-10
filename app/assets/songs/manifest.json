@@ -60,7 +60,18 @@
     "youtubeId": "L3Vlrgq6BFw",
     "cardCount": 20,
     "order": 33,
-    "hash": "32b94c72dbcc6f3f"
+    "hash": "2bb43de7e4d23b13",
+    "program": "미스터트롯"
+  },
+  {
+    "id": "jangminho-lonely-love",
+    "title": "홀로된 사랑",
+    "artist": "장민호",
+    "youtubeId": "jXJKJc5fZnE",
+    "cardCount": 20,
+    "order": 35,
+    "hash": "de4d391592d15d8d",
+    "program": "미스터트롯"
   },
   {
     "id": "jangyoonjeong-chohon",
@@ -151,6 +162,16 @@
     "cardCount": 20,
     "order": 17,
     "hash": "bfc0d7f89bf05f5a"
+  },
+  {
+    "id": "leechanwon-pungdeung",
+    "title": "풍등",
+    "artist": "이찬원",
+    "youtubeId": "yaeG5iPP414",
+    "cardCount": 20,
+    "order": 36,
+    "hash": "068cae9a9209d913",
+    "program": "미스터트롯"
   },
   {
     "id": "leemija-island-teacher",
@@ -288,6 +309,16 @@
     "hash": "12c3a0faa8667374"
   },
   {
+    "id": "songgain-mom-arirang",
+    "title": "엄마 아리랑",
+    "artist": "송가인",
+    "youtubeId": "C9dheXI7Dag",
+    "cardCount": 20,
+    "order": 37,
+    "hash": "469e14673a84e868",
+    "program": "미스트롯"
+  },
+  {
     "id": "taejina-companion",
     "title": "동반자",
     "artist": "태진아",
@@ -303,6 +334,7 @@
     "youtubeId": "88a2RgUjRKk",
     "cardCount": 20,
     "order": 34,
-    "hash": "fbc1eec3b5ae59cd"
+    "hash": "93304fd86484a9b3",
+    "program": "미스터트롯"
   }
 ]
