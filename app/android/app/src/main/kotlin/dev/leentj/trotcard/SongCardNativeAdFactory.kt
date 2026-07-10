@@ -1,4 +1,4 @@
-package dev.leentj.trot_card
+package dev.leentj.trotcard
 
 import android.view.LayoutInflater
 import android.view.View

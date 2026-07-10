@@ -122,7 +122,7 @@ Future<void> shareCardImage(GlobalKey boundaryKey, {String? text}) async {
 
   final dir = await getTemporaryDirectory();
   final file = File(
-      '${dir.path}/trot_card_${DateTime.now().millisecondsSinceEpoch}.png');
+      '${dir.path}/trotcard_${DateTime.now().millisecondsSinceEpoch}.png');
   await file.writeAsBytes(bytes.buffer.asUint8List());
 
   await SharePlus.instance.share(
