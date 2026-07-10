@@ -5,11 +5,125 @@
   "youtubeId": "5MS-GpklkHs",
   "mood": "그리움과 기다림, 애틋한",
   "cards": [
-    { "text": "보고 싶은 마음\n잘 전해지길", "emoji": "🌙", "gradient": "night", "category": "인사" },
-    { "text": "그리운 사람에게\n안부 전하세요", "emoji": "💌", "gradient": "lavender", "category": "인사" },
-    { "text": "오늘도 당신을\n생각합니다", "emoji": "🍁", "gradient": "sunset", "category": "그리움" },
-    { "text": "먼 길도 마음은\n늘 함께입니다", "emoji": "✨", "gradient": "night", "category": "축복" },
-    { "text": "따뜻한 차 한잔\n같이 나눠요", "emoji": "☕", "gradient": "calm", "category": "인사" },
-    { "text": "건강히 지내다\n또 만나요", "emoji": "🤍", "gradient": "calm", "category": "축복" }
+    {
+      "text": "보고 싶은 마음\n밤하늘에\n띄워 보내요",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "위로"
+    },
+    {
+      "text": "그리운 사람\n오늘 잘 지내나요",
+      "emoji": "🍃",
+      "gradient": "sunset",
+      "category": "인사"
+    },
+    {
+      "text": "저녁 노을처럼\n따뜻한 밤\n되세요",
+      "emoji": "🌇",
+      "gradient": "sunset",
+      "category": "인사"
+    },
+    {
+      "text": "떨어져 있어도\n마음은 늘 곁에",
+      "emoji": "⭐",
+      "gradient": "night",
+      "category": "위로"
+    },
+    {
+      "text": "오늘도 무사히\n잘 지냈나요",
+      "emoji": "🌆",
+      "gradient": "sunset",
+      "category": "인사"
+    },
+    {
+      "text": "기다림도\n사랑이랍니다",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "명언"
+    },
+    {
+      "text": "고요한 밤\n편히 쉬세요",
+      "emoji": "🌌",
+      "gradient": "night",
+      "category": "인사"
+    },
+    {
+      "text": "보고 싶을 땐\n하늘을 봐요\n같은 달이에요",
+      "emoji": "🌕",
+      "gradient": "night",
+      "category": "위로"
+    },
+    {
+      "text": "그리운 얼굴\n오늘 밤 꿈에\n만나요",
+      "emoji": "💫",
+      "gradient": "night",
+      "category": "인사"
+    },
+    {
+      "text": "애틋한 마음\n곱게 접어\n보냅니다",
+      "emoji": "🍂",
+      "gradient": "sunset",
+      "category": "위로"
+    },
+    {
+      "text": "멀리 있어도\n늘 생각해요",
+      "emoji": "🌾",
+      "gradient": "sunset",
+      "category": "인사"
+    },
+    {
+      "text": "저물어 가는 하루\n수고 많았어요",
+      "emoji": "🌅",
+      "gradient": "sunset",
+      "category": "위로"
+    },
+    {
+      "text": "그리움은\n사랑의 다른 이름",
+      "emoji": "🌙",
+      "gradient": "lavender",
+      "category": "명언"
+    },
+    {
+      "text": "오늘 밤도\n따뜻한 꿈\n꾸세요",
+      "emoji": "⭐",
+      "gradient": "night",
+      "category": "인사"
+    },
+    {
+      "text": "기다리는 마음\n외롭지 않아요",
+      "emoji": "🕊️",
+      "gradient": "calm",
+      "category": "위로"
+    },
+    {
+      "text": "보고픈 사람\n건강하게\n잘 지내요",
+      "emoji": "🍃",
+      "gradient": "calm",
+      "category": "건강"
+    },
+    {
+      "text": "고운 저녁 노을\n마음에 담아요",
+      "emoji": "🌇",
+      "gradient": "sunset",
+      "category": "계절"
+    },
+    {
+      "text": "오늘 하루도\n잘 견뎌줘서\n고마워요",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "감사"
+    },
+    {
+      "text": "그대 생각에\n마음이 따뜻해요",
+      "emoji": "💜",
+      "gradient": "lavender",
+      "category": "위로"
+    },
+    {
+      "text": "먼 길 오느라\n애썼어요\n푹 쉬세요",
+      "emoji": "🌌",
+      "gradient": "night",
+      "category": "위로"
+    }
   ]
 }

@@ -5,11 +5,125 @@
   "youtubeId": "LCEyhP6y98o",
   "mood": "흥겹고 신나는, 정겨운",
   "cards": [
-    { "text": "얼쑤! 신나는\n하루 되세요", "emoji": "🎉", "gradient": "warm", "category": "인사" },
-    { "text": "정겨운 하루\n보내시길 바라요", "emoji": "🏡", "gradient": "spring", "category": "인사" },
-    { "text": "흥이 절로 나는\n좋은 날!", "emoji": "🎶", "gradient": "sunrise", "category": "응원" },
-    { "text": "오늘도 어깨\n들썩들썩~", "emoji": "💃", "gradient": "rose", "category": "인사" },
-    { "text": "건강하고 신나게\n지내요 우리", "emoji": "💪", "gradient": "spring", "category": "축복" },
-    { "text": "기쁨이 넘치는\n하루 되세요", "emoji": "✨", "gradient": "sunrise", "category": "축복" }
+    {
+      "text": "흥이 절로 나는\n신나는 하루\n되세요",
+      "emoji": "🌻",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "오늘도 정겹게\n웃으며 지내요",
+      "emoji": "🌼",
+      "gradient": "warm",
+      "category": "인사"
+    },
+    {
+      "text": "진짜배기 행복\n가득한 하루",
+      "emoji": "🌈",
+      "gradient": "sunrise",
+      "category": "축복"
+    },
+    {
+      "text": "어깨춤 절로 나는\n즐거운 하루예요",
+      "emoji": "🌺",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "신명 나게\n하루를 열어봐요",
+      "emoji": "🌞",
+      "gradient": "sunrise",
+      "category": "응원"
+    },
+    {
+      "text": "정겨운 우리 사이\n오래오래 가요",
+      "emoji": "🍀",
+      "gradient": "spring",
+      "category": "축복"
+    },
+    {
+      "text": "흥겨운 노래처럼\n즐거운 하루 되길",
+      "emoji": "🌷",
+      "gradient": "warm",
+      "category": "인사"
+    },
+    {
+      "text": "오늘도 신나게\n웃어봐요",
+      "emoji": "😄",
+      "gradient": "sunrise",
+      "category": "응원"
+    },
+    {
+      "text": "진국인 사람\n당신이 최고예요",
+      "emoji": "🌟",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "흥과 정이 넘치는\n하루 보내세요",
+      "emoji": "💐",
+      "gradient": "warm",
+      "category": "인사"
+    },
+    {
+      "text": "신나는 리듬에\n걱정 훌훌 털어요",
+      "emoji": "🌿",
+      "gradient": "spring",
+      "category": "위로"
+    },
+    {
+      "text": "오늘도 건강하게\n덩실덩실",
+      "emoji": "🌻",
+      "gradient": "spring",
+      "category": "건강"
+    },
+    {
+      "text": "정겨운 인사\n따뜻하게 전해요",
+      "emoji": "🌸",
+      "gradient": "warm",
+      "category": "인사"
+    },
+    {
+      "text": "참되고 진실한\n당신이 좋아요",
+      "emoji": "🌹",
+      "gradient": "rose",
+      "category": "응원"
+    },
+    {
+      "text": "흥겨운 하루에\n복이 가득하길",
+      "emoji": "🌈",
+      "gradient": "sunrise",
+      "category": "축복"
+    },
+    {
+      "text": "오늘 하루도\n신바람 나게",
+      "emoji": "🎉",
+      "gradient": "sunrise",
+      "category": "응원"
+    },
+    {
+      "text": "정 많은 당신\n늘 고마워요",
+      "emoji": "🌼",
+      "gradient": "warm",
+      "category": "감사"
+    },
+    {
+      "text": "흥이 나면\n세상이 다 즐거워요",
+      "emoji": "🌞",
+      "gradient": "sunrise",
+      "category": "명언"
+    },
+    {
+      "text": "진솔한 마음이\n제일 멋져요",
+      "emoji": "🌺",
+      "gradient": "lavender",
+      "category": "명언"
+    },
+    {
+      "text": "신나고 정겨운\n하루 되세요",
+      "emoji": "🍃",
+      "gradient": "spring",
+      "category": "인사"
+    }
   ]
 }

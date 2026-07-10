@@ -5,11 +5,125 @@
   "youtubeId": "DbLpG9x_dho",
   "mood": "밝고 사랑스러운, 힘이 나는",
   "cards": [
-    { "text": "오늘도 사랑 가득한\n하루 되세요", "emoji": "🌸", "gradient": "warm", "category": "인사" },
-    { "text": "당신은 언제나\n소중한 사람입니다", "emoji": "💐", "gradient": "rose", "category": "축복" },
-    { "text": "웃음이\n최고의 보약입니다", "emoji": "😊", "gradient": "sunrise", "category": "명언" },
-    { "text": "기운 내세요!\n당신은 할 수 있어요", "emoji": "💪", "gradient": "spring", "category": "응원" },
-    { "text": "좋은 아침이에요\n활기찬 하루 되세요", "emoji": "☀️", "gradient": "sunrise", "category": "인사" },
-    { "text": "행복은 마음먹기\n나름입니다", "emoji": "🍀", "gradient": "spring", "category": "명언" }
+    {
+      "text": "좋은 아침이에요\n오늘도 힘차게\n웃어봐요",
+      "emoji": "🌻",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "당신은 나의\n반가운 햇살이에요",
+      "emoji": "☀️",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "기운 내세요\n당신은 언제나\n소중한 사람",
+      "emoji": "🌷",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "오늘 하루도\n웃음 가득\n채워봐요",
+      "emoji": "😊",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "사랑하는 마음이\n제일 큰 힘이에요",
+      "emoji": "💝",
+      "gradient": "warm",
+      "category": "명언"
+    },
+    {
+      "text": "당신 덕분에\n오늘도 든든해요",
+      "emoji": "🌸",
+      "gradient": "warm",
+      "category": "감사"
+    },
+    {
+      "text": "지친 마음에\n따뜻한 햇살\n한 줌 보내요",
+      "emoji": "🌅",
+      "gradient": "sunrise",
+      "category": "위로"
+    },
+    {
+      "text": "힘내세요\n당신은 할 수 있어요",
+      "emoji": "🌟",
+      "gradient": "sunrise",
+      "category": "응원"
+    },
+    {
+      "text": "웃는 얼굴에\n복이 가득\n들어와요",
+      "emoji": "🌼",
+      "gradient": "warm",
+      "category": "축복"
+    },
+    {
+      "text": "오늘도 건강하고\n활짝 웃는\n하루 되세요",
+      "emoji": "🌻",
+      "gradient": "spring",
+      "category": "건강"
+    },
+    {
+      "text": "당신의 미소가\n세상을 밝혀요",
+      "emoji": "🌞",
+      "gradient": "sunrise",
+      "category": "응원"
+    },
+    {
+      "text": "마음이 통하면\n언제나 봄날이에요",
+      "emoji": "🌷",
+      "gradient": "spring",
+      "category": "명언"
+    },
+    {
+      "text": "함께라서\n더 행복한 하루",
+      "emoji": "💐",
+      "gradient": "warm",
+      "category": "감사"
+    },
+    {
+      "text": "오늘도 사랑을\n듬뿍 받으세요",
+      "emoji": "🌹",
+      "gradient": "rose",
+      "category": "축복"
+    },
+    {
+      "text": "기쁜 일만\n가득하길\n바랄게요",
+      "emoji": "🌈",
+      "gradient": "sunrise",
+      "category": "축복"
+    },
+    {
+      "text": "당신은 나의\n소중한 보물이에요",
+      "emoji": "💝",
+      "gradient": "warm",
+      "category": "인사"
+    },
+    {
+      "text": "힘든 날도\n웃으면 이겨내요",
+      "emoji": "🍃",
+      "gradient": "spring",
+      "category": "위로"
+    },
+    {
+      "text": "오늘 하루\n반짝반짝\n빛나세요",
+      "emoji": "⭐",
+      "gradient": "sunrise",
+      "category": "응원"
+    },
+    {
+      "text": "사랑은 주고받을수록\n더 커진답니다",
+      "emoji": "🌺",
+      "gradient": "rose",
+      "category": "명언"
+    },
+    {
+      "text": "활기찬 하루\n힘차게\n시작해요",
+      "emoji": "🌄",
+      "gradient": "sunrise",
+      "category": "인사"
+    }
   ]
 }

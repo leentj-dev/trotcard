@@ -28,50 +28,72 @@ class GreetingCardView extends StatelessWidget {
     final g = cardGradientFor(card.gradient);
     return AspectRatio(
       aspectRatio: 1,
-      child: Container(
-        decoration: BoxDecoration(gradient: g.gradient),
-        child: Padding(
-          padding: const EdgeInsets.all(22),
-          child: Center(
-            // 타일(작은 박스)에선 자동 축소, 전체보기에선 자연 크기.
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 300),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (card.emoji.isNotEmpty)
-                      Text(card.emoji,
-                          style: const TextStyle(fontSize: 52)),
-                    if (card.emoji.isNotEmpty) const SizedBox(height: 16),
-                    Text(
-                      card.text,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: g.foreground,
-                        fontSize: 27,
-                        fontWeight: FontWeight.w800,
-                        height: 1.4,
-                      ),
-                    ),
-                    if (showBrand) ...[
-                      const SizedBox(height: 22),
-                      Text(
-                        '💌 트로트 카드',
-                        style: TextStyle(
-                          color: g.foreground.withValues(alpha: 0.55),
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
+      child: LayoutBuilder(
+        builder: (context, c) {
+          final s = c.maxWidth; // 정사각형 한 변
+          return Container(
+            decoration: BoxDecoration(gradient: g.gradient),
+            child: Stack(
+              children: [
+                // 하단 꽃 정원 장식
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: Image.asset(
+                    'assets/deco/floral.png',
+                    fit: BoxFit.fitWidth,
+                    alignment: Alignment.bottomCenter,
+                  ),
+                ),
+                // 문구 (윗쪽~가운데, 꽃 밴드 위 공간 확보)
+                Padding(
+                  padding: EdgeInsets.fromLTRB(
+                      s * 0.09, s * 0.10, s * 0.09, s * 0.33),
+                  child: Center(
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 300),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (card.emoji.isNotEmpty)
+                              Text(card.emoji,
+                                  style: const TextStyle(fontSize: 52)),
+                            if (card.emoji.isNotEmpty)
+                              const SizedBox(height: 16),
+                            Text(
+                              card.text,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: g.foreground,
+                                fontSize: 27,
+                                fontWeight: FontWeight.w800,
+                                height: 1.4,
+                              ),
+                            ),
+                            if (showBrand) ...[
+                              const SizedBox(height: 20),
+                              Text(
+                                '💌 트로트 카드',
+                                style: TextStyle(
+                                  color: g.foreground.withValues(alpha: 0.6),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                            ],
+                          ],
                         ),
                       ),
-                    ],
-                  ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }

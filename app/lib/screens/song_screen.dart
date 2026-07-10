@@ -243,7 +243,7 @@ class _SongScreenState extends State<SongScreen> {
                     child: FilledButton.icon(
                       onPressed: _sharing ? null : _shareCurrent,
                       style: FilledButton.styleFrom(
-                        backgroundColor: const Color(0xFFE11D48),
+                        backgroundColor: const Color(0xFF00704A), // 스타벅스 그린
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
                         ),

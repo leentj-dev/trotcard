@@ -5,11 +5,125 @@
   "youtubeId": "b6W1-IF7Ko0",
   "mood": "인생 긍정, 열정적이고 신나는",
   "cards": [
-    { "text": "인생은 지금부터!\n즐기며 삽시다", "emoji": "🎉", "gradient": "warm", "category": "명언" },
-    { "text": "나이는 숫자일 뿐\n마음은 청춘", "emoji": "💃", "gradient": "rose", "category": "명언" },
-    { "text": "오늘을 신나게\n살아봅시다", "emoji": "🔥", "gradient": "sunrise", "category": "응원" },
-    { "text": "웃고 즐기는 것이\n최고의 인생", "emoji": "😄", "gradient": "spring", "category": "명언" },
-    { "text": "후회 없이\n오늘을 사랑하세요", "emoji": "❤️", "gradient": "warm", "category": "명언" },
-    { "text": "당신의 하루를\n응원합니다", "emoji": "🙌", "gradient": "sunrise", "category": "응원" }
+    {
+      "text": "인생은 지금\n이 순간이\n제일 좋아요",
+      "emoji": "🌈",
+      "gradient": "sunrise",
+      "category": "명언"
+    },
+    {
+      "text": "나이는 숫자일 뿐\n마음은 청춘이에요",
+      "emoji": "🌻",
+      "gradient": "sunrise",
+      "category": "명언"
+    },
+    {
+      "text": "오늘을 즐겨요\n인생은 한 번뿐",
+      "emoji": "☀️",
+      "gradient": "warm",
+      "category": "명언"
+    },
+    {
+      "text": "후회 없이\n웃으며 살아요",
+      "emoji": "🌟",
+      "gradient": "sunrise",
+      "category": "응원"
+    },
+    {
+      "text": "당신의 인생\n지금부터가\n꽃길이에요",
+      "emoji": "🌸",
+      "gradient": "spring",
+      "category": "축복"
+    },
+    {
+      "text": "두려워 말고\n힘차게 나아가요",
+      "emoji": "🌄",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "매일이 새로운\n선물이랍니다",
+      "emoji": "🎁",
+      "gradient": "sunrise",
+      "category": "명언"
+    },
+    {
+      "text": "열정을 잃지 않는\n당신이 멋져요",
+      "emoji": "⭐",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "슬픔은 뒤로\n기쁨을 향해\n걸어요",
+      "emoji": "🌈",
+      "gradient": "sunrise",
+      "category": "위로"
+    },
+    {
+      "text": "인생은 즐기는\n사람의 것이에요",
+      "emoji": "🌻",
+      "gradient": "warm",
+      "category": "명언"
+    },
+    {
+      "text": "오늘도 뜨겁게\n사랑하며 살아요",
+      "emoji": "🌹",
+      "gradient": "rose",
+      "category": "응원"
+    },
+    {
+      "text": "지나간 일은 잊고\n새 마음으로",
+      "emoji": "🌱",
+      "gradient": "spring",
+      "category": "명언"
+    },
+    {
+      "text": "당신의 하루가\n축제 같기를",
+      "emoji": "🎉",
+      "gradient": "sunrise",
+      "category": "축복"
+    },
+    {
+      "text": "마음껏 웃고\n마음껏 사랑해요",
+      "emoji": "💐",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "살아있는 오늘이\n가장 큰 행복",
+      "emoji": "🌞",
+      "gradient": "sunrise",
+      "category": "명언"
+    },
+    {
+      "text": "넘어져도 다시\n일어서면 돼요",
+      "emoji": "🌿",
+      "gradient": "spring",
+      "category": "응원"
+    },
+    {
+      "text": "건강하게 웃으며\n오래오래 살아요",
+      "emoji": "🌻",
+      "gradient": "spring",
+      "category": "건강"
+    },
+    {
+      "text": "멋진 인생\n박수를 보내요",
+      "emoji": "🌺",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "오늘 하루도\n신나게\n춤춰봐요",
+      "emoji": "🌈",
+      "gradient": "sunrise",
+      "category": "응원"
+    },
+    {
+      "text": "인생아 고맙다\n오늘도 감사해요",
+      "emoji": "🌷",
+      "gradient": "warm",
+      "category": "감사"
+    }
   ]
 }

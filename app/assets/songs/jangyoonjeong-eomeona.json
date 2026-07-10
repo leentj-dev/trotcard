@@ -5,11 +5,125 @@
   "youtubeId": "P3Gde3RwTzA",
   "mood": "설레고 발랄한, 사랑이 시작되는",
   "cards": [
-    { "text": "오늘 당신에게\n좋은 일이 생길 거예요", "emoji": "🍀", "gradient": "spring", "category": "응원" },
-    { "text": "설레는 하루\n되시길 바라요", "emoji": "💕", "gradient": "warm", "category": "인사" },
-    { "text": "당신이 있어\n참 든든합니다", "emoji": "🌷", "gradient": "rose", "category": "축복" },
-    { "text": "웃는 얼굴이\n제일 예뻐요", "emoji": "😊", "gradient": "sunrise", "category": "인사" },
-    { "text": "행복은 늘\n곁에 있답니다", "emoji": "🌸", "gradient": "lavender", "category": "명언" },
-    { "text": "좋은 아침!\n활짝 웃어요 우리", "emoji": "☀️", "gradient": "sunrise", "category": "인사" }
+    {
+      "text": "설레는 아침이에요\n좋은 일이\n생길 것 같아요",
+      "emoji": "🌷",
+      "gradient": "spring",
+      "category": "인사"
+    },
+    {
+      "text": "봄바람처럼\n산뜻한 하루\n되세요",
+      "emoji": "🌸",
+      "gradient": "spring",
+      "category": "계절"
+    },
+    {
+      "text": "오늘은 왠지\n좋은 소식이\n올 것 같아요",
+      "emoji": "🌼",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "당신을 생각하면\n마음이 설레요",
+      "emoji": "💐",
+      "gradient": "rose",
+      "category": "인사"
+    },
+    {
+      "text": "꽃처럼 예쁜\n하루 보내세요",
+      "emoji": "🌺",
+      "gradient": "spring",
+      "category": "축복"
+    },
+    {
+      "text": "새 아침 새 마음\n활짝 피어나요",
+      "emoji": "🌻",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "설렘 가득한\n하루 되길\n바라요",
+      "emoji": "🌹",
+      "gradient": "rose",
+      "category": "축복"
+    },
+    {
+      "text": "봄날의 꽃처럼\n환하게 웃어요",
+      "emoji": "🌷",
+      "gradient": "spring",
+      "category": "응원"
+    },
+    {
+      "text": "당신 곁에 늘\n좋은 인연이\n함께하길",
+      "emoji": "🍀",
+      "gradient": "spring",
+      "category": "축복"
+    },
+    {
+      "text": "싱그러운 아침\n반가워요",
+      "emoji": "🌿",
+      "gradient": "spring",
+      "category": "인사"
+    },
+    {
+      "text": "오늘도 젊은 마음\n잃지 마세요",
+      "emoji": "🌸",
+      "gradient": "lavender",
+      "category": "명언"
+    },
+    {
+      "text": "마음이 두근두근\n행복한 하루예요",
+      "emoji": "💝",
+      "gradient": "rose",
+      "category": "인사"
+    },
+    {
+      "text": "당신은 여전히\n곱고 예뻐요",
+      "emoji": "🌺",
+      "gradient": "lavender",
+      "category": "응원"
+    },
+    {
+      "text": "꽃길만 걷는\n하루 되세요",
+      "emoji": "🌼",
+      "gradient": "spring",
+      "category": "축복"
+    },
+    {
+      "text": "봄처럼 따뜻한\n인사 전해요",
+      "emoji": "🌷",
+      "gradient": "warm",
+      "category": "인사"
+    },
+    {
+      "text": "오늘 하루\n소녀처럼\n설레보세요",
+      "emoji": "🌸",
+      "gradient": "rose",
+      "category": "응원"
+    },
+    {
+      "text": "반가운 하루\n활짝 열려요",
+      "emoji": "🌈",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "고운 마음에\n고운 복이 와요",
+      "emoji": "🏵️",
+      "gradient": "lavender",
+      "category": "축복"
+    },
+    {
+      "text": "싱그러운 봄날\n건강하세요",
+      "emoji": "🌱",
+      "gradient": "spring",
+      "category": "건강"
+    },
+    {
+      "text": "당신의 하루가\n꽃밭 같기를",
+      "emoji": "💐",
+      "gradient": "spring",
+      "category": "축복"
+    }
   ]
 }

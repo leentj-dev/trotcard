@@ -255,8 +255,8 @@ class _FeedScreenState extends State<FeedScreen> {
                                         s.title,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                          color: Colors.white,
+                                        style: TextStyle(
+                                          color: onSurface,
                                           fontSize: 17,
                                           fontWeight: FontWeight.w700,
                                         ),
@@ -265,13 +265,16 @@ class _FeedScreenState extends State<FeedScreen> {
                                       Text(
                                         s.artist,
                                         style: TextStyle(
-                                            color: theme.accent, fontSize: 14),
+                                            color: onSurface.withValues(
+                                                alpha: 0.65),
+                                            fontSize: 14),
                                       ),
                                       const SizedBox(height: 3),
                                       Text(
                                         '💌 카드 ${s.cardCount}장',
-                                        style: const TextStyle(
-                                            color: Colors.white54,
+                                        style: TextStyle(
+                                            color: onSurface.withValues(
+                                                alpha: 0.45),
                                             fontSize: 12.5),
                                       ),
                                     ],
