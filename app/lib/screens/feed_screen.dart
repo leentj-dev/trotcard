@@ -23,6 +23,7 @@ class _FeedScreenState extends State<FeedScreen> {
   final _scrollController = ScrollController();
   List<SongSummary> _songs = [];
   String _query = '';
+  String _program = ''; // 선택된 프로그램 필터('' = 전체)
   bool _loading = true;
   bool _showScrollTop = false;
 
@@ -95,13 +96,30 @@ class _FeedScreenState extends State<FeedScreen> {
 
   String _norm(String s) => s.toLowerCase().replaceAll(RegExp(r'\s'), '');
 
-  List<SongSummary> get _filtered => _query.isEmpty
-      ? _songs
-      : _songs
+  /// 데이터에 존재하는 프로그램 목록(등장 순서 유지, 중복 제거).
+  List<String> get _programs {
+    final seen = <String>{};
+    final out = <String>[];
+    for (final s in _songs) {
+      if (s.program.isNotEmpty && seen.add(s.program)) out.add(s.program);
+    }
+    return out;
+  }
+
+  List<SongSummary> get _filtered {
+    var list = _songs;
+    if (_program.isNotEmpty) {
+      list = list.where((s) => s.program == _program).toList();
+    }
+    if (_query.isNotEmpty) {
+      list = list
           .where((s) =>
               _norm(s.title).contains(_norm(_query)) ||
               _norm(s.artist).contains(_norm(_query)))
           .toList();
+    }
+    return list;
+  }
 
   Future<void> _openSong(SongSummary summary) async {
     final song = await _repo.loadSong(summary.id);
@@ -192,7 +210,11 @@ class _FeedScreenState extends State<FeedScreen> {
       ),
       body: _loading
           ? const Center(child: CircularProgressIndicator())
-          : ValueListenableBuilder<int>(
+          : Column(
+              children: [
+                _programChips(onSurface),
+                Expanded(
+                  child: ValueListenableBuilder<int>(
               valueListenable: feedAdIntervalNotifier,
               builder: (context, _, _) => ValueListenableBuilder<bool>(
                 valueListenable: adsEnabledNotifier,
@@ -288,6 +310,45 @@ class _FeedScreenState extends State<FeedScreen> {
                 },
               ),
             ),
+                ),
+              ],
+            ),
+    );
+  }
+
+  /// 상단 프로그램 필터 칩 줄. 프로그램 소속 곡이 하나도 없으면 숨긴다.
+  Widget _programChips(Color onSurface) {
+    final programs = _programs;
+    if (programs.isEmpty) return const SizedBox.shrink();
+    final chips = ['', ...programs]; // '' = 전체
+    final scheme = Theme.of(context).colorScheme;
+    return SizedBox(
+      height: 52,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+        itemCount: chips.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 8),
+        itemBuilder: (context, i) {
+          final p = chips[i];
+          final selected = _program == p;
+          return ChoiceChip(
+            label: Text(p.isEmpty ? '전체' : p),
+            selected: selected,
+            showCheckmark: false,
+            labelStyle: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: selected ? scheme.onPrimary : onSurface,
+            ),
+            selectedColor: scheme.primary,
+            backgroundColor: onSurface.withValues(alpha: 0.06),
+            side: BorderSide.none,
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            onSelected: (_) => setState(() => _program = p),
+          );
+        },
+      ),
     );
   }
 
