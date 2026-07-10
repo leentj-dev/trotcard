@@ -1,7 +1,5 @@
 import 'dart:io';
 
-import 'package:google_mobile_ads/google_mobile_ads.dart';
-
 import '../config/remote_config.dart';
 
 /// AdMob 광고 단위 설정.

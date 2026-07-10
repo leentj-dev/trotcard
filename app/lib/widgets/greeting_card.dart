@@ -158,9 +158,19 @@ Future<void> shareCardImage(GlobalKey boundaryKey, {String? text}) async {
   );
 }
 
-/// 문구를 수정한 뒤 이미지로 공유하는 화면.
-/// 카드를 크게 미리보기하고, 아래 입력칸에서 문구를 고쳐 바로 보낼 수 있다.
-/// 배경 사진은 원래 카드 기준으로 고정(편집 중 사진이 바뀌지 않음).
+/// 카드 위에 붙이는 스티커(이모지) 한 개.
+class _Sticker {
+  String emoji;
+  Offset pos; // 카드 한 변 기준 0~1 (중심 앵커)
+  double scale;
+  _Sticker(this.emoji, this.pos, this.scale);
+}
+
+/// 이미지 편집·공유 화면.
+/// - 문구는 카드 위에서 바로 수정(별도 입력칸 없음).
+/// - 아래 가로 스크롤 팔레트에서 스티커를 붙이고, 드래그로 옮기고,
+///   크게/작게/삭제할 수 있다.
+/// - 키보드가 떠도 카드가 위로 밀려 사라지지 않는다(resize 안 함).
 class EditShareScreen extends StatefulWidget {
   final GreetingCard card;
 
@@ -174,14 +184,25 @@ class _EditShareScreenState extends State<EditShareScreen> {
   final _boundaryKey = GlobalKey();
   late final TextEditingController _controller;
   late final String _bgAsset;
+  final List<_Sticker> _stickers = [];
+  int? _selected;
   bool _sharing = false;
+
+  static const _palette = [
+    '🌸','❤️','🎉','😊','👍','🌷','🌹','✨','🥰','💐',
+    '🍀','🎈','🌻','🎁','💕','⭐','🙏','🎶','🌺','💖',
+  ];
+
+  static const _shadow = [
+    Shadow(color: Color(0xCC000000), blurRadius: 12, offset: Offset(0, 2)),
+    Shadow(color: Color(0x99000000), blurRadius: 24),
+  ];
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.card.text);
-    _bgAsset = bgAssetFor(widget.card); // 원래 카드 기준 사진 고정
-    _controller.addListener(() => setState(() {}));
+    _bgAsset = bgAssetFor(widget.card);
   }
 
   @override
@@ -190,9 +211,39 @@ class _EditShareScreenState extends State<EditShareScreen> {
     super.dispose();
   }
 
+  void _addSticker(String e) {
+    setState(() {
+      _stickers.add(_Sticker(e, const Offset(0.5, 0.45), 1));
+      _selected = _stickers.length - 1;
+    });
+  }
+
+  void _scaleSel(double f) {
+    final i = _selected;
+    if (i != null) {
+      setState(() =>
+          _stickers[i].scale = (_stickers[i].scale * f).clamp(0.4, 3.5));
+    }
+  }
+
+  void _deleteSel() {
+    final i = _selected;
+    if (i != null) {
+      setState(() {
+        _stickers.removeAt(i);
+        _selected = null;
+      });
+    }
+  }
+
   Future<void> _share() async {
     if (_sharing) return;
-    setState(() => _sharing = true);
+    FocusScope.of(context).unfocus();
+    setState(() {
+      _selected = null; // 선택 테두리 제거 후 캡처
+      _sharing = true;
+    });
+    await Future.delayed(const Duration(milliseconds: 150));
     try {
       await shareCardImage(_boundaryKey);
     } catch (_) {
@@ -208,10 +259,10 @@ class _EditShareScreenState extends State<EditShareScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final preview = widget.card.copyWith(text: _controller.text);
+    final g = cardGradientFor(widget.card.gradient);
     return Scaffold(
       backgroundColor: Colors.black,
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false, // 키보드가 떠도 카드가 안 밀리게
       body: SafeArea(
         child: Column(
           children: [
@@ -223,58 +274,173 @@ class _EditShareScreenState extends State<EditShareScreen> {
                     color: Colors.white, size: 30),
               ),
             ),
+            // ── 편집 카드 ──
             Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24),
-                child: Column(
-                  children: [
-                    // 미리보기 (편집 문구 실시간 반영, 사진 고정)
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(24),
-                      child: RepaintBoundary(
-                        key: _boundaryKey,
-                        child: GreetingCardView(
-                          card: preview,
-                          bgAsset: _bgAsset,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: RepaintBoundary(
+                      key: _boundaryKey,
+                      child: AspectRatio(
+                        aspectRatio: 1,
+                        child: LayoutBuilder(
+                          builder: (context, c) {
+                            final side = c.maxWidth;
+                            return Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: DecoratedBox(
+                                      decoration:
+                                          BoxDecoration(gradient: g.gradient)),
+                                ),
+                                Positioned.fill(
+                                  child: Image.asset(_bgAsset,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (_, _, _) =>
+                                          const SizedBox.shrink()),
+                                ),
+                                Positioned.fill(
+                                  child: Container(
+                                      color: const Color(0x33000000)),
+                                ),
+                                const Positioned.fill(
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      gradient: RadialGradient(
+                                        radius: 0.9,
+                                        colors: [
+                                          Color(0x88000000),
+                                          Color(0x11000000)
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                // 빈 곳 탭 → 선택 해제
+                                Positioned.fill(
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: () =>
+                                        setState(() => _selected = null),
+                                  ),
+                                ),
+                                // 문구(제자리 편집) + 이모지 + 브랜드
+                                Padding(
+                                  padding: EdgeInsets.all(side * 0.09),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        if (widget.card.emoji.isNotEmpty)
+                                          Text(widget.card.emoji,
+                                              style: TextStyle(
+                                                  fontSize: side * 0.14)),
+                                        if (widget.card.emoji.isNotEmpty)
+                                          SizedBox(height: side * 0.03),
+                                        ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                              maxWidth: side * 0.82),
+                                          child: TextField(
+                                            controller: _controller,
+                                            maxLines: null,
+                                            textAlign: TextAlign.center,
+                                            cursorColor: Colors.white,
+                                            onTap: () => setState(
+                                                () => _selected = null),
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: side * 0.078,
+                                              fontWeight: FontWeight.w800,
+                                              height: 1.35,
+                                              shadows: _shadow,
+                                            ),
+                                            decoration: const InputDecoration(
+                                              border: InputBorder.none,
+                                              isDense: true,
+                                              contentPadding: EdgeInsets.zero,
+                                              hintText: '문구 입력',
+                                              hintStyle:
+                                                  TextStyle(color: Colors.white38),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(height: side * 0.05),
+                                        Text('💌 트로트 카드',
+                                            style: TextStyle(
+                                              color: Colors.white
+                                                  .withValues(alpha: 0.85),
+                                              fontSize: side * 0.036,
+                                              fontWeight: FontWeight.w700,
+                                              shadows: _shadow,
+                                            )),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                // 스티커들
+                                for (int i = 0; i < _stickers.length; i++)
+                                  _stickerWidget(i, side),
+                              ],
+                            );
+                          },
                         ),
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    // 문구 입력칸 (시니어용 큰 글씨)
-                    TextField(
-                      controller: _controller,
-                      maxLines: 3,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          height: 1.4),
-                      decoration: InputDecoration(
-                        hintText: '문구를 입력하세요',
-                        hintStyle: const TextStyle(color: Colors.white38),
-                        filled: true,
-                        fillColor: Colors.white.withValues(alpha: 0.08),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: BorderSide.none,
-                        ),
-                        contentPadding: const EdgeInsets.all(16),
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    const Text('문구를 자유롭게 고칠 수 있어요',
-                        style:
-                            TextStyle(color: Colors.white38, fontSize: 13)),
-                  ],
+                  ),
                 ),
               ),
             ),
+            // ── 스티커 팔레트 (기존 문구 자리, 가로 스크롤) ──
+            SizedBox(
+              height: 64,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                itemCount: _palette.length,
+                separatorBuilder: (_, _) => const SizedBox(width: 8),
+                itemBuilder: (context, i) => GestureDetector(
+                  onTap: () => _addSticker(_palette[i]),
+                  child: Container(
+                    width: 52,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Text(_palette[i],
+                        style: const TextStyle(fontSize: 28)),
+                  ),
+                ),
+              ),
+            ),
+            // ── 선택된 스티커 조절 ──
+            if (_selected != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _ctrlBtn('작게', Icons.remove_rounded, () => _scaleSel(0.85)),
+                    _ctrlBtn('크게', Icons.add_rounded, () => _scaleSel(1.18)),
+                    _ctrlBtn('삭제', Icons.delete_outline_rounded, _deleteSel,
+                        color: const Color(0xFFE11D48)),
+                  ],
+                ),
+              )
+            else
+              const Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Text('문구를 눌러 고치고, 스티커를 붙여보세요',
+                    style: TextStyle(color: Colors.white38, fontSize: 13)),
+              ),
+            // ── 보내기 ──
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+              padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
               child: SizedBox(
                 width: double.infinity,
-                height: 62,
+                height: 60,
                 child: FilledButton.icon(
                   onPressed: _sharing ? null : _share,
                   style: FilledButton.styleFrom(
@@ -289,16 +455,70 @@ class _EditShareScreenState extends State<EditShareScreen> {
                           width: 24,
                           height: 24,
                           child: CircularProgressIndicator(
-                              strokeWidth: 2.5, color: Colors.white),
-                        )
-                      : const Icon(Icons.ios_share_rounded, size: 26),
+                              strokeWidth: 2.5, color: Colors.white))
+                      : const Icon(Icons.ios_share_rounded, size: 24),
                   label: const Text('이미지로 보내기',
-                      style: TextStyle(
-                          fontSize: 21, fontWeight: FontWeight.w800)),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
                 ),
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _ctrlBtn(String label, IconData icon, VoidCallback onTap,
+      {Color color = const Color(0xFF3A3A3C)}) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        child: FilledButton.icon(
+          onPressed: onTap,
+          style: FilledButton.styleFrom(
+            backgroundColor: color,
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14)),
+          ),
+          icon: Icon(icon, size: 20),
+          label: Text(label,
+              style:
+                  const TextStyle(fontSize: 15, fontWeight: FontWeight.w700)),
+        ),
+      ),
+    );
+  }
+
+  Widget _stickerWidget(int i, double side) {
+    final s = _stickers[i];
+    final sel = _selected == i;
+    final fs = side * 0.14 * s.scale;
+    return Positioned(
+      left: s.pos.dx * side - fs * 0.62,
+      top: s.pos.dy * side - fs * 0.62,
+      child: GestureDetector(
+        onTap: () => setState(() => _selected = i),
+        onPanStart: (_) {
+          if (_selected != i) setState(() => _selected = i);
+        },
+        onPanUpdate: (d) => setState(() {
+          s.pos = Offset(
+            (s.pos.dx + d.delta.dx / side).clamp(0.03, 0.97),
+            (s.pos.dy + d.delta.dy / side).clamp(0.03, 0.97),
+          );
+        }),
+        child: Container(
+          padding: const EdgeInsets.all(4),
+          decoration: sel
+              ? BoxDecoration(
+                  border: Border.all(color: Colors.white, width: 2),
+                  borderRadius: BorderRadius.circular(10),
+                )
+              : null,
+          child: Text(s.emoji, style: TextStyle(fontSize: fs, shadows: _shadow)),
         ),
       ),
     );
