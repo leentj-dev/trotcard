@@ -11,8 +11,8 @@ import '../utils/card_gradients.dart';
 
 /// 분위기 키별 배경 사진 풀 개수 (`assets/bg/{key}_1..N.jpg`).
 const _bgPoolCount = {
-  'warm': 14, 'sunrise': 14, 'spring': 14, 'calm': 14,
-  'sunset': 14, 'night': 14, 'rose': 14, 'lavender': 14,
+  'warm': 24, 'sunrise': 21, 'spring': 22, 'calm': 25,
+  'sunset': 25, 'night': 21, 'rose': 24, 'lavender': 27,
 };
 
 /// 문자열 안정 해시 (Dart String.hashCode는 런마다 달라질 수 있어 직접 계산).
