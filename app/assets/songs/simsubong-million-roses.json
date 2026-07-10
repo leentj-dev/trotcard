@@ -1,0 +1,129 @@
+{
+  "id": "simsubong-million-roses",
+  "title": "백만송이 장미",
+  "artist": "심수봉",
+  "youtubeId": "0KlpBqgcEII",
+  "mood": "애틋하고 아름다운 사랑",
+  "cards": [
+    {
+      "text": "당신을 생각하는 마음\n장미 한 송이에 담아\n조용히 전합니다",
+      "emoji": "🌹",
+      "gradient": "rose",
+      "category": "감사"
+    },
+    {
+      "text": "진실한 사랑은\n말없이도 전해집니다\n오늘도 평안하세요",
+      "emoji": "🌸",
+      "gradient": "calm",
+      "category": "명언"
+    },
+    {
+      "text": "아낌없이 주는 마음이\n세상에서 가장\n아름다운 사랑입니다",
+      "emoji": "💐",
+      "gradient": "rose",
+      "category": "명언"
+    },
+    {
+      "text": "좋은 아침입니다\n오늘 하루도\n곱게 피어나시길 바라요",
+      "emoji": "🌷",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "세월이 흘러도\n변치 않는 마음\n늘 당신을 응원합니다",
+      "emoji": "🌿",
+      "gradient": "calm",
+      "category": "응원"
+    },
+    {
+      "text": "슬픔도 지나고 나면\n한 송이 꽃으로\n피어납니다",
+      "emoji": "🏵️",
+      "gradient": "lavender",
+      "category": "위로"
+    },
+    {
+      "text": "당신은 소중한 사람입니다\n그 사실을\n잊지 마세요",
+      "emoji": "🌹",
+      "gradient": "rose",
+      "category": "위로"
+    },
+    {
+      "text": "노을 지는 저녁\n오늘도 수고한\n당신을 안아 줍니다",
+      "emoji": "🌄",
+      "gradient": "sunset",
+      "category": "위로"
+    },
+    {
+      "text": "그리운 사람을 향한 마음은\n세월이 지나도\n시들지 않습니다",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "명언"
+    },
+    {
+      "text": "당신이 흘린 눈물도\n언젠가 예쁜 꽃으로\n피어날 거예요",
+      "emoji": "🌷",
+      "gradient": "lavender",
+      "category": "위로"
+    },
+    {
+      "text": "몸 건강히\n오래오래\n제 곁에 있어 주세요",
+      "emoji": "🌿",
+      "gradient": "spring",
+      "category": "건강"
+    },
+    {
+      "text": "함께라면\n어떤 시간도\n아름답습니다",
+      "emoji": "🌸",
+      "gradient": "warm",
+      "category": "축복"
+    },
+    {
+      "text": "마음을 다해 사랑한 날들은\n결코\n헛되지 않습니다",
+      "emoji": "🌹",
+      "gradient": "rose",
+      "category": "명언"
+    },
+    {
+      "text": "고맙습니다\n당신의 따뜻함이\n제 삶을 물들였습니다",
+      "emoji": "💐",
+      "gradient": "warm",
+      "category": "감사"
+    },
+    {
+      "text": "괴로운 날도\n지나갑니다\n조금만 더 힘내세요",
+      "emoji": "🍃",
+      "gradient": "calm",
+      "category": "위로"
+    },
+    {
+      "text": "별이 빛나는 이 밤\n당신도 편안히\n쉬어 가시길 바라요",
+      "emoji": "⭐",
+      "gradient": "night",
+      "category": "인사"
+    },
+    {
+      "text": "작은 마음 하나하나가\n모여 큰 사랑이\n됩니다",
+      "emoji": "🌼",
+      "gradient": "spring",
+      "category": "명언"
+    },
+    {
+      "text": "당신을 기다리는 사람이\n여기 있음을\n기억해 주세요",
+      "emoji": "🌹",
+      "gradient": "rose",
+      "category": "위로"
+    },
+    {
+      "text": "아름다운 계절이 옵니다\n당신의 마음에도\n꽃이 피어나길",
+      "emoji": "🌺",
+      "gradient": "spring",
+      "category": "계절"
+    },
+    {
+      "text": "편안한 밤 되세요\n좋은 꿈 속에서\n행복하시길 바랍니다",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "인사"
+    }
+  ]
+}

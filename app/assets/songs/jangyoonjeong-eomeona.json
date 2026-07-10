@@ -6,124 +6,124 @@
   "mood": "설레고 발랄한, 사랑이 시작되는",
   "cards": [
     {
-      "text": "설레는 아침이에요\n좋은 일이\n생길 것 같아요",
-      "emoji": "🌷",
+      "text": "봄바람처럼 설레는\n하루가\n당신을 찾아오길 바랍니다",
+      "emoji": "🌸",
       "gradient": "spring",
       "category": "인사"
     },
     {
-      "text": "봄바람처럼\n산뜻한 하루\n되세요",
+      "text": "좋은 인연은\n귀하게 다가옵니다\n오늘 그 만남이 있기를",
+      "emoji": "🌷",
+      "gradient": "rose",
+      "category": "축복"
+    },
+    {
+      "text": "설레는 마음으로\n오늘 하루를\n산뜻하게 시작하세요",
+      "emoji": "🌼",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "당신의 미소가\n꽃보다\n더 곱고 예쁩니다",
+      "emoji": "🌺",
+      "gradient": "spring",
+      "category": "명언"
+    },
+    {
+      "text": "새로운 시작은\n언제나 아름답습니다\n용기 내어 걸어가세요",
+      "emoji": "🌈",
+      "gradient": "sunrise",
+      "category": "응원"
+    },
+    {
+      "text": "오늘 하루도\n꽃길만 걷듯\n환하게 보내시길 바랍니다",
+      "emoji": "💐",
+      "gradient": "spring",
+      "category": "축복"
+    },
+    {
+      "text": "웃음 가득한\n하루가 되세요\n당신은 참 사랑스럽습니다",
+      "emoji": "🌻",
+      "gradient": "warm",
+      "category": "인사"
+    },
+    {
+      "text": "마음이 통하는 사람과\n따뜻한 차 한잔\n나누는 하루 되세요",
+      "emoji": "🍃",
+      "gradient": "calm",
+      "category": "인사"
+    },
+    {
+      "text": "당신을 아끼는 마음\n변함없이\n늘 곁에 있습니다",
+      "emoji": "🌹",
+      "gradient": "rose",
+      "category": "감사"
+    },
+    {
+      "text": "설렘을 잃지 마세요\n작은 일에도 두근대는\n그 마음이 청춘입니다",
+      "emoji": "🌷",
+      "gradient": "spring",
+      "category": "명언"
+    },
+    {
+      "text": "화사한 봄날처럼\n당신의 하루도\n곱게 피어나길 바랍니다",
       "emoji": "🌸",
       "gradient": "spring",
       "category": "계절"
     },
     {
-      "text": "오늘은 왠지\n좋은 소식이\n올 것 같아요",
+      "text": "당신 곁에\n좋은 사람이\n늘 함께하길 바랍니다",
       "emoji": "🌼",
-      "gradient": "sunrise",
-      "category": "인사"
-    },
-    {
-      "text": "당신을 생각하면\n마음이 설레요",
-      "emoji": "💐",
-      "gradient": "rose",
-      "category": "인사"
-    },
-    {
-      "text": "꽃처럼 예쁜\n하루 보내세요",
-      "emoji": "🌺",
-      "gradient": "spring",
+      "gradient": "warm",
       "category": "축복"
     },
     {
-      "text": "새 아침 새 마음\n활짝 피어나요",
-      "emoji": "🌻",
+      "text": "오늘도 예쁜 마음으로\n환하게 웃으며\n지내시길 바랍니다",
+      "emoji": "🌺",
       "gradient": "sunrise",
       "category": "인사"
     },
     {
-      "text": "설렘 가득한\n하루 되길\n바라요",
+      "text": "진심은 언젠가\n반드시 전해집니다\n마음을 곱게 지키세요",
       "emoji": "🌹",
       "gradient": "rose",
-      "category": "축복"
-    },
-    {
-      "text": "봄날의 꽃처럼\n환하게 웃어요",
-      "emoji": "🌷",
-      "gradient": "spring",
-      "category": "응원"
-    },
-    {
-      "text": "당신 곁에 늘\n좋은 인연이\n함께하길",
-      "emoji": "🍀",
-      "gradient": "spring",
-      "category": "축복"
-    },
-    {
-      "text": "싱그러운 아침\n반가워요",
-      "emoji": "🌿",
-      "gradient": "spring",
-      "category": "인사"
-    },
-    {
-      "text": "오늘도 젊은 마음\n잃지 마세요",
-      "emoji": "🌸",
-      "gradient": "lavender",
       "category": "명언"
     },
     {
-      "text": "마음이 두근두근\n행복한 하루예요",
-      "emoji": "💝",
-      "gradient": "rose",
-      "category": "인사"
-    },
-    {
-      "text": "당신은 여전히\n곱고 예뻐요",
-      "emoji": "🌺",
-      "gradient": "lavender",
-      "category": "응원"
-    },
-    {
-      "text": "꽃길만 걷는\n하루 되세요",
-      "emoji": "🌼",
-      "gradient": "spring",
-      "category": "축복"
-    },
-    {
-      "text": "봄처럼 따뜻한\n인사 전해요",
+      "text": "당신은 있는 그대로\n충분히\n사랑스러운 사람입니다",
       "emoji": "🌷",
-      "gradient": "warm",
-      "category": "인사"
+      "gradient": "spring",
+      "category": "위로"
     },
     {
-      "text": "오늘 하루\n소녀처럼\n설레보세요",
+      "text": "산들바람 부는\n좋은 날입니다\n가벼운 걸음으로 나서세요",
+      "emoji": "🌿",
+      "gradient": "calm",
+      "category": "계절"
+    },
+    {
+      "text": "당신의 하루에\n달콤한 기쁨이\n소복이 쌓이길 바랍니다",
+      "emoji": "🌻",
+      "gradient": "warm",
+      "category": "축복"
+    },
+    {
+      "text": "고운 미소 잃지 말고\n오늘도 즐겁게\n지내시길 바랍니다",
       "emoji": "🌸",
-      "gradient": "rose",
+      "gradient": "sunrise",
       "category": "응원"
     },
     {
-      "text": "반가운 하루\n활짝 열려요",
-      "emoji": "🌈",
-      "gradient": "sunrise",
-      "category": "인사"
+      "text": "당신을 생각하면\n괜히 마음이\n환해집니다",
+      "emoji": "🌼",
+      "gradient": "warm",
+      "category": "감사"
     },
     {
-      "text": "고운 마음에\n고운 복이 와요",
-      "emoji": "🏵️",
+      "text": "편안한 저녁 되세요\n오늘도 곱게\n하루를 마무리하세요",
+      "emoji": "🌙",
       "gradient": "lavender",
-      "category": "축복"
-    },
-    {
-      "text": "싱그러운 봄날\n건강하세요",
-      "emoji": "🌱",
-      "gradient": "spring",
-      "category": "건강"
-    },
-    {
-      "text": "당신의 하루가\n꽃밭 같기를",
-      "emoji": "💐",
-      "gradient": "spring",
-      "category": "축복"
+      "category": "인사"
     }
   ]
 }

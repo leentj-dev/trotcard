@@ -1,0 +1,129 @@
+{
+  "id": "namjin-nimgwa-hamkke",
+  "title": "님과 함께",
+  "artist": "남진",
+  "youtubeId": "AvI25KxUfgI",
+  "mood": "밝고 낭만적인, 사랑하는 사람과의 행복",
+  "cards": [
+    {
+      "text": "좋은 아침입니다\n오늘도 즐거운 마음으로\n하루를 시작해 보세요",
+      "emoji": "🌻",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "함께라면\n어디든 꽃길입니다\n오늘도 즐겁게 걸어가요",
+      "emoji": "🌷",
+      "gradient": "spring",
+      "category": "축복"
+    },
+    {
+      "text": "푸른 하늘 아래\n좋은 사람들과\n행복한 하루 보내세요",
+      "emoji": "☀️",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "봄이면 꽃이 피고\n가을이면 열매 맺듯\n당신의 나날도 풍성하길",
+      "emoji": "🌼",
+      "gradient": "spring",
+      "category": "축복"
+    },
+    {
+      "text": "웃음꽃 활짝 핀\n행복한 하루\n오늘도 만들어 가세요",
+      "emoji": "😊",
+      "gradient": "warm",
+      "category": "응원"
+    },
+    {
+      "text": "소박한 밥상 앞에서도\n웃을 수 있다면\n그것이 진짜 행복입니다",
+      "emoji": "🌾",
+      "gradient": "warm",
+      "category": "명언"
+    },
+    {
+      "text": "여름이면 시원한 바람\n겨울이면 따뜻한 온기\n늘 평안하시길 바랍니다",
+      "emoji": "🍃",
+      "gradient": "calm",
+      "category": "축복"
+    },
+    {
+      "text": "오늘도 힘차게\n좋은 하루 만들어 가세요\n당신을 응원합니다",
+      "emoji": "🌟",
+      "gradient": "sunrise",
+      "category": "응원"
+    },
+    {
+      "text": "높은 빌딩도 부럽지 않아요\n마음 맞는 사람과 함께면\n그곳이 낙원입니다",
+      "emoji": "🌈",
+      "gradient": "warm",
+      "category": "명언"
+    },
+    {
+      "text": "반딧불 반짝이는 여름밤처럼\n당신의 하루도\n반짝반짝 빛나길 바라요",
+      "emoji": "⭐",
+      "gradient": "night",
+      "category": "축복"
+    },
+    {
+      "text": "좋은 사람과 나누는\n따뜻한 밥 한 끼\n오늘도 든든히 챙기세요",
+      "emoji": "🌷",
+      "gradient": "warm",
+      "category": "건강"
+    },
+    {
+      "text": "행복은 멀리 있지 않아요\n지금 이 순간\n마음껏 웃으며 사세요",
+      "emoji": "🌸",
+      "gradient": "spring",
+      "category": "명언"
+    },
+    {
+      "text": "초원 위에 부는 바람처럼\n오늘 하루도\n상쾌하고 시원하시길",
+      "emoji": "🌿",
+      "gradient": "calm",
+      "category": "인사"
+    },
+    {
+      "text": "가을 들녘 풍년처럼\n당신의 삶에도\n좋은 일 가득 넘치길 바라요",
+      "emoji": "🌻",
+      "gradient": "sunset",
+      "category": "축복"
+    },
+    {
+      "text": "즐거운 마음이\n최고의 보약입니다\n오늘도 활짝 웃으세요",
+      "emoji": "🌼",
+      "gradient": "warm",
+      "category": "건강"
+    },
+    {
+      "text": "사랑하는 사람과 함께\n오순도순 사는 것\n그것이 인생의 낙입니다",
+      "emoji": "💐",
+      "gradient": "rose",
+      "category": "명언"
+    },
+    {
+      "text": "노을 지는 저녁\n오늘 하루도\n행복하게 마무리하세요",
+      "emoji": "🌄",
+      "gradient": "sunset",
+      "category": "인사"
+    },
+    {
+      "text": "봄바람에 꽃잎 날리듯\n당신의 마음에도\n설렘 가득한 하루이길",
+      "emoji": "🌸",
+      "gradient": "spring",
+      "category": "계절"
+    },
+    {
+      "text": "오늘도 씩씩하게\n웃으며 나아가는 당신\n참 멋진 사람입니다",
+      "emoji": "🌟",
+      "gradient": "sunrise",
+      "category": "응원"
+    },
+    {
+      "text": "편안한 밤 되세요\n좋은 꿈 꾸시고\n내일 또 웃으며 만나요",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "인사"
+    }
+  ]
+}

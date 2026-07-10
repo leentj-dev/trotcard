@@ -6,124 +6,124 @@
   "mood": "그리움과 기다림, 애틋한",
   "cards": [
     {
-      "text": "보고 싶은 마음\n밤하늘에\n띄워 보내요",
+      "text": "보고 싶은 마음은\n언제나\n조용히 깊어집니다",
       "emoji": "🌙",
       "gradient": "night",
       "category": "위로"
     },
     {
-      "text": "그리운 사람\n오늘 잘 지내나요",
+      "text": "그리운 사람이 있다는 건\n그만큼\n귀한 인연이 있다는 것이지요",
       "emoji": "🍃",
-      "gradient": "sunset",
+      "gradient": "lavender",
+      "category": "명언"
+    },
+    {
+      "text": "첫눈 오는 날엔\n괜히 마음이\n포근해집니다",
+      "emoji": "❄️",
+      "gradient": "calm",
+      "category": "계절"
+    },
+    {
+      "text": "잘 지내고 계신가요\n문득 당신 생각에\n안부를 전합니다",
+      "emoji": "🌿",
+      "gradient": "lavender",
       "category": "인사"
     },
     {
-      "text": "저녁 노을처럼\n따뜻한 밤\n되세요",
-      "emoji": "🌇",
+      "text": "기다림도\n사랑의 한 자락입니다\n그 마음 소중히 여기세요",
+      "emoji": "🌸",
       "gradient": "sunset",
+      "category": "명언"
+    },
+    {
+      "text": "추운 날씨에\n감기 조심하시고\n따뜻하게 지내세요",
+      "emoji": "🧣",
+      "gradient": "calm",
+      "category": "건강"
+    },
+    {
+      "text": "오래된 인연일수록\n마음 깊이\n더 아련하고 곱습니다",
+      "emoji": "🌷",
+      "gradient": "lavender",
+      "category": "명언"
+    },
+    {
+      "text": "고요한 밤입니다\n오늘 하루도\n평안히 쉬시길 바랍니다",
+      "emoji": "🌙",
+      "gradient": "night",
       "category": "인사"
     },
     {
-      "text": "떨어져 있어도\n마음은 늘 곁에",
+      "text": "멀리 있어도\n마음은 늘\n당신 곁에 있습니다",
       "emoji": "⭐",
       "gradient": "night",
       "category": "위로"
     },
     {
-      "text": "오늘도 무사히\n잘 지냈나요",
-      "emoji": "🌆",
-      "gradient": "sunset",
-      "category": "인사"
-    },
-    {
-      "text": "기다림도\n사랑이랍니다",
-      "emoji": "🌙",
-      "gradient": "night",
-      "category": "명언"
-    },
-    {
-      "text": "고요한 밤\n편히 쉬세요",
-      "emoji": "🌌",
-      "gradient": "night",
-      "category": "인사"
-    },
-    {
-      "text": "보고 싶을 땐\n하늘을 봐요\n같은 달이에요",
-      "emoji": "🌕",
-      "gradient": "night",
-      "category": "위로"
-    },
-    {
-      "text": "그리운 얼굴\n오늘 밤 꿈에\n만나요",
-      "emoji": "💫",
-      "gradient": "night",
-      "category": "인사"
-    },
-    {
-      "text": "애틋한 마음\n곱게 접어\n보냅니다",
+      "text": "함께한 시간들이\n오래도록\n따뜻하게 남습니다",
       "emoji": "🍂",
       "gradient": "sunset",
-      "category": "위로"
+      "category": "감사"
     },
     {
-      "text": "멀리 있어도\n늘 생각해요",
+      "text": "그리운 이름을\n가만히 불러봅니다\n부디 건강하세요",
       "emoji": "🌾",
       "gradient": "sunset",
       "category": "인사"
     },
     {
-      "text": "저물어 가는 하루\n수고 많았어요",
-      "emoji": "🌅",
+      "text": "차가운 바람 속에도\n당신을 향한 마음은\n늘 따뜻합니다",
+      "emoji": "🌙",
+      "gradient": "lavender",
+      "category": "위로"
+    },
+    {
+      "text": "눈 내리는 계절엔\n소식이 더 그립습니다\n건강히 잘 지내세요",
+      "emoji": "❄️",
+      "gradient": "calm",
+      "category": "계절"
+    },
+    {
+      "text": "지난날의 인연에\n감사하며\n오늘도 마음을 전합니다",
+      "emoji": "🍃",
+      "gradient": "lavender",
+      "category": "감사"
+    },
+    {
+      "text": "보고 싶다는 말\n쉽게 못 해도\n마음만은 늘 진심입니다",
+      "emoji": "🌷",
       "gradient": "sunset",
       "category": "위로"
     },
     {
-      "text": "그리움은\n사랑의 다른 이름",
-      "emoji": "🌙",
-      "gradient": "lavender",
-      "category": "명언"
-    },
-    {
-      "text": "오늘 밤도\n따뜻한 꿈\n꾸세요",
-      "emoji": "⭐",
+      "text": "밤이 깊어갑니다\n오늘 하루도\n애쓰셨습니다 편히 쉬세요",
+      "emoji": "🌌",
       "gradient": "night",
       "category": "인사"
     },
     {
-      "text": "기다리는 마음\n외롭지 않아요",
-      "emoji": "🕊️",
+      "text": "세월이 흘러도\n변치 않는 마음\n하나쯤은 지키고 삽니다",
+      "emoji": "⭐",
+      "gradient": "night",
+      "category": "명언"
+    },
+    {
+      "text": "그리움이 사무칠 땐\n따뜻한 차 한잔에\n마음을 달래 보세요",
+      "emoji": "🍵",
       "gradient": "calm",
       "category": "위로"
     },
     {
-      "text": "보고픈 사람\n건강하게\n잘 지내요",
-      "emoji": "🍃",
-      "gradient": "calm",
-      "category": "건강"
-    },
-    {
-      "text": "고운 저녁 노을\n마음에 담아요",
-      "emoji": "🌇",
-      "gradient": "sunset",
-      "category": "계절"
-    },
-    {
-      "text": "오늘 하루도\n잘 견뎌줘서\n고마워요",
+      "text": "당신을 떠올리면\n마음 한켠이\n포근해집니다",
       "emoji": "🌙",
-      "gradient": "night",
+      "gradient": "lavender",
       "category": "감사"
     },
     {
-      "text": "그대 생각에\n마음이 따뜻해요",
-      "emoji": "💜",
-      "gradient": "lavender",
-      "category": "위로"
-    },
-    {
-      "text": "먼 길 오느라\n애썼어요\n푹 쉬세요",
-      "emoji": "🌌",
-      "gradient": "night",
-      "category": "위로"
+      "text": "추운 계절 잘 견디시고\n늘 건강하고\n평안하시길 빕니다",
+      "emoji": "🌨️",
+      "gradient": "calm",
+      "category": "축복"
     }
   ]
 }
