@@ -331,52 +331,53 @@ class _EditShareScreenState extends State<EditShareScreen> {
                                         setState(() => _selected = null),
                                   ),
                                 ),
-                                // 문구(제자리 편집) + 이모지 + 브랜드
+                                // 문구(제자리 편집) — 카드 가운데
                                 Padding(
                                   padding: EdgeInsets.all(side * 0.09),
                                   child: Center(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        ConstrainedBox(
-                                          constraints: BoxConstraints(
-                                              maxWidth: side * 0.82),
-                                          child: TextField(
-                                            controller: _controller,
-                                            maxLines: null,
-                                            textAlign: TextAlign.center,
-                                            cursorColor: Colors.white,
-                                            onTap: () => setState(
-                                                () => _selected = null),
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: side * 0.078,
-                                              fontWeight: FontWeight.w800,
-                                              height: 1.35,
-                                              shadows: _shadow,
-                                            ),
-                                            decoration: const InputDecoration(
-                                              border: InputBorder.none,
-                                              isDense: true,
-                                              contentPadding: EdgeInsets.zero,
-                                              hintText: '문구 입력',
-                                              hintStyle:
-                                                  TextStyle(color: Colors.white38),
-                                            ),
-                                          ),
+                                    child: ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                          maxWidth: side * 0.82),
+                                      child: TextField(
+                                        controller: _controller,
+                                        maxLines: null,
+                                        textAlign: TextAlign.center,
+                                        cursorColor: Colors.white,
+                                        onTap: () => setState(
+                                            () => _selected = null),
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: side * 0.078,
+                                          fontWeight: FontWeight.w800,
+                                          height: 1.35,
+                                          shadows: _shadow,
                                         ),
-                                        SizedBox(height: side * 0.05),
-                                        Text('💌 트로트 카드',
-                                            style: TextStyle(
-                                              color: Colors.white
-                                                  .withValues(alpha: 0.85),
-                                              fontSize: side * 0.036,
-                                              fontWeight: FontWeight.w700,
-                                              shadows: _shadow,
-                                            )),
-                                      ],
+                                        decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.zero,
+                                          hintText: '문구 입력',
+                                          hintStyle:
+                                              TextStyle(color: Colors.white38),
+                                        ),
+                                      ),
                                     ),
                                   ),
+                                ),
+                                // 브랜드 — 카드 맨 하단
+                                Positioned(
+                                  left: 0,
+                                  right: 0,
+                                  bottom: side * 0.06,
+                                  child: Text('💌 트로트 카드',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        color: Colors.white
+                                            .withValues(alpha: 0.85),
+                                        fontSize: side * 0.036,
+                                        fontWeight: FontWeight.w700,
+                                        shadows: _shadow,
+                                      )),
                                 ),
                                 // 스티커들
                                 for (int i = 0; i < _stickers.length; i++)

@@ -226,7 +226,7 @@ class _SongScreenState extends State<SongScreen> {
                   ],
                 ),
               ),
-              // 카드 + 광고 페이저
+              // 카드 + 광고 페이저 (+ 인디케이터·공유버튼·배너)
               Expanded(
                 child: _song.cards.isEmpty
                     ? const Center(
@@ -243,42 +243,53 @@ class _SongScreenState extends State<SongScreen> {
                                 ? _withCardAds(_song.cards, interval)
                                 : List<GreetingCard?>.from(_song.cards);
                             _itemCount = items.length;
-                            _lastItems = items;
                             if (_currentPage >= _itemCount) _currentPage = 0;
-                            return NotificationListener<ScrollNotification>(
-                              onNotification: _onScroll,
-                              child: PageView.builder(
-                                controller: _pageController,
-                                itemCount: items.length,
-                                onPageChanged: (i) =>
-                                    setState(() => _currentPage = i),
-                                itemBuilder: (context, i) {
-                                  final card = items[i];
-                                  if (card == null) return const CardNativeAd();
-                                  return Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 8, vertical: 8),
-                                    child: Center(
-                                      child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(20),
-                                        child: GreetingCardView(card: card),
-                                      ),
+                            final current = _currentPage < items.length
+                                ? items[_currentPage]
+                                : null;
+                            return Column(
+                              children: [
+                                Expanded(
+                                  child:
+                                      NotificationListener<ScrollNotification>(
+                                    onNotification: _onScroll,
+                                    child: PageView.builder(
+                                      controller: _pageController,
+                                      itemCount: items.length,
+                                      onPageChanged: (i) =>
+                                          setState(() => _currentPage = i),
+                                      itemBuilder: (context, i) {
+                                        final card = items[i];
+                                        if (card == null) {
+                                          return const CardNativeAd();
+                                        }
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8, vertical: 8),
+                                          child: Center(
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              child:
+                                                  GreetingCardView(card: card),
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     ),
-                                  );
-                                },
-                              ),
+                                  ),
+                                ),
+                                _pageDots(items.length),
+                                _shareButton(current),
+                                const SizedBox(height: 6),
+                                const BannerAdBar(),
+                                const SizedBox(height: 8),
+                              ],
                             );
                           },
                         ),
                       ),
               ),
-              _pageDots(),
-              _shareButton(),
-              const SizedBox(height: 6),
-              // 카드 아래 배너 광고
-              const BannerAdBar(),
-              const SizedBox(height: 8),
             ],
           ),
         ),
@@ -286,13 +297,13 @@ class _SongScreenState extends State<SongScreen> {
     );
   }
 
-  Widget _pageDots() {
-    if (_itemCount == 0) return const SizedBox.shrink();
+  Widget _pageDots(int count) {
+    if (count == 0) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(_itemCount, (i) {
+        children: List.generate(count, (i) {
           final active = i == _currentPage;
           return AnimatedContainer(
             duration: const Duration(milliseconds: 250),
@@ -311,12 +322,8 @@ class _SongScreenState extends State<SongScreen> {
     );
   }
 
-  Widget _shareButton() {
+  Widget _shareButton(GreetingCard? current) {
     // 현재 아이템이 광고(null)면 공유 비활성.
-    final items = _lastItems;
-    final current = (items != null && _currentPage < items.length)
-        ? items[_currentPage]
-        : null;
     final isAd = current == null;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -344,7 +351,4 @@ class _SongScreenState extends State<SongScreen> {
       ),
     );
   }
-
-  // 마지막으로 빌드된 items (공유 버튼이 현재 카드/광고 판별에 사용).
-  List<GreetingCard?>? _lastItems;
 }
