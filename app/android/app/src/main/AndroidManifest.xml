@@ -31,7 +31,7 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-        <!-- AdMob App ID — set per product flavor (real for kpop, test for jpop). -->
+        <!-- AdMob App ID — defaultConfig manifestPlaceholder (현재 테스트 ID). -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="${admobAppId}" />

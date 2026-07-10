@@ -1,8 +1,8 @@
-name: kpop_hangul
-description: "Learn Korean through K-pop songs — word cards synced to YouTube."
+name: trot_quiz
+description: "트롯 퀴즈 — 트롯트를 들으며 즐기는 시니어 두뇌 게임."
 publish_to: 'none'
 
-version: 1.0.0+43
+version: 1.0.0+1
 
 environment:
   sdk: ^3.11.1
@@ -41,6 +41,4 @@ flutter:
 
   assets:
     - assets/songs/
-    - assets/songs_jpop/
     - assets/icon/icon.png
-    - assets/icon_jpop/icon.png

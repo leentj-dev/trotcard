@@ -4,7 +4,6 @@ import java.io.FileInputStream
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("com.google.gms.google-services")
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
@@ -17,7 +16,7 @@ if (hasKeystore) {
 }
 
 android {
-    namespace = "dev.leentj.kpop_hangul"
+    namespace = "dev.leentj.trot_quiz"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -31,58 +30,35 @@ android {
     }
 
     defaultConfig {
-        // Overridden per product flavor below.
-        applicationId = "dev.leentj.kpop_hangul"
+        applicationId = "dev.leentj.trot_quiz"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["appLabel"] = "트롯 퀴즈"
+        // AdMob: Google 테스트 App ID. 실제 AdMob 앱 등록 후 교체.
+        manifestPlaceholders["admobAppId"] =
+            "ca-app-pub-3940256099942544~3347511713"
     }
 
     signingConfigs {
         if (hasKeystore) {
-            create("kpop") {
-                keyAlias = keystoreProperties["kpopKeyAlias"] as String
-                keyPassword = keystoreProperties["kpopKeyPassword"] as String
-                storeFile = file(keystoreProperties["kpopStoreFile"] as String)
-                storePassword = keystoreProperties["kpopStorePassword"] as String
+            create("trot") {
+                keyAlias = keystoreProperties["trotKeyAlias"] as String
+                keyPassword = keystoreProperties["trotKeyPassword"] as String
+                storeFile = file(keystoreProperties["trotStoreFile"] as String)
+                storePassword = keystoreProperties["trotStorePassword"] as String
             }
-            create("jpop") {
-                keyAlias = keystoreProperties["jpopKeyAlias"] as String
-                keyPassword = keystoreProperties["jpopKeyPassword"] as String
-                storeFile = file(keystoreProperties["jpopStoreFile"] as String)
-                storePassword = keystoreProperties["jpopStorePassword"] as String
-            }
-        }
-    }
-
-    flavorDimensions += "app"
-    productFlavors {
-        create("kpop") {
-            dimension = "app"
-            applicationId = "dev.leentj.kpop_hangul"
-            manifestPlaceholders["appLabel"] = "K-pop Hangul"
-            manifestPlaceholders["admobAppId"] =
-                "ca-app-pub-6232115093331648~5603947943"
-            if (hasKeystore) signingConfig = signingConfigs.getByName("kpop")
-        }
-        create("jpop") {
-            dimension = "app"
-            applicationId = "dev.leentj.jpop_kana"
-            manifestPlaceholders["appLabel"] = "J-pop Kana"
-            // jpop has no AdMob app yet — keep Google's test App ID.
-            manifestPlaceholders["admobAppId"] =
-                "ca-app-pub-3940256099942544~3347511713"
-            if (hasKeystore) signingConfig = signingConfigs.getByName("jpop")
         }
     }
 
     buildTypes {
         release {
-            // Per-flavor release keys apply when key.properties exists;
-            // otherwise fall back to debug signing so `flutter run` still works.
-            if (!hasKeystore) {
-                signingConfig = signingConfigs.getByName("debug")
+            // 릴리스 키가 있으면 사용, 없으면 디버그 서명으로 폴백해 `flutter run` 동작.
+            signingConfig = if (hasKeystore) {
+                signingConfigs.getByName("trot")
+            } else {
+                signingConfigs.getByName("debug")
             }
         }
     }

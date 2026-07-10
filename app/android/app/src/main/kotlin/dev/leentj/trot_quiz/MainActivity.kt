@@ -1,4 +1,4 @@
-package dev.leentj.kpop_hangul
+package dev.leentj.trot_quiz
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine

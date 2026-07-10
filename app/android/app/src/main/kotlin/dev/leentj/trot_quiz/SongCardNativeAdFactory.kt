@@ -1,4 +1,4 @@
-package dev.leentj.kpop_hangul
+package dev.leentj.trot_quiz
 
 import android.view.LayoutInflater
 import android.view.View

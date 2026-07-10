@@ -49,39 +49,15 @@ class AppConfig {
 /// Set once by the flavor entrypoint (main*.dart) before runApp().
 late AppConfig appConfig;
 
-/// K-pop → Korean (the original, live app).
-const kpopConfig = AppConfig(
-  appTitle: 'K-pop Hangul',
+/// 트롯 퀴즈 — 시니어용 트롯트 두뇌 게임 (단일 앱).
+const trotConfig = AppConfig(
+  appTitle: '트롯 퀴즈',
   logoAsset: 'assets/icon/icon.png',
-  seedColor: Color(0xFFF0ABFC),
+  seedColor: Color(0xFFE11D48), // 트롯 레드
   assetDir: 'assets/songs',
   remoteBase:
-      'https://raw.githubusercontent.com/leentj-dev/kpop-hangul/main/app/assets/songs',
+      'https://raw.githubusercontent.com/leentj-dev/trot/main/app/assets/songs',
   target: KoreanTarget(),
-  androidPackageId: 'dev.leentj.kpop_hangul',
-  iosAppId: '6788620417',
-);
-
-/// J-pop → Japanese.
-const jpopConfig = AppConfig(
-  appTitle: 'J-pop Kana',
-  logoAsset: 'assets/icon_jpop/icon.png',
-  seedColor: Color(0xFFF9A8D4),
-  assetDir: 'assets/songs_jpop',
-  remoteBase:
-      'https://raw.githubusercontent.com/leentj-dev/kpop-hangul/main/app/assets/songs_jpop',
-  target: JapaneseTarget(),
-  androidPackageId: 'dev.leentj.jpop_kana',
-);
-
-/// Latin → Spanish (future flavor; content pack TBD).
-const esConfig = AppConfig(
-  appTitle: 'Latin Español',
-  logoAsset: 'assets/icon/icon.png',
-  seedColor: Color(0xFFFCD34D),
-  assetDir: 'assets/songs_es',
-  remoteBase:
-      'https://raw.githubusercontent.com/leentj-dev/kpop-hangul/main/app/assets/songs_es',
-  target: RomanTarget('es-ES'),
-  androidPackageId: 'dev.leentj.latin_es',
+  androidPackageId: 'dev.leentj.trot_quiz',
+  iosAppId: '', // App Store 등록 후 채움
 );
