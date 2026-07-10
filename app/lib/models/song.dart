@@ -27,6 +27,13 @@ class GreetingCard {
         gradient: json['gradient'] as String? ?? 'warm',
         category: json['category'] as String? ?? '',
       );
+
+  GreetingCard copyWith({String? text, String? emoji}) => GreetingCard(
+        text: text ?? this.text,
+        emoji: emoji ?? this.emoji,
+        gradient: gradient,
+        category: category,
+      );
 }
 
 /// 트롯 한 곡 + 그 곡의 분위기에 맞춘 마음 카드 묶음.

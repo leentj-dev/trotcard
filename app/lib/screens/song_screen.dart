@@ -8,7 +8,7 @@ import '../data/song_repository.dart';
 import '../models/song.dart';
 import '../utils/themes.dart';
 import '../widgets/greeting_card.dart';
-import '../widgets/native_ad_card.dart';
+import '../widgets/pager_ads.dart';
 
 /// 노래 상세 — 위에 유튜브로 트롯을 재생하며, 아래 마음 카드가 4초마다 자동으로
 /// 넘어간다. 사용자가 스와이프하면 그대로 두고, 멈추면 10초 뒤 다시 자동 재개.
@@ -39,9 +39,6 @@ class _SongScreenState extends State<SongScreen> {
   late int _index;
   bool _advancing = false;
 
-  /// 카드마다 고정 캡처 키(공유용). 카드 객체별로 유지.
-  final Map<GreetingCard, GlobalKey> _keyFor = {};
-
   /// 현재 페이지(광고 포함 items 기준) + 현재 아이템 개수(타이머용).
   int _currentPage = 0;
   int _itemCount = 0;
@@ -49,7 +46,6 @@ class _SongScreenState extends State<SongScreen> {
   Timer? _autoTimer; // 4초 자동 넘김
   Timer? _resumeTimer; // 사용자 조작 후 10초 뒤 재개
   bool _userInteracting = false;
-  bool _sharing = false;
 
   static const _autoInterval = Duration(seconds: 4);
   static const _resumeDelay = Duration(seconds: 10);
@@ -59,7 +55,6 @@ class _SongScreenState extends State<SongScreen> {
     super.initState();
     _song = widget.song;
     _index = widget.index;
-    _rebuildKeys();
     _pageController = PageController(viewportFraction: 0.82);
     _player = YoutubePlayerController.fromVideoId(
       videoId: _song.youtubeId,
@@ -74,13 +69,6 @@ class _SongScreenState extends State<SongScreen> {
       if (value.playerState == PlayerState.ended) _playNext();
     });
     _startAuto();
-  }
-
-  void _rebuildKeys() {
-    _keyFor.clear();
-    for (final c in _song.cards) {
-      _keyFor[c] = GlobalKey();
-    }
   }
 
   // ── 자동 넘김 ──────────────────────────────────────────────
@@ -136,7 +124,6 @@ class _SongScreenState extends State<SongScreen> {
         _index += 1;
         _song = song;
         _currentPage = 0;
-        _rebuildKeys();
       });
       if (_pageController.hasClients) _pageController.jumpToPage(0);
       await _player.loadVideoById(videoId: song.youtubeId);
@@ -146,20 +133,11 @@ class _SongScreenState extends State<SongScreen> {
   }
 
   // ── 공유 ───────────────────────────────────────────────────
-  Future<void> _shareCard(GreetingCard card) async {
-    if (_sharing) return;
-    setState(() => _sharing = true);
-    try {
-      await shareCardImage(_keyFor[card]!);
-    } catch (_) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('공유에 실패했어요. 다시 시도해 주세요.')),
-        );
-      }
-    } finally {
-      if (mounted) setState(() => _sharing = false);
-    }
+  /// "이미지로 보내기" → 문구 수정 화면을 띄운다(거기서 편집 후 공유).
+  void _openEditor(GreetingCard card) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => EditShareScreen(card: card)),
+    );
   }
 
   @override
@@ -276,7 +254,7 @@ class _SongScreenState extends State<SongScreen> {
                                     setState(() => _currentPage = i),
                                 itemBuilder: (context, i) {
                                   final card = items[i];
-                                  if (card == null) return _adCard();
+                                  if (card == null) return const CardNativeAd();
                                   return Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 8, vertical: 8),
@@ -284,10 +262,7 @@ class _SongScreenState extends State<SongScreen> {
                                       child: ClipRRect(
                                         borderRadius:
                                             BorderRadius.circular(20),
-                                        child: RepaintBoundary(
-                                          key: _keyFor[card],
-                                          child: GreetingCardView(card: card),
-                                        ),
+                                        child: GreetingCardView(card: card),
                                       ),
                                     ),
                                   );
@@ -300,42 +275,11 @@ class _SongScreenState extends State<SongScreen> {
               ),
               _pageDots(),
               _shareButton(),
-              const SizedBox(height: 10),
+              const SizedBox(height: 6),
+              // 카드 아래 배너 광고
+              const BannerAdBar(),
+              const SizedBox(height: 8),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// 광고 페이지 — 카드 모양의 네이티브 광고.
-  Widget _adCard() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      child: Center(
-        child: AspectRatio(
-          aspectRatio: 1,
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.10),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white24),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text('광고',
-                    style: TextStyle(
-                        color: Colors.white60,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700)),
-                const SizedBox(height: 8),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: NativeAdCard(),
-                ),
-              ],
-            ),
           ),
         ),
       ),
@@ -380,8 +324,7 @@ class _SongScreenState extends State<SongScreen> {
         width: double.infinity,
         height: 60,
         child: FilledButton.icon(
-          onPressed:
-              (isAd || _sharing) ? null : () => _shareCard(current),
+          onPressed: isAd ? null : () => _openEditor(current),
           style: FilledButton.styleFrom(
             backgroundColor: const Color(0xFF00704A),
             foregroundColor: Colors.white,
@@ -391,14 +334,7 @@ class _SongScreenState extends State<SongScreen> {
               borderRadius: BorderRadius.circular(18),
             ),
           ),
-          icon: _sharing
-              ? const SizedBox(
-                  width: 22,
-                  height: 22,
-                  child: CircularProgressIndicator(
-                      strokeWidth: 2.5, color: Colors.white),
-                )
-              : const Icon(Icons.ios_share_rounded, size: 24),
+          icon: const Icon(Icons.ios_share_rounded, size: 24),
           label: Text(
             isAd ? '카드를 골라주세요' : '이미지로 보내기',
             style:

@@ -40,10 +40,15 @@ class GreetingCardView extends StatelessWidget {
   /// 하단 브랜드 워터마크 표시 여부 (공유 이미지엔 표시, 필요 시 숨김).
   final bool showBrand;
 
+  /// 배경 사진 경로 고정용(문구 편집 미리보기에서 사진이 안 바뀌게). null이면
+  /// 카드 텍스트 해시로 자동 선택.
+  final String? bgAsset;
+
   const GreetingCardView({
     super.key,
     required this.card,
     this.showBrand = true,
+    this.bgAsset,
   });
 
   @override
@@ -66,7 +71,7 @@ class GreetingCardView extends StatelessWidget {
               children: [
                 // 실사 자연/꽃 배경 사진 (분위기 풀에서 카드별 고정 선택)
                 Image.asset(
-                  bgAssetFor(card),
+                  bgAsset ?? bgAssetFor(card),
                   fit: BoxFit.cover,
                   errorBuilder: (_, _, _) => const SizedBox.shrink(),
                 ),
@@ -151,4 +156,151 @@ Future<void> shareCardImage(GlobalKey boundaryKey, {String? text}) async {
   await SharePlus.instance.share(
     ShareParams(files: [XFile(file.path)], text: text),
   );
+}
+
+/// 문구를 수정한 뒤 이미지로 공유하는 화면.
+/// 카드를 크게 미리보기하고, 아래 입력칸에서 문구를 고쳐 바로 보낼 수 있다.
+/// 배경 사진은 원래 카드 기준으로 고정(편집 중 사진이 바뀌지 않음).
+class EditShareScreen extends StatefulWidget {
+  final GreetingCard card;
+
+  const EditShareScreen({super.key, required this.card});
+
+  @override
+  State<EditShareScreen> createState() => _EditShareScreenState();
+}
+
+class _EditShareScreenState extends State<EditShareScreen> {
+  final _boundaryKey = GlobalKey();
+  late final TextEditingController _controller;
+  late final String _bgAsset;
+  bool _sharing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.card.text);
+    _bgAsset = bgAssetFor(widget.card); // 원래 카드 기준 사진 고정
+    _controller.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _share() async {
+    if (_sharing) return;
+    setState(() => _sharing = true);
+    try {
+      await shareCardImage(_boundaryKey);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('공유에 실패했어요. 다시 시도해 주세요.')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _sharing = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final preview = widget.card.copyWith(text: _controller.text);
+    return Scaffold(
+      backgroundColor: Colors.black,
+      resizeToAvoidBottomInset: true,
+      body: SafeArea(
+        child: Column(
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: IconButton(
+                onPressed: () => Navigator.of(context).pop(),
+                icon: const Icon(Icons.close_rounded,
+                    color: Colors.white, size: 30),
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    // 미리보기 (편집 문구 실시간 반영, 사진 고정)
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(24),
+                      child: RepaintBoundary(
+                        key: _boundaryKey,
+                        child: GreetingCardView(
+                          card: preview,
+                          bgAsset: _bgAsset,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // 문구 입력칸 (시니어용 큰 글씨)
+                    TextField(
+                      controller: _controller,
+                      maxLines: 3,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          height: 1.4),
+                      decoration: InputDecoration(
+                        hintText: '문구를 입력하세요',
+                        hintStyle: const TextStyle(color: Colors.white38),
+                        filled: true,
+                        fillColor: Colors.white.withValues(alpha: 0.08),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide.none,
+                        ),
+                        contentPadding: const EdgeInsets.all(16),
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    const Text('문구를 자유롭게 고칠 수 있어요',
+                        style:
+                            TextStyle(color: Colors.white38, fontSize: 13)),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
+              child: SizedBox(
+                width: double.infinity,
+                height: 62,
+                child: FilledButton.icon(
+                  onPressed: _sharing ? null : _share,
+                  style: FilledButton.styleFrom(
+                    backgroundColor: const Color(0xFF00704A),
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                  ),
+                  icon: _sharing
+                      ? const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator(
+                              strokeWidth: 2.5, color: Colors.white),
+                        )
+                      : const Icon(Icons.ios_share_rounded, size: 26),
+                  label: const Text('이미지로 보내기',
+                      style: TextStyle(
+                          fontSize: 21, fontWeight: FontWeight.w800)),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
