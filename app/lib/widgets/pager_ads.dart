@@ -129,7 +129,7 @@ class CardNativeAdView extends StatelessWidget {
               child: SizedBox(
                 width: 330,
                 height: 340,
-                child: AdWidget(ad: ad),
+                child: AdWidget(key: ValueKey(ad), ad: ad),
               ),
             ),
           ],
@@ -227,7 +227,9 @@ class _BannerAdBarState extends State<BannerAdBar> {
         return SizedBox(
           width: _ad!.size.width.toDouble(),
           height: _ad!.size.height.toDouble(),
-          child: AdWidget(ad: _ad!),
+          // 새로고침으로 광고가 교체될 때마다 새 플랫폼뷰가 생기도록 ad별 key.
+          // (없으면 예전 뷰를 재사용하다 배너가 빈 화면으로 사라짐)
+          child: AdWidget(key: ValueKey(_ad), ad: _ad!),
         );
       },
     );
