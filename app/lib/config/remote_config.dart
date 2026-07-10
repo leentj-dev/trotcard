@@ -26,8 +26,8 @@ final bannerAdRefreshSecNotifier = ValueNotifier<int>(60);
 /// 0 = no forced update.
 final minVersionNotifier = ValueNotifier<int>(0);
 
-/// 카드가 자동으로 다음 장으로 넘어가는 간격(초). Driven by `card_auto_sec`. 기본 4.
-final cardAutoSecNotifier = ValueNotifier<int>(4);
+/// 카드가 자동으로 다음 장으로 넘어가는 간격(초). Driven by `card_auto_sec`. 기본 5.
+final cardAutoSecNotifier = ValueNotifier<int>(5);
 
 /// 손으로 넘긴 뒤 자동넘김이 다시 켜지기까지 대기(초). Driven by
 /// `card_resume_sec`. 기본 10.
@@ -100,7 +100,7 @@ Future<void> initRemoteConfig() async {
       _bannerUnitAndroidKey: '',
       _bannerUnitIosKey: '',
       _minVersionKey: 0,
-      _cardAutoSecKey: 4,
+      _cardAutoSecKey: 5,
       _cardResumeSecKey: 10,
     });
     await rc.fetchAndActivate();
@@ -137,7 +137,7 @@ void _publish(FirebaseRemoteConfig rc) {
   minVersionNotifier.value = rc.getInt(_minVersionKey);
   // 카드 넘김 속도: 비정상 값 방어(자동 2~30초, 재개 3~120초).
   final auto = rc.getInt(_cardAutoSecKey);
-  cardAutoSecNotifier.value = (auto >= 2 && auto <= 30) ? auto : 4;
+  cardAutoSecNotifier.value = (auto >= 2 && auto <= 30) ? auto : 5;
   final resume = rc.getInt(_cardResumeSecKey);
   cardResumeSecNotifier.value = (resume >= 3 && resume <= 120) ? resume : 10;
 }
