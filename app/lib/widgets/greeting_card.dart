@@ -274,11 +274,12 @@ class _EditShareScreenState extends State<EditShareScreen> {
                     color: Colors.white, size: 30),
               ),
             ),
-            // ── 편집 카드 ──
+            // ── 편집 카드 (맨 위로 붙임 → 키보드 떠도 전체 보임) ──
             Expanded(
-              child: Center(
+              child: Align(
+                alignment: Alignment.topCenter,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(24),
                     child: RepaintBoundary(
