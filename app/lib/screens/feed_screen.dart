@@ -261,27 +261,19 @@ class _FeedScreenState extends State<FeedScreen> {
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                           color: onSurface,
-                                          fontSize: 22,
+                                          fontSize: 26,
                                           fontWeight: FontWeight.w800,
                                           height: 1.2,
                                         ),
                                       ),
-                                      const SizedBox(height: 5),
+                                      const SizedBox(height: 6),
                                       Text(
                                         s.artist,
                                         style: TextStyle(
                                             color: onSurface.withValues(
                                                 alpha: 0.7),
-                                            fontSize: 16,
+                                            fontSize: 17,
                                             fontWeight: FontWeight.w600),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        '💌 카드 ${s.cardCount}장',
-                                        style: TextStyle(
-                                            color: onSurface.withValues(
-                                                alpha: 0.5),
-                                            fontSize: 14),
                                       ),
                                     ],
                                   ),
