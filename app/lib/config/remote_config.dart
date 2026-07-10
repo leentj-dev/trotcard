@@ -18,6 +18,9 @@ final cardAdIntervalNotifier = ValueNotifier<int>(5);
 /// Seconds between native-ad auto-refreshes. Driven by `native_ad_refresh_sec`.
 final nativeAdRefreshSecNotifier = ValueNotifier<int>(60);
 
+/// Seconds between banner-ad auto-refreshes. Driven by `banner_ad_refresh_sec`.
+final bannerAdRefreshSecNotifier = ValueNotifier<int>(60);
+
 /// Minimum required build number (pubspec `+NN`). Driven by `min_version`.
 /// If the running build is below this, a blocking update prompt is shown.
 /// 0 = no forced update.
@@ -27,6 +30,7 @@ const _adsEnabledKey = 'ads_enabled';
 const _feedAdIntervalKey = 'feed_ad_interval';
 const _cardAdIntervalKey = 'card_ad_interval';
 const _nativeRefreshKey = 'native_ad_refresh_sec';
+const _bannerRefreshKey = 'banner_ad_refresh_sec';
 const _minVersionKey = 'min_version';
 const _nativeUnitAndroidKey = 'native_ad_unit_android';
 const _nativeUnitIosKey = 'native_ad_unit_ios';
@@ -60,6 +64,7 @@ Future<void> initRemoteConfig() async {
       _feedAdIntervalKey: 8,
       _cardAdIntervalKey: 5,
       _nativeRefreshKey: 60,
+      _bannerRefreshKey: 60,
       _nativeUnitAndroidKey: '',
       _nativeUnitIosKey: '',
       _minVersionKey: 0,
@@ -87,6 +92,8 @@ void _publish(FirebaseRemoteConfig rc) {
   // AdMob requires >= 30s; clamp to a safe floor.
   final refresh = rc.getInt(_nativeRefreshKey);
   nativeAdRefreshSecNotifier.value = refresh >= 30 ? refresh : 60;
+  final bannerRefresh = rc.getInt(_bannerRefreshKey);
+  bannerAdRefreshSecNotifier.value = bannerRefresh >= 30 ? bannerRefresh : 60;
   _nativeUnitAndroid = rc.getString(_nativeUnitAndroidKey);
   _nativeUnitIos = rc.getString(_nativeUnitIosKey);
   minVersionNotifier.value = rc.getInt(_minVersionKey);

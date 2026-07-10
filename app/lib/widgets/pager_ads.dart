@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
@@ -6,6 +8,7 @@ import '../utils/ads.dart';
 
 /// 카드 사이에 들어가는 "예쁜" 네이티브 광고. google_mobile_ads 의 medium
 /// 네이티브 템플릿을 앱 톤(어두운 카드 + 그린 CTA)으로 커스텀해 카드처럼 보이게 한다.
+/// Remote Config `native_ad_refresh_sec` 간격으로 자동 새로고침(신규 광고 로드).
 class CardNativeAd extends StatefulWidget {
   const CardNativeAd({super.key});
 
@@ -16,15 +19,27 @@ class CardNativeAd extends StatefulWidget {
 class _CardNativeAdState extends State<CardNativeAd> {
   NativeAd? _ad;
   bool _loaded = false;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     _load();
+    _startTimer();
+    nativeAdRefreshSecNotifier.addListener(_startTimer);
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(
+      Duration(seconds: nativeAdRefreshSecNotifier.value),
+      (_) => _load(),
+    );
   }
 
   void _load() {
-    _ad = NativeAd(
+    // 새 광고가 로드되면 그때 교체(로드 전까진 기존 광고 유지).
+    NativeAd(
       adUnitId: Ads.nativeUnitId,
       request: const AdRequest(),
       nativeTemplateStyle: NativeTemplateStyle(
@@ -57,18 +72,22 @@ class _CardNativeAdState extends State<CardNativeAd> {
             ad.dispose();
             return;
           }
+          final old = _ad;
           setState(() {
             _ad = ad as NativeAd;
             _loaded = true;
           });
+          old?.dispose();
         },
         onAdFailedToLoad: (ad, _) => ad.dispose(),
       ),
-    )..load();
+    ).load();
   }
 
   @override
   void dispose() {
+    nativeAdRefreshSecNotifier.removeListener(_startTimer);
+    _timer?.cancel();
     _ad?.dispose();
     super.dispose();
   }
@@ -119,7 +138,8 @@ class _CardNativeAdState extends State<CardNativeAd> {
   }
 }
 
-/// 카드 아래 고정 배너 광고. 광고가 꺼져 있거나 로드 전이면 자리를 차지하지 않는다.
+/// 카드 아래 고정 배너 광고. Remote Config `banner_ad_refresh_sec` 간격으로
+/// 자동 새로고침. 광고가 꺼져 있거나 로드 전이면 자리를 차지하지 않는다.
 class BannerAdBar extends StatefulWidget {
   const BannerAdBar({super.key});
 
@@ -130,25 +150,51 @@ class BannerAdBar extends StatefulWidget {
 class _BannerAdBarState extends State<BannerAdBar> {
   BannerAd? _ad;
   bool _loaded = false;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-    _ad = BannerAd(
+    _load();
+    _startTimer();
+    bannerAdRefreshSecNotifier.addListener(_startTimer);
+  }
+
+  void _startTimer() {
+    _timer?.cancel();
+    _timer = Timer.periodic(
+      Duration(seconds: bannerAdRefreshSecNotifier.value),
+      (_) => _load(),
+    );
+  }
+
+  void _load() {
+    BannerAd(
       adUnitId: Ads.bannerUnitId,
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
-        onAdLoaded: (_) {
-          if (mounted) setState(() => _loaded = true);
+        onAdLoaded: (ad) {
+          if (!mounted) {
+            ad.dispose();
+            return;
+          }
+          final old = _ad;
+          setState(() {
+            _ad = ad as BannerAd;
+            _loaded = true;
+          });
+          old?.dispose();
         },
         onAdFailedToLoad: (ad, _) => ad.dispose(),
       ),
-    )..load();
+    ).load();
   }
 
   @override
   void dispose() {
+    bannerAdRefreshSecNotifier.removeListener(_startTimer);
+    _timer?.cancel();
     _ad?.dispose();
     super.dispose();
   }
