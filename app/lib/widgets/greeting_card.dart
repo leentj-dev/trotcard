@@ -203,6 +203,10 @@ class _EditShareScreenState extends State<EditShareScreen> {
     super.initState();
     _controller = TextEditingController(text: widget.card.text);
     _bgAsset = bgAssetFor(widget.card);
+    // 카드 원래 이모지도 스티커로 시작 → 이동·크기·삭제 가능.
+    if (widget.card.emoji.isNotEmpty) {
+      _stickers.add(_Sticker(widget.card.emoji, const Offset(0.5, 0.24), 1.2));
+    }
   }
 
   @override
@@ -334,12 +338,6 @@ class _EditShareScreenState extends State<EditShareScreen> {
                                     child: Column(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        if (widget.card.emoji.isNotEmpty)
-                                          Text(widget.card.emoji,
-                                              style: TextStyle(
-                                                  fontSize: side * 0.14)),
-                                        if (widget.card.emoji.isNotEmpty)
-                                          SizedBox(height: side * 0.03),
                                         ConstrainedBox(
                                           constraints: BoxConstraints(
                                               maxWidth: side * 0.82),
