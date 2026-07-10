@@ -7,25 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:544354492685:android:abfdd6f069e325ad231044",
-        "android_client_info": {
-          "package_name": "dev.leentj.trot_card"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyDK1ZUPWct9-FMkVaZwGEUG3CMoPgwLOPw"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:544354492685:android:60d6cb712bf06654231044",
         "android_client_info": {
           "package_name": "dev.leentj.trotcard"
