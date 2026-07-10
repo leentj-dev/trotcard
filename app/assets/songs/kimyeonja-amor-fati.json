@@ -1,0 +1,15 @@
+{
+  "id": "kimyeonja-amor-fati",
+  "title": "아모르 파티",
+  "artist": "김연자",
+  "youtubeId": "b6W1-IF7Ko0",
+  "mood": "인생 긍정, 열정적이고 신나는",
+  "cards": [
+    { "text": "인생은 지금부터!\n즐기며 삽시다", "emoji": "🎉", "gradient": "warm", "category": "명언" },
+    { "text": "나이는 숫자일 뿐\n마음은 청춘", "emoji": "💃", "gradient": "rose", "category": "명언" },
+    { "text": "오늘을 신나게\n살아봅시다", "emoji": "🔥", "gradient": "sunrise", "category": "응원" },
+    { "text": "웃고 즐기는 것이\n최고의 인생", "emoji": "😄", "gradient": "spring", "category": "명언" },
+    { "text": "후회 없이\n오늘을 사랑하세요", "emoji": "❤️", "gradient": "warm", "category": "명언" },
+    { "text": "당신의 하루를\n응원합니다", "emoji": "🙌", "gradient": "sunrise", "category": "응원" }
+  ]
+}

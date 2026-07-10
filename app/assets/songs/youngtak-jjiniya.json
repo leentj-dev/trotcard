@@ -1,0 +1,15 @@
+{
+  "id": "youngtak-jjiniya",
+  "title": "찐이야",
+  "artist": "영탁",
+  "youtubeId": "Oo9YNmZHrxg",
+  "mood": "진심 어린 사랑 고백, 유쾌하고 밝은",
+  "cards": [
+    { "text": "당신은 나의\n진짜 소중한 사람", "emoji": "💝", "gradient": "rose", "category": "축복" },
+    { "text": "진심을 담아\n안부를 전해요", "emoji": "💌", "gradient": "warm", "category": "인사" },
+    { "text": "오늘도 찐하게\n행복하세요", "emoji": "😆", "gradient": "sunrise", "category": "인사" },
+    { "text": "당신 덕분에\n웃습니다", "emoji": "😊", "gradient": "spring", "category": "감사" },
+    { "text": "진짜 좋은 하루\n되시길!", "emoji": "🌟", "gradient": "warm", "category": "응원" },
+    { "text": "마음만은\n늘 청춘입니다", "emoji": "🔥", "gradient": "rose", "category": "명언" }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "id": "taejina-love-not-anyone",
+  "title": "사랑은 아무나 하나",
+  "artist": "태진아",
+  "youtubeId": "AS_-EpKw3hs",
+  "mood": "인생과 사랑, 위트 있고 정겨운",
+  "cards": [
+    { "text": "좋은 인연은\n소중히 여기세요", "emoji": "🌹", "gradient": "rose", "category": "명언" },
+    { "text": "마음 가는 대로\n행복하세요", "emoji": "💐", "gradient": "warm", "category": "인사" },
+    { "text": "인생, 너무\n애쓰지 마세요", "emoji": "🍵", "gradient": "calm", "category": "위로" },
+    { "text": "당신은 사랑받기\n충분한 사람", "emoji": "💖", "gradient": "rose", "category": "축복" },
+    { "text": "오늘도 웃으며\n지내요 우리", "emoji": "😊", "gradient": "sunrise", "category": "인사" },
+    { "text": "마음 편한 하루\n되시길", "emoji": "🕊️", "gradient": "lavender", "category": "축복" }
+  ]
+}

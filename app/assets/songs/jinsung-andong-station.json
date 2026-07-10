@@ -1,0 +1,15 @@
+{
+  "id": "jinsung-andong-station",
+  "title": "안동역에서",
+  "artist": "진성",
+  "youtubeId": "5MS-GpklkHs",
+  "mood": "그리움과 기다림, 애틋한",
+  "cards": [
+    { "text": "보고 싶은 마음\n잘 전해지길", "emoji": "🌙", "gradient": "night", "category": "인사" },
+    { "text": "그리운 사람에게\n안부 전하세요", "emoji": "💌", "gradient": "lavender", "category": "인사" },
+    { "text": "오늘도 당신을\n생각합니다", "emoji": "🍁", "gradient": "sunset", "category": "그리움" },
+    { "text": "먼 길도 마음은\n늘 함께입니다", "emoji": "✨", "gradient": "night", "category": "축복" },
+    { "text": "따뜻한 차 한잔\n같이 나눠요", "emoji": "☕", "gradient": "calm", "category": "인사" },
+    { "text": "건강히 지내다\n또 만나요", "emoji": "🤍", "gradient": "calm", "category": "축복" }
+  ]
+}

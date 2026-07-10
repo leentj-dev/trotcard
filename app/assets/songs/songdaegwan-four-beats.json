@@ -1,0 +1,15 @@
+{
+  "id": "songdaegwan-four-beats",
+  "title": "네 박자",
+  "artist": "송대관",
+  "youtubeId": "p6WgpWSUgk8",
+  "mood": "인생사, 흥겹고 어깨춤 나는",
+  "cards": [
+    { "text": "쿵짝쿵짝\n신나는 하루!", "emoji": "🎵", "gradient": "warm", "category": "인사" },
+    { "text": "인생 뭐 있나요\n웃으면 되지", "emoji": "😄", "gradient": "sunrise", "category": "명언" },
+    { "text": "어깨춤 절로 나는\n좋은 날 되세요", "emoji": "💃", "gradient": "rose", "category": "인사" },
+    { "text": "오늘도 흥겹게\n살아봅시다", "emoji": "🎶", "gradient": "spring", "category": "응원" },
+    { "text": "울고 웃는 게\n인생이랍니다", "emoji": "🌈", "gradient": "lavender", "category": "명언" },
+    { "text": "기분 좋은 하루\n보내세요", "emoji": "☀️", "gradient": "sunrise", "category": "인사" }
+  ]
+}

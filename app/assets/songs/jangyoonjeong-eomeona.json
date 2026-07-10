@@ -1,0 +1,15 @@
+{
+  "id": "jangyoonjeong-eomeona",
+  "title": "어머나",
+  "artist": "장윤정",
+  "youtubeId": "P3Gde3RwTzA",
+  "mood": "설레고 발랄한, 사랑이 시작되는",
+  "cards": [
+    { "text": "오늘 당신에게\n좋은 일이 생길 거예요", "emoji": "🍀", "gradient": "spring", "category": "응원" },
+    { "text": "설레는 하루\n되시길 바라요", "emoji": "💕", "gradient": "warm", "category": "인사" },
+    { "text": "당신이 있어\n참 든든합니다", "emoji": "🌷", "gradient": "rose", "category": "축복" },
+    { "text": "웃는 얼굴이\n제일 예뻐요", "emoji": "😊", "gradient": "sunrise", "category": "인사" },
+    { "text": "행복은 늘\n곁에 있답니다", "emoji": "🌸", "gradient": "lavender", "category": "명언" },
+    { "text": "좋은 아침!\n활짝 웃어요 우리", "emoji": "☀️", "gradient": "sunrise", "category": "인사" }
+  ]
+}
