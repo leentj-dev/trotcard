@@ -9,6 +9,29 @@ import 'package:share_plus/share_plus.dart';
 import '../models/song.dart';
 import '../utils/card_gradients.dart';
 
+/// 분위기 키별 배경 사진 풀 개수 (`assets/bg/{key}_1..N.jpg`).
+const _bgPoolCount = {
+  'warm': 14, 'sunrise': 14, 'spring': 14, 'calm': 14,
+  'sunset': 14, 'night': 14, 'rose': 14, 'lavender': 14,
+};
+
+/// 문자열 안정 해시 (Dart String.hashCode는 런마다 달라질 수 있어 직접 계산).
+int _stableHash(String s) {
+  var h = 0;
+  for (final c in s.codeUnits) {
+    h = (h * 31 + c) & 0x7fffffff;
+  }
+  return h;
+}
+
+/// 카드마다 분위기 풀에서 고정된 사진 하나를 고른다(같은 카드=항상 같은 사진).
+String bgAssetFor(GreetingCard card) {
+  final key = card.gradient;
+  final n = _bgPoolCount[key] ?? 1;
+  final idx = _stableHash(card.text) % n + 1;
+  return 'assets/bg/${key}_$idx.jpg';
+}
+
 /// 마음 카드의 순수 비주얼. 그리드 타일·전체보기·공유 캡처에 공통으로 쓴다.
 /// 정사각형(1:1) — 카톡 공유 이미지에 잘 맞는 비율.
 class GreetingCardView extends StatelessWidget {
@@ -41,9 +64,9 @@ class GreetingCardView extends StatelessWidget {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                // 실사 자연/꽃 배경 사진 (분위기 키별)
+                // 실사 자연/꽃 배경 사진 (분위기 풀에서 카드별 고정 선택)
                 Image.asset(
-                  'assets/bg/${card.gradient}.jpg',
+                  bgAssetFor(card),
                   fit: BoxFit.cover,
                   errorBuilder: (_, _, _) => const SizedBox.shrink(),
                 ),

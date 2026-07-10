@@ -244,6 +244,7 @@ class _SongScreenState extends State<SongScreen> {
                       onPressed: _sharing ? null : _shareCurrent,
                       style: FilledButton.styleFrom(
                         backgroundColor: const Color(0xFF00704A), // 스타벅스 그린
+                        foregroundColor: Colors.white, // 글자·아이콘 흰색
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18),
                         ),
