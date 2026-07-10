@@ -11,6 +11,10 @@ final adsEnabledNotifier = ValueNotifier<bool>(true);
 /// How many songs appear between feed ads. Driven by `feed_ad_interval`.
 final feedAdIntervalNotifier = ValueNotifier<int>(8);
 
+/// How many cards appear between native ads in the song detail pager.
+/// Driven by `card_ad_interval`. Default 5.
+final cardAdIntervalNotifier = ValueNotifier<int>(5);
+
 /// Seconds between native-ad auto-refreshes. Driven by `native_ad_refresh_sec`.
 final nativeAdRefreshSecNotifier = ValueNotifier<int>(60);
 
@@ -21,6 +25,7 @@ final minVersionNotifier = ValueNotifier<int>(0);
 
 const _adsEnabledKey = 'ads_enabled';
 const _feedAdIntervalKey = 'feed_ad_interval';
+const _cardAdIntervalKey = 'card_ad_interval';
 const _nativeRefreshKey = 'native_ad_refresh_sec';
 const _minVersionKey = 'min_version';
 const _nativeUnitAndroidKey = 'native_ad_unit_android';
@@ -53,6 +58,7 @@ Future<void> initRemoteConfig() async {
     await rc.setDefaults(const {
       _adsEnabledKey: true,
       _feedAdIntervalKey: 8,
+      _cardAdIntervalKey: 5,
       _nativeRefreshKey: 60,
       _nativeUnitAndroidKey: '',
       _nativeUnitIosKey: '',
@@ -76,6 +82,8 @@ void _publish(FirebaseRemoteConfig rc) {
   final interval = rc.getInt(_feedAdIntervalKey);
   // Guard against a bad/zero value making every row an ad.
   feedAdIntervalNotifier.value = interval >= 2 ? interval : 8;
+  final cardInterval = rc.getInt(_cardAdIntervalKey);
+  cardAdIntervalNotifier.value = cardInterval >= 2 ? cardInterval : 5;
   // AdMob requires >= 30s; clamp to a safe floor.
   final refresh = rc.getInt(_nativeRefreshKey);
   nativeAdRefreshSecNotifier.value = refresh >= 30 ? refresh : 60;
