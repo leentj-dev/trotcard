@@ -79,7 +79,11 @@ class _CardNativeAdState extends State<CardNativeAd> {
           });
           old?.dispose();
         },
-        onAdFailedToLoad: (ad, _) => ad.dispose(),
+        onAdFailedToLoad: (ad, err) {
+          ad.dispose();
+          debugPrint('[NativeAd] load failed: code=${err.code} '
+              '${err.message} (unit=${Ads.cardNativeUnitId})');
+        },
       ),
     ).load();
   }
@@ -151,6 +155,8 @@ class _BannerAdBarState extends State<BannerAdBar> {
   BannerAd? _ad;
   bool _loaded = false;
   Timer? _timer;
+  Timer? _retry;
+  int _retryCount = 0;
 
   @override
   void initState() {
@@ -179,6 +185,7 @@ class _BannerAdBarState extends State<BannerAdBar> {
             ad.dispose();
             return;
           }
+          _retryCount = 0;
           final old = _ad;
           setState(() {
             _ad = ad as BannerAd;
@@ -186,7 +193,19 @@ class _BannerAdBarState extends State<BannerAdBar> {
           });
           old?.dispose();
         },
-        onAdFailedToLoad: (ad, _) => ad.dispose(),
+        onAdFailedToLoad: (ad, err) {
+          ad.dispose();
+          debugPrint('[BannerAd] load failed: code=${err.code} '
+              '${err.message} (unit=${Ads.bannerUnitId})');
+          // no-fill 등 일시적 실패 → 지수 백오프로 재시도(최대 ~2분 간격).
+          if (!mounted) return;
+          final delay = Duration(seconds: (5 << _retryCount).clamp(5, 120));
+          if (_retryCount < 5) _retryCount++;
+          _retry?.cancel();
+          _retry = Timer(delay, () {
+            if (mounted) _load();
+          });
+        },
       ),
     ).load();
   }
@@ -195,6 +214,7 @@ class _BannerAdBarState extends State<BannerAdBar> {
   void dispose() {
     bannerAdRefreshSecNotifier.removeListener(_startTimer);
     _timer?.cancel();
+    _retry?.cancel();
     _ad?.dispose();
     super.dispose();
   }
