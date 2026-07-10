@@ -43,7 +43,7 @@ class _NativeAdCardState extends State<NativeAdCard> {
 
   void _loadAd() {
     NativeAd(
-      adUnitId: Ads.nativeUnitId,
+      adUnitId: Ads.feedNativeUnitId,
       factoryId: 'songCard',
       request: const AdRequest(),
       listener: NativeAdListener(

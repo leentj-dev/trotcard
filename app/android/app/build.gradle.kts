@@ -37,9 +37,9 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
         manifestPlaceholders["appLabel"] = "트로트 카드 - 안부카드"
-        // AdMob: Google 테스트 App ID. 실제 AdMob 앱 등록 후 교체.
+        // AdMob 실제 App ID (Android).
         manifestPlaceholders["admobAppId"] =
-            "ca-app-pub-3940256099942544~3347511713"
+            "ca-app-pub-6232115093331648~9989865189"
     }
 
     signingConfigs {

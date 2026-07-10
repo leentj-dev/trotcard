@@ -32,28 +32,36 @@ const _cardAdIntervalKey = 'card_ad_interval';
 const _nativeRefreshKey = 'native_ad_refresh_sec';
 const _bannerRefreshKey = 'banner_ad_refresh_sec';
 const _minVersionKey = 'min_version';
-const _nativeUnitAndroidKey = 'native_ad_unit_android';
+const _nativeUnitAndroidKey = 'native_ad_unit_android'; // 피드(리스트) 네이티브
 const _nativeUnitIosKey = 'native_ad_unit_ios';
+const _cardNativeUnitAndroidKey = 'card_native_ad_unit_android'; // 카드 사이 네이티브
+const _cardNativeUnitIosKey = 'card_native_ad_unit_ios';
 const _bannerUnitAndroidKey = 'banner_ad_unit_android';
 const _bannerUnitIosKey = 'banner_ad_unit_ios';
 
-// Remote-overridable ad unit IDs (empty = use the built-in test id).
+// Remote-overridable ad unit IDs (empty = use the built-in default in ads.dart).
 // NOTE: only the ad *unit* IDs are remote-configurable. The AdMob *App ID*
 // is read from AndroidManifest/Info.plist at startup and needs a rebuild.
 String _nativeUnitAndroid = '';
 String _nativeUnitIos = '';
+String _cardNativeUnitAndroid = '';
+String _cardNativeUnitIos = '';
 String _bannerUnitAndroid = '';
 String _bannerUnitIos = '';
 
-/// The remote-config override for the native ad unit id, or null to fall
-/// back to the built-in test id.
+/// 피드(리스트) 네이티브 광고 단위 원격 오버라이드, 없으면 null.
 String? nativeAdUnitOverride() {
   final v = Platform.isIOS ? _nativeUnitIos : _nativeUnitAndroid;
   return v.isEmpty ? null : v;
 }
 
-/// The remote-config override for the banner ad unit id, or null to fall
-/// back to the built-in test id.
+/// 카드 사이 네이티브 광고 단위 원격 오버라이드, 없으면 null.
+String? cardNativeAdUnitOverride() {
+  final v = Platform.isIOS ? _cardNativeUnitIos : _cardNativeUnitAndroid;
+  return v.isEmpty ? null : v;
+}
+
+/// 배너 광고 단위 원격 오버라이드, 없으면 null.
 String? bannerAdUnitOverride() {
   final v = Platform.isIOS ? _bannerUnitIos : _bannerUnitAndroid;
   return v.isEmpty ? null : v;
@@ -78,6 +86,8 @@ Future<void> initRemoteConfig() async {
       _bannerRefreshKey: 60,
       _nativeUnitAndroidKey: '',
       _nativeUnitIosKey: '',
+      _cardNativeUnitAndroidKey: '',
+      _cardNativeUnitIosKey: '',
       _bannerUnitAndroidKey: '',
       _bannerUnitIosKey: '',
       _minVersionKey: 0,
@@ -109,6 +119,8 @@ void _publish(FirebaseRemoteConfig rc) {
   bannerAdRefreshSecNotifier.value = bannerRefresh >= 30 ? bannerRefresh : 60;
   _nativeUnitAndroid = rc.getString(_nativeUnitAndroidKey);
   _nativeUnitIos = rc.getString(_nativeUnitIosKey);
+  _cardNativeUnitAndroid = rc.getString(_cardNativeUnitAndroidKey);
+  _cardNativeUnitIos = rc.getString(_cardNativeUnitIosKey);
   _bannerUnitAndroid = rc.getString(_bannerUnitAndroidKey);
   _bannerUnitIos = rc.getString(_bannerUnitIosKey);
   minVersionNotifier.value = rc.getInt(_minVersionKey);

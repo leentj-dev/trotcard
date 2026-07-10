@@ -40,7 +40,7 @@ class _CardNativeAdState extends State<CardNativeAd> {
   void _load() {
     // 새 광고가 로드되면 그때 교체(로드 전까진 기존 광고 유지).
     NativeAd(
-      adUnitId: Ads.nativeUnitId,
+      adUnitId: Ads.cardNativeUnitId,
       request: const AdRequest(),
       nativeTemplateStyle: NativeTemplateStyle(
         templateType: TemplateType.medium,
