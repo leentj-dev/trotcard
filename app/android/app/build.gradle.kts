@@ -16,7 +16,7 @@ if (hasKeystore) {
 }
 
 android {
-    namespace = "dev.leentj.trot_quiz"
+    namespace = "dev.leentj.trot_card"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -30,7 +30,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "dev.leentj.trot_quiz"
+        applicationId = "dev.leentj.trot_card"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

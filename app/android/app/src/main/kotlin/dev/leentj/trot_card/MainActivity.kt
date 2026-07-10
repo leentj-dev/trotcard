@@ -1,4 +1,4 @@
-package dev.leentj.trot_quiz
+package dev.leentj.trot_card
 
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine

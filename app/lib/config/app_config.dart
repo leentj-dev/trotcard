@@ -50,7 +50,7 @@ const trotConfig = AppConfig(
   seedColor: Color(0xFFE11D48), // 트롯 레드
   assetDir: 'assets/songs',
   remoteBase:
-      'https://raw.githubusercontent.com/leentj-dev/trot/main/app/assets/songs',
-  androidPackageId: 'dev.leentj.trot_quiz',
+      'https://raw.githubusercontent.com/leentj-dev/trot-card/main/app/assets/songs',
+  androidPackageId: 'dev.leentj.trot_card',
   iosAppId: '', // App Store 등록 후 채움
 );

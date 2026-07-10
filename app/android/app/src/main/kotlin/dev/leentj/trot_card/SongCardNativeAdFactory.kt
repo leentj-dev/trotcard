@@ -1,4 +1,4 @@
-package dev.leentj.trot_quiz
+package dev.leentj.trot_card
 
 import android.view.LayoutInflater
 import android.view.View
