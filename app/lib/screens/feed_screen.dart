@@ -137,7 +137,6 @@ class _FeedScreenState extends State<FeedScreen> {
       appBar: AppBar(
         titleSpacing: 12,
         title: Row(
-          mainAxisSize: MainAxisSize.min,
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(8),
@@ -145,9 +144,14 @@ class _FeedScreenState extends State<FeedScreen> {
                   width: 30, height: 30, fit: BoxFit.cover),
             ),
             const SizedBox(width: 8),
-            Text(
-              appConfig.appTitle,
-              style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 20),
+            Flexible(
+              child: Text(
+                appConfig.appTitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style:
+                    const TextStyle(fontWeight: FontWeight.w800, fontSize: 18),
+              ),
             ),
           ],
         ),

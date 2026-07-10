@@ -45,7 +45,7 @@ late AppConfig appConfig;
 
 /// 트로트 카드 — 트롯을 들으며 마음 카드를 나누는 시니어용 앱 (단일 앱).
 const trotConfig = AppConfig(
-  appTitle: '트로트 카드',
+  appTitle: '트로트 카드 - 안부카드',
   logoAsset: 'assets/icon/icon.png',
   seedColor: Color(0xFFE11D48), // 트롯 레드
   assetDir: 'assets/songs',
