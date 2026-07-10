@@ -26,30 +26,40 @@ class GreetingCardView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final g = cardGradientFor(card.gradient);
+    const shadow = [
+      Shadow(color: Color(0xCC000000), blurRadius: 12, offset: Offset(0, 2)),
+      Shadow(color: Color(0x99000000), blurRadius: 24),
+    ];
     return AspectRatio(
       aspectRatio: 1,
       child: LayoutBuilder(
         builder: (context, c) {
           final s = c.maxWidth; // 정사각형 한 변
           return Container(
+            // 사진 로딩 전/누락 시 폴백 그라데이션.
             decoration: BoxDecoration(gradient: g.gradient),
             child: Stack(
+              fit: StackFit.expand,
               children: [
-                // 하단 꽃 정원 장식
-                Positioned(
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: Image.asset(
-                    'assets/deco/floral.png',
-                    fit: BoxFit.fitWidth,
-                    alignment: Alignment.bottomCenter,
+                // 실사 자연/꽃 배경 사진 (분위기 키별)
+                Image.asset(
+                  'assets/bg/${card.gradient}.jpg',
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                ),
+                // 가독성 스크림: 전체 은은하게 + 가운데 진하게
+                Container(color: const Color(0x33000000)),
+                DecoratedBox(
+                  decoration: const BoxDecoration(
+                    gradient: RadialGradient(
+                      radius: 0.9,
+                      colors: [Color(0x88000000), Color(0x11000000)],
+                    ),
                   ),
                 ),
-                // 문구 (윗쪽~가운데, 꽃 밴드 위 공간 확보)
+                // 문구
                 Padding(
-                  padding: EdgeInsets.fromLTRB(
-                      s * 0.09, s * 0.10, s * 0.09, s * 0.33),
+                  padding: EdgeInsets.all(s * 0.10),
                   child: Center(
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
@@ -66,11 +76,12 @@ class GreetingCardView extends StatelessWidget {
                             Text(
                               card.text,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: g.foreground,
+                              style: const TextStyle(
+                                color: Colors.white,
                                 fontSize: 27,
                                 fontWeight: FontWeight.w800,
                                 height: 1.4,
+                                shadows: shadow,
                               ),
                             ),
                             if (showBrand) ...[
@@ -78,9 +89,10 @@ class GreetingCardView extends StatelessWidget {
                               Text(
                                 '💌 트로트 카드',
                                 style: TextStyle(
-                                  color: g.foreground.withValues(alpha: 0.6),
+                                  color: Colors.white.withValues(alpha: 0.85),
                                   fontSize: 14,
                                   fontWeight: FontWeight.w700,
+                                  shadows: shadow,
                                 ),
                               ),
                             ],

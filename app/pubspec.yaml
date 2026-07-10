@@ -42,4 +42,4 @@ flutter:
   assets:
     - assets/songs/
     - assets/icon/icon.png
-    - assets/deco/floral.png
+    - assets/bg/
