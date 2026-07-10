@@ -21,8 +21,11 @@ class Ads {
   /// Insert an ad after every N songs in the feed.
   static const feedInterval = 8;
 
+  /// Banner ad unit id — Remote Config override (`banner_ad_unit_*`) if set,
+  /// otherwise the built-in Google test id.
   static String get bannerUnitId =>
-      Platform.isIOS ? _testBannerIos : _testBannerAndroid;
+      bannerAdUnitOverride() ??
+      (Platform.isIOS ? _testBannerIos : _testBannerAndroid);
 
   /// Native ad unit id — Remote Config override (`native_ad_unit_*`) if set,
   /// otherwise the built-in Google test id.
