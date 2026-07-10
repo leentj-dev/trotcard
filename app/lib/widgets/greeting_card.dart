@@ -75,13 +75,13 @@ class GreetingCardView extends StatelessWidget {
                   fit: BoxFit.cover,
                   errorBuilder: (_, _, _) => const SizedBox.shrink(),
                 ),
-                // 가독성 스크림: 전체 은은하게 + 가운데 진하게
-                Container(color: const Color(0x33000000)),
+                // 가독성 스크림: 전체 살짝 + 가운데만 은은하게 (배경 잘 보이게)
+                Container(color: const Color(0x1A000000)),
                 DecoratedBox(
                   decoration: const BoxDecoration(
                     gradient: RadialGradient(
                       radius: 0.9,
-                      colors: [Color(0x88000000), Color(0x11000000)],
+                      colors: [Color(0x55000000), Color(0x00000000)],
                     ),
                   ),
                 ),
@@ -308,7 +308,7 @@ class _EditShareScreenState extends State<EditShareScreen> {
                                 ),
                                 Positioned.fill(
                                   child: Container(
-                                      color: const Color(0x33000000)),
+                                      color: const Color(0x1A000000)),
                                 ),
                                 const Positioned.fill(
                                   child: DecoratedBox(
@@ -316,8 +316,8 @@ class _EditShareScreenState extends State<EditShareScreen> {
                                       gradient: RadialGradient(
                                         radius: 0.9,
                                         colors: [
-                                          Color(0x88000000),
-                                          Color(0x11000000)
+                                          Color(0x55000000),
+                                          Color(0x00000000)
                                         ],
                                       ),
                                     ),
