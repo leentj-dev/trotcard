@@ -52,9 +52,6 @@ class _SongScreenState extends State<SongScreen> {
   /// **로드된 광고만** 슬롯으로 끼운다(로드 안 된 슬롯은 안 만들어 빈 페이지 방지).
   final List<CardNativeAdLoader> _adLoaders = [];
 
-  static const _autoInterval = Duration(seconds: 4);
-  static const _resumeDelay = Duration(seconds: 10);
-
   @override
   void initState() {
     super.initState();
@@ -74,6 +71,7 @@ class _SongScreenState extends State<SongScreen> {
       if (value.playerState == PlayerState.ended) _playNext();
     });
     _startAuto();
+    cardAutoSecNotifier.addListener(_startAuto); // RC로 속도 바뀌면 타이머 재시작
     _syncAdPool();
     cardAdIntervalNotifier.addListener(_syncAdPool);
     adsEnabledNotifier.addListener(_syncAdPool);
@@ -108,7 +106,8 @@ class _SongScreenState extends State<SongScreen> {
   // ── 자동 넘김 ──────────────────────────────────────────────
   void _startAuto() {
     _autoTimer?.cancel();
-    _autoTimer = Timer.periodic(_autoInterval, (_) => _autoAdvance());
+    _autoTimer = Timer.periodic(
+        Duration(seconds: cardAutoSecNotifier.value), (_) => _autoAdvance());
   }
 
   void _autoAdvance() {
@@ -128,10 +127,10 @@ class _SongScreenState extends State<SongScreen> {
     _resumeTimer?.cancel();
   }
 
-  /// 손을 뗀 뒤 10초간 조작이 없으면 자동 넘김 재개.
+  /// 손을 뗀 뒤 일정 시간 조작이 없으면 자동 넘김 재개(`card_resume_sec`).
   void _onUserDragEnd() {
     _resumeTimer?.cancel();
-    _resumeTimer = Timer(_resumeDelay, () {
+    _resumeTimer = Timer(Duration(seconds: cardResumeSecNotifier.value), () {
       _userInteracting = false;
     });
   }
@@ -177,6 +176,7 @@ class _SongScreenState extends State<SongScreen> {
 
   @override
   void dispose() {
+    cardAutoSecNotifier.removeListener(_startAuto);
     cardAdIntervalNotifier.removeListener(_syncAdPool);
     adsEnabledNotifier.removeListener(_syncAdPool);
     for (final l in _adLoaders) {

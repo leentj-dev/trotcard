@@ -26,12 +26,21 @@ final bannerAdRefreshSecNotifier = ValueNotifier<int>(60);
 /// 0 = no forced update.
 final minVersionNotifier = ValueNotifier<int>(0);
 
+/// 카드가 자동으로 다음 장으로 넘어가는 간격(초). Driven by `card_auto_sec`. 기본 4.
+final cardAutoSecNotifier = ValueNotifier<int>(4);
+
+/// 손으로 넘긴 뒤 자동넘김이 다시 켜지기까지 대기(초). Driven by
+/// `card_resume_sec`. 기본 10.
+final cardResumeSecNotifier = ValueNotifier<int>(10);
+
 const _adsEnabledKey = 'ads_enabled';
 const _feedAdIntervalKey = 'feed_ad_interval';
 const _cardAdIntervalKey = 'card_ad_interval';
 const _nativeRefreshKey = 'native_ad_refresh_sec';
 const _bannerRefreshKey = 'banner_ad_refresh_sec';
 const _minVersionKey = 'min_version';
+const _cardAutoSecKey = 'card_auto_sec';
+const _cardResumeSecKey = 'card_resume_sec';
 const _nativeUnitAndroidKey = 'native_ad_unit_android'; // 피드(리스트) 네이티브
 const _nativeUnitIosKey = 'native_ad_unit_ios';
 const _cardNativeUnitAndroidKey = 'card_native_ad_unit_android'; // 카드 사이 네이티브
@@ -91,6 +100,8 @@ Future<void> initRemoteConfig() async {
       _bannerUnitAndroidKey: '',
       _bannerUnitIosKey: '',
       _minVersionKey: 0,
+      _cardAutoSecKey: 4,
+      _cardResumeSecKey: 10,
     });
     await rc.fetchAndActivate();
     _publish(rc);
@@ -124,4 +135,9 @@ void _publish(FirebaseRemoteConfig rc) {
   _bannerUnitAndroid = rc.getString(_bannerUnitAndroidKey);
   _bannerUnitIos = rc.getString(_bannerUnitIosKey);
   minVersionNotifier.value = rc.getInt(_minVersionKey);
+  // 카드 넘김 속도: 비정상 값 방어(자동 2~30초, 재개 3~120초).
+  final auto = rc.getInt(_cardAutoSecKey);
+  cardAutoSecNotifier.value = (auto >= 2 && auto <= 30) ? auto : 4;
+  final resume = rc.getInt(_cardResumeSecKey);
+  cardResumeSecNotifier.value = (resume >= 3 && resume <= 120) ? resume : 10;
 }
