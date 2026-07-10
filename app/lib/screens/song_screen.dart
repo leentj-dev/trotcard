@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 import '../config/remote_config.dart';
@@ -47,6 +48,10 @@ class _SongScreenState extends State<SongScreen> {
   Timer? _resumeTimer; // 사용자 조작 후 10초 뒤 재개
   bool _userInteracting = false;
 
+  /// 카드 사이 네이티브 광고 로더 풀. PageView 밖에서 미리 로드해두고,
+  /// **로드된 광고만** 슬롯으로 끼운다(로드 안 된 슬롯은 안 만들어 빈 페이지 방지).
+  final List<CardNativeAdLoader> _adLoaders = [];
+
   static const _autoInterval = Duration(seconds: 4);
   static const _resumeDelay = Duration(seconds: 10);
 
@@ -69,6 +74,35 @@ class _SongScreenState extends State<SongScreen> {
       if (value.playerState == PlayerState.ended) _playNext();
     });
     _startAuto();
+    _syncAdPool();
+    cardAdIntervalNotifier.addListener(_syncAdPool);
+    adsEnabledNotifier.addListener(_syncAdPool);
+  }
+
+  /// 현재 곡·간격에서 필요한 광고 슬롯 개수만큼 로더를 확보한다.
+  /// 로더 생성 자체는 화면에 영향이 없고(광고는 비동기 로드), 로드 완료 시
+  /// [_onAdChanged] 가 rebuild 하므로 여기선 setState 하지 않는다(initState 안전).
+  void _syncAdPool() {
+    final need = adsEnabledNotifier.value
+        ? _neededAdSlots(cardAdIntervalNotifier.value)
+        : 0;
+    while (_adLoaders.length < need) {
+      _adLoaders.add(CardNativeAdLoader()..addListener(_onAdChanged));
+    }
+  }
+
+  int _neededAdSlots(int interval) {
+    final n = _song.cards.length;
+    var slots = 0;
+    for (var i = 0; i < n; i++) {
+      final isLast = i == n - 1;
+      if (!isLast && (i + 1) % interval == 0) slots++;
+    }
+    return slots;
+  }
+
+  void _onAdChanged() {
+    if (mounted) setState(() {});
   }
 
   // ── 자동 넘김 ──────────────────────────────────────────────
@@ -125,6 +159,7 @@ class _SongScreenState extends State<SongScreen> {
         _song = song;
         _currentPage = 0;
       });
+      _syncAdPool(); // 새 곡의 카드 수에 맞춰 광고 슬롯 보충
       if (_pageController.hasClients) _pageController.jumpToPage(0);
       await _player.loadVideoById(videoId: song.youtubeId);
     } finally {
@@ -142,6 +177,12 @@ class _SongScreenState extends State<SongScreen> {
 
   @override
   void dispose() {
+    cardAdIntervalNotifier.removeListener(_syncAdPool);
+    adsEnabledNotifier.removeListener(_syncAdPool);
+    for (final l in _adLoaders) {
+      l.removeListener(_onAdChanged);
+      l.dispose();
+    }
     _autoTimer?.cancel();
     _resumeTimer?.cancel();
     _player.close();
@@ -149,13 +190,22 @@ class _SongScreenState extends State<SongScreen> {
     super.dispose();
   }
 
-  /// 카드 리스트에 광고 슬롯(null)을 interval마다 끼운다.
-  List<GreetingCard?> _withCardAds(List<GreetingCard> cards, int interval) {
-    final out = <GreetingCard?>[];
+  /// 카드 리스트에 **로드된** 광고를 interval마다 끼운다. 아직 로드 안 된
+  /// 슬롯은 건너뛰어(빈 페이지 방지) 광고가 준비된 만큼만 노출한다.
+  /// 반환 원소: [GreetingCard] 또는 [NativeAd].
+  List<Object> _withCardAds(List<GreetingCard> cards, int interval) {
+    final loaded = <NativeAd>[
+      for (final l in _adLoaders)
+        if (l.ad != null) l.ad!,
+    ];
+    final out = <Object>[];
+    var adIdx = 0;
     for (var i = 0; i < cards.length; i++) {
       out.add(cards[i]);
       final isLast = i == cards.length - 1;
-      if (!isLast && (i + 1) % interval == 0) out.add(null);
+      if (!isLast && (i + 1) % interval == 0 && adIdx < loaded.length) {
+        out.add(loaded[adIdx++]);
+      }
     }
     return out;
   }
@@ -241,11 +291,14 @@ class _SongScreenState extends State<SongScreen> {
                           builder: (context, interval, _) {
                             final items = adsOn
                                 ? _withCardAds(_song.cards, interval)
-                                : List<GreetingCard?>.from(_song.cards);
+                                : List<Object>.from(_song.cards);
                             _itemCount = items.length;
                             if (_currentPage >= _itemCount) _currentPage = 0;
-                            final current = _currentPage < items.length
+                            final currentItem = _currentPage < items.length
                                 ? items[_currentPage]
+                                : null;
+                            final current = currentItem is GreetingCard
+                                ? currentItem
                                 : null;
                             return Column(
                               children: [
@@ -259,10 +312,11 @@ class _SongScreenState extends State<SongScreen> {
                                       onPageChanged: (i) =>
                                           setState(() => _currentPage = i),
                                       itemBuilder: (context, i) {
-                                        final card = items[i];
-                                        if (card == null) {
-                                          return const CardNativeAd();
+                                        final item = items[i];
+                                        if (item is NativeAd) {
+                                          return CardNativeAdView(ad: item);
                                         }
+                                        final card = item as GreetingCard;
                                         return Padding(
                                           padding: const EdgeInsets.symmetric(
                                               horizontal: 8, vertical: 8),
