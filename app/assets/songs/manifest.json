@@ -1,1 +1,11 @@
-{"songs":[]}
+[
+  {
+    "id": "hongjinyoung-love-battery",
+    "title": "사랑의 배터리",
+    "artist": "홍진영",
+    "youtubeId": "REPLACE_ME",
+    "cardCount": 6,
+    "order": 1,
+    "hash": ""
+  }
+]

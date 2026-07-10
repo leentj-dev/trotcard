@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../config/app_config.dart';
 import '../models/song.dart';
@@ -69,14 +68,13 @@ class SongRepository {
   }
 
   bool _changed(SongSummary local, SongSummary remote) {
-    // Prefer the content hash: it changes on ANY edit (words, translations,
-    // timestamps, intro offset, ...), so every content change re-syncs.
+    // Prefer the content hash: it changes on ANY edit (cards, youtubeId, ...),
+    // so every content change re-syncs.
     if (local.hash.isNotEmpty || remote.hash.isNotEmpty) {
       return local.hash != remote.hash;
     }
     // Fallback for manifests predating the hash field.
-    return local.wordCount != remote.wordCount ||
-        local.synced != remote.synced ||
+    return local.cardCount != remote.cardCount ||
         local.youtubeId != remote.youtubeId;
   }
 
@@ -107,10 +105,6 @@ class SongRepository {
         jsonDecode(body); // validate before persisting
         File('${dir.path}/${summary.id}.json').writeAsStringSync(body);
         _cache.remove(summary.id);
-        // The song's data changed (new intro offset, words, ...). Any local
-        // sync-offset override was tuning the OLD data, so drop it and let the
-        // freshly downloaded introOffset apply.
-        (await SharedPreferences.getInstance()).remove('offset_${summary.id}');
         fetched++;
       }
       if (fetched == 0) return null;

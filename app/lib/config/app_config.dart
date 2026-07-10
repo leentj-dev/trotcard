@@ -2,23 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
-import 'target_language.dart';
-
-/// Per-flavor configuration. The engine (feed, player, word cards, ads,
-/// remote updates) is shared; only these values change between apps.
+/// 앱 설정. 엔진(피드, 플레이어, 마음 카드, 광고, 원격 업데이트)은 공유하고
+/// 이 값들만 앱마다 바뀐다.
 class AppConfig {
   final String appTitle;
   final String logoAsset;
   final Color seedColor;
 
-  /// Bundled asset dir for this flavor's songs, e.g. 'assets/songs'.
+  /// 번들 노래 자산 디렉토리, 예: 'assets/songs'.
   final String assetDir;
 
-  /// Base URL for the song manifest + files (GitHub raw, no backend).
+  /// 노래 manifest + 파일의 base URL (GitHub raw, 백엔드 불필요).
   final String remoteBase;
-
-  /// The language being learned.
-  final TargetLanguage target;
 
   /// Android application id (for the Play Store update link).
   final String androidPackageId;
@@ -32,7 +27,6 @@ class AppConfig {
     required this.seedColor,
     required this.assetDir,
     required this.remoteBase,
-    required this.target,
     required this.androidPackageId,
     this.iosAppId = '',
   });
@@ -57,7 +51,6 @@ const trotConfig = AppConfig(
   assetDir: 'assets/songs',
   remoteBase:
       'https://raw.githubusercontent.com/leentj-dev/trot/main/app/assets/songs',
-  target: KoreanTarget(),
   androidPackageId: 'dev.leentj.trot_quiz',
   iosAppId: '', // App Store 등록 후 채움
 );

@@ -1,93 +1,53 @@
-class WordEntry {
-  final String korean;
-  final String romanization;
-  final String english;
-  final String spanish;
-  final String portuguese;
-  final String indonesian;
-  final String japanese;
-  final String korean_;
-  final String thai;
-  final String french;
-  final String partOfSpeech;
-  final String emoji;
-  final String example;
-  final String exampleTranslation;
-  final double? timestamp;
+/// 노래 분위기에 맞춰 미리 큐레이션한 "마음 카드" 한 장.
+/// 가사는 담지 않는다(저작권). 노래의 느낌·분위기에 어울리는 인사말·명언·
+/// 축복 문구를 원본으로 작성해 담는다. 사용자는 이 카드를 이미지로 공유한다.
+class GreetingCard {
+  /// 카드에 크게 들어갈 문구. 줄바꿈(\n) 포함 가능.
+  final String text;
 
-  const WordEntry({
-    required this.korean,
-    required this.romanization,
-    required this.english,
-    this.spanish = '',
-    this.portuguese = '',
-    this.indonesian = '',
-    this.japanese = '',
-    this.korean_ = '',
-    this.thai = '',
-    this.french = '',
-    this.partOfSpeech = '',
+  /// 문구 옆/위에 얹는 이모지 (예: 🌸, ☀️, 💐).
+  final String emoji;
+
+  /// 배경 그라데이션 프리셋 키 (card_gradients.dart 참조).
+  final String gradient;
+
+  /// 분류: 인사 / 명언 / 축복 / 계절 등. 필터/그룹핑용.
+  final String category;
+
+  const GreetingCard({
+    required this.text,
     this.emoji = '',
-    this.example = '',
-    this.exampleTranslation = '',
-    this.timestamp,
+    this.gradient = 'warm',
+    this.category = '',
   });
 
-  factory WordEntry.fromJson(Map<String, dynamic> json) => WordEntry(
-        korean: json['korean'] as String? ?? '',
-        romanization: json['romanization'] as String? ?? '',
-        english: json['english'] as String? ?? '',
-        spanish: json['spanish'] as String? ?? '',
-        portuguese: json['portuguese'] as String? ?? '',
-        indonesian: json['indonesian'] as String? ?? '',
-        japanese: json['japanese'] as String? ?? '',
-        korean_: json['koreanTranslation'] as String? ?? '',
-        thai: json['thai'] as String? ?? '',
-        french: json['french'] as String? ?? '',
-        partOfSpeech: json['partOfSpeech'] as String? ?? '',
+  factory GreetingCard.fromJson(Map<String, dynamic> json) => GreetingCard(
+        text: json['text'] as String? ?? '',
         emoji: json['emoji'] as String? ?? '',
-        example: json['example'] as String? ?? '',
-        exampleTranslation: json['exampleTranslation'] as String? ?? '',
-        timestamp: (json['timestamp'] as num?)?.toDouble(),
+        gradient: json['gradient'] as String? ?? 'warm',
+        category: json['category'] as String? ?? '',
       );
-
-  /// Translation for the given language code, falling back to English.
-  String translation(String lang) {
-    final value = switch (lang) {
-      'spanish' => spanish,
-      'portuguese' => portuguese,
-      'indonesian' => indonesian,
-      'japanese' => japanese,
-      'korean' => korean_,
-      'thai' => thai,
-      'french' => french,
-      _ => english,
-    };
-    return value.isEmpty ? english : value;
-  }
 }
 
+/// 트롯 한 곡 + 그 곡의 분위기에 맞춘 마음 카드 묶음.
 class Song {
   final String id;
   final String title;
   final String artist;
   final String youtubeId;
 
-  /// Seconds the music video runs ahead of the audio track (e.g. a drama
-  /// intro before the song starts). Word timestamps are audio-relative, so
-  /// video time = timestamp + introOffset. Data default 0; the user can
-  /// nudge it live and that override is stored per-song on device.
-  final double introOffset;
+  /// 곡 분위기 메모 (예: "밝고 사랑스러운", "그리움"). 카드 큐레이션 참고용.
+  final String mood;
 
-  final List<WordEntry> words;
+  final List<GreetingCard> cards;
 
   const Song({
     required this.id,
     required this.title,
     required this.artist,
     required this.youtubeId,
-    this.introOffset = 0,
-    required this.words,
+    this.mood = '',
+    required this.cards,
   });
 
   factory Song.fromJson(Map<String, dynamic> json) => Song(
@@ -95,31 +55,25 @@ class Song {
         title: json['title'] as String? ?? '',
         artist: json['artist'] as String? ?? '',
         youtubeId: json['youtubeId'] as String? ?? '',
-        introOffset: (json['introOffset'] as num?)?.toDouble() ?? 0,
-        words: (json['words'] as List<dynamic>? ?? [])
-            .map((w) => WordEntry.fromJson(w as Map<String, dynamic>))
+        mood: json['mood'] as String? ?? '',
+        cards: (json['cards'] as List<dynamic>? ?? [])
+            .map((c) => GreetingCard.fromJson(c as Map<String, dynamic>))
             .toList(),
       );
-
-  bool get isSynced => words.where((w) => w.timestamp != null).length >= 10;
 }
 
+/// 피드(노래 목록)용 경량 요약. manifest.json 의 각 항목.
 class SongSummary {
   final String id;
   final String title;
   final String artist;
   final String youtubeId;
-  final bool synced;
-  final int wordCount;
+  final int cardCount;
 
-  /// When the song was first added (unix seconds). Newer = larger; the feed
-  /// sorts descending so the most recently added song is on top.
+  /// 추가 시각(unix 초). 클수록 최신 → 피드 상단.
   final int order;
 
-  /// Content hash of the song file (from the manifest). Any change to the song
-  /// (words, translations, timestamps, offset, ...) changes this, which is how
-  /// [SongRepository] detects that a song needs re-downloading. Empty for old
-  /// manifests that predate the hash field (falls back to field comparison).
+  /// 곡 파일 내용 해시. 무엇이든 바뀌면 값이 바뀌어 재다운로드 트리거.
   final String hash;
 
   const SongSummary({
@@ -127,8 +81,7 @@ class SongSummary {
     required this.title,
     required this.artist,
     required this.youtubeId,
-    required this.synced,
-    required this.wordCount,
+    this.cardCount = 0,
     this.order = 0,
     this.hash = '',
   });
@@ -138,8 +91,7 @@ class SongSummary {
         title: json['title'] as String? ?? '',
         artist: json['artist'] as String? ?? '',
         youtubeId: json['youtubeId'] as String? ?? '',
-        synced: json['synced'] as bool? ?? false,
-        wordCount: json['wordCount'] as int? ?? 0,
+        cardCount: json['cardCount'] as int? ?? 0,
         order: json['order'] as int? ?? 0,
         hash: json['hash'] as String? ?? '',
       );
