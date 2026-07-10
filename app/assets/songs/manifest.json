@@ -1,5 +1,15 @@
 [
   {
+    "id": "ansunghoon-cant-come-back",
+    "title": "돌아올순 없나요",
+    "artist": "안성훈",
+    "youtubeId": "qW3gM3g-Lq8",
+    "cardCount": 20,
+    "order": 38,
+    "hash": "330dfc031e133341",
+    "program": "불타는 트롯맨"
+  },
+  {
     "id": "choebaekho-romance",
     "title": "낭만에 대하여",
     "artist": "최백호",
@@ -319,6 +329,16 @@
     "program": "미스트롯"
   },
   {
+    "id": "sontaejin-good-person",
+    "title": "참 좋은 사람",
+    "artist": "손태진",
+    "youtubeId": "Wx7M_OWU_mg",
+    "cardCount": 20,
+    "order": 39,
+    "hash": "8b447a0010390e01",
+    "program": "현역가왕"
+  },
+  {
     "id": "taejina-companion",
     "title": "동반자",
     "artist": "태진아",
@@ -326,6 +346,16 @@
     "cardCount": 20,
     "order": 1,
     "hash": "d0ccb0233605c8d0"
+  },
+  {
+    "id": "youngtak-on-your-side",
+    "title": "니편이야",
+    "artist": "영탁",
+    "youtubeId": "fc-lKLdZf1Q",
+    "cardCount": 20,
+    "order": 40,
+    "hash": "c0bf7c8889535ff5",
+    "program": "미스터트롯"
   },
   {
     "id": "youngtak-why-are-you-there",
