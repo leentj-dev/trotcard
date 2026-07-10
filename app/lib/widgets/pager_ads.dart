@@ -20,6 +20,8 @@ class _CardNativeAdState extends State<CardNativeAd> {
   NativeAd? _ad;
   bool _loaded = false;
   Timer? _timer;
+  Timer? _retry;
+  int _retryCount = 0;
 
   @override
   void initState() {
@@ -72,6 +74,7 @@ class _CardNativeAdState extends State<CardNativeAd> {
             ad.dispose();
             return;
           }
+          _retryCount = 0;
           final old = _ad;
           setState(() {
             _ad = ad as NativeAd;
@@ -83,6 +86,14 @@ class _CardNativeAdState extends State<CardNativeAd> {
           ad.dispose();
           debugPrint('[NativeAd] load failed: code=${err.code} '
               '${err.message} (unit=${Ads.cardNativeUnitId})');
+          // no-fill 등 일시적 실패 → 지수 백오프로 재시도(최대 ~2분 간격).
+          if (!mounted) return;
+          final delay = Duration(seconds: (5 << _retryCount).clamp(5, 120));
+          if (_retryCount < 5) _retryCount++;
+          _retry?.cancel();
+          _retry = Timer(delay, () {
+            if (mounted) _load();
+          });
         },
       ),
     ).load();
@@ -92,6 +103,7 @@ class _CardNativeAdState extends State<CardNativeAd> {
   void dispose() {
     nativeAdRefreshSecNotifier.removeListener(_startTimer);
     _timer?.cancel();
+    _retry?.cancel();
     _ad?.dispose();
     super.dispose();
   }
@@ -101,7 +113,11 @@ class _CardNativeAdState extends State<CardNativeAd> {
     return ValueListenableBuilder<bool>(
       valueListenable: adsEnabledNotifier,
       builder: (context, enabled, _) {
-        if (!enabled) return const SizedBox.shrink();
+        // 광고가 꺼져 있거나 아직/끝내 로드 안 됐으면 아무것도 안 보인다
+        // (빈 로딩 박스 대신 자리를 차지하지 않음).
+        if (!enabled || !_loaded || _ad == null) {
+          return const SizedBox.shrink();
+        }
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           child: Center(
@@ -119,18 +135,7 @@ class _CardNativeAdState extends State<CardNativeAd> {
                   child: SizedBox(
                     width: 330,
                     height: 340,
-                    child: (_loaded && _ad != null)
-                        ? AdWidget(ad: _ad!)
-                        : Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.06),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Center(
-                              child: CircularProgressIndicator(
-                                  strokeWidth: 2, color: Colors.white38),
-                            ),
-                          ),
+                    child: AdWidget(ad: _ad!),
                   ),
                 ),
               ],
