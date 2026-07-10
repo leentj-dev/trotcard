@@ -28,6 +28,15 @@ def main() -> None:
             prev_order[s["id"]] = s.get("order", 0)
             max_order = max(max_order, s.get("order", 0))
 
+    # 조회수(youtubeId → view_count). fetch_viewcounts.py 산출물. 없으면 0.
+    viewcounts = {}
+    vc_path = os.path.join(os.path.dirname(__file__), "viewcounts.json")
+    if os.path.exists(vc_path):
+        try:
+            viewcounts = json.load(open(vc_path))
+        except Exception:
+            viewcounts = {}
+
     entries = []
     next_order = max_order + 1
     for path in sorted(glob.glob(os.path.join(SONGS_DIR, "*.json"))):
@@ -41,15 +50,19 @@ def main() -> None:
         else:
             order = next_order
             next_order += 1
+        vid = song.get("youtubeId", "")
         entry = {
             "id": sid,
             "title": song.get("title", ""),
             "artist": song.get("artist", ""),
-            "youtubeId": song.get("youtubeId", ""),
+            "youtubeId": vid,
             "cardCount": len(song.get("cards", [])),
             "order": order,
             "hash": hashlib.sha256(raw).hexdigest()[:16],
         }
+        vc = viewcounts.get(vid)
+        if vc:
+            entry["viewCount"] = int(vc)
         # 프로그램 소속 곡만 program 키를 실어 프로그램별 그룹핑을 지원.
         # (정통 트로트 등 미지정 곡은 키 없음 → 기존 항목 그대로.)
         program = song.get("program", "")

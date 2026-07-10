@@ -24,7 +24,15 @@ class _FeedScreenState extends State<FeedScreen> {
   List<SongSummary> _songs = [];
   String _query = '';
   String _program = ''; // 선택된 프로그램 필터('' = 전체)
+  String _sort = 'recent'; // 정렬: recent/popular/title/artist
   bool _loading = true;
+
+  static const _sortLabels = {
+    'recent': '최신순',
+    'popular': '인기순',
+    'title': '제목순',
+    'artist': '가수순',
+  };
   bool _showScrollTop = false;
 
   @override
@@ -107,7 +115,7 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 
   List<SongSummary> get _filtered {
-    var list = _songs;
+    var list = List<SongSummary>.of(_songs);
     if (_program.isNotEmpty) {
       list = list.where((s) => s.program == _program).toList();
     }
@@ -117,6 +125,22 @@ class _FeedScreenState extends State<FeedScreen> {
               _norm(s.title).contains(_norm(_query)) ||
               _norm(s.artist).contains(_norm(_query)))
           .toList();
+    }
+    switch (_sort) {
+      case 'popular':
+        list.sort((a, b) => b.viewCount.compareTo(a.viewCount));
+        break;
+      case 'title':
+        list.sort((a, b) => a.title.compareTo(b.title));
+        break;
+      case 'artist':
+        list.sort((a, b) => a.artist.compareTo(b.artist));
+        break;
+      case 'recent':
+      default:
+        list.sort((a, b) => b.order != a.order
+            ? b.order.compareTo(a.order)
+            : a.artist.compareTo(b.artist));
     }
     return list;
   }
@@ -212,7 +236,12 @@ class _FeedScreenState extends State<FeedScreen> {
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
-                _programChips(onSurface),
+                Row(
+                  children: [
+                    Expanded(child: _programChips(onSurface)),
+                    _sortButton(onSurface),
+                  ],
+                ),
                 Expanded(
                   child: ValueListenableBuilder<int>(
               valueListenable: feedAdIntervalNotifier,
@@ -313,6 +342,43 @@ class _FeedScreenState extends State<FeedScreen> {
                 ),
               ],
             ),
+    );
+  }
+
+  /// 정렬 선택 버튼(최신순/인기순/제목순/가수순).
+  Widget _sortButton(Color onSurface) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, right: 12, bottom: 4),
+      child: PopupMenuButton<String>(
+        initialValue: _sort,
+        onSelected: (v) => setState(() => _sort = v),
+        itemBuilder: (_) => _sortLabels.entries
+            .map((e) => PopupMenuItem<String>(
+                  value: e.key,
+                  child: Text(e.value, style: const TextStyle(fontSize: 16)),
+                ))
+            .toList(),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+          decoration: BoxDecoration(
+            color: onSurface.withValues(alpha: 0.06),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.sort_rounded, size: 18, color: onSurface),
+              const SizedBox(width: 4),
+              Text(_sortLabels[_sort]!,
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w700,
+                      color: onSurface)),
+              Icon(Icons.arrow_drop_down_rounded, size: 20, color: onSurface),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

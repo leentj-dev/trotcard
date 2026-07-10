@@ -87,6 +87,9 @@ class SongSummary {
   /// 피드에서 프로그램별 그룹핑에 쓰이며, 곡 파일을 받지 않고 판별한다.
   final String program;
 
+  /// 유튜브 조회수(수집 시점 스냅샷). 인기순 정렬용. 없으면 0.
+  final int viewCount;
+
   /// 추가 시각(unix 초). 클수록 최신 → 피드 상단.
   final int order;
 
@@ -100,6 +103,7 @@ class SongSummary {
     required this.youtubeId,
     this.cardCount = 0,
     this.program = '',
+    this.viewCount = 0,
     this.order = 0,
     this.hash = '',
   });
@@ -111,6 +115,7 @@ class SongSummary {
         youtubeId: json['youtubeId'] as String? ?? '',
         cardCount: json['cardCount'] as int? ?? 0,
         program: json['program'] as String? ?? '',
+        viewCount: json['viewCount'] as int? ?? 0,
         order: json['order'] as int? ?? 0,
         hash: json['hash'] as String? ?? '',
       );

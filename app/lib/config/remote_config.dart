@@ -30,8 +30,8 @@ final minVersionNotifier = ValueNotifier<int>(0);
 final cardAutoSecNotifier = ValueNotifier<int>(5);
 
 /// 손으로 넘긴 뒤 자동넘김이 다시 켜지기까지 대기(초). Driven by
-/// `card_resume_sec`. 기본 10.
-final cardResumeSecNotifier = ValueNotifier<int>(10);
+/// `card_resume_sec`. 기본 5.
+final cardResumeSecNotifier = ValueNotifier<int>(5);
 
 const _adsEnabledKey = 'ads_enabled';
 const _feedAdIntervalKey = 'feed_ad_interval';
@@ -101,7 +101,7 @@ Future<void> initRemoteConfig() async {
       _bannerUnitIosKey: '',
       _minVersionKey: 0,
       _cardAutoSecKey: 5,
-      _cardResumeSecKey: 10,
+      _cardResumeSecKey: 5,
     });
     await rc.fetchAndActivate();
     _publish(rc);
