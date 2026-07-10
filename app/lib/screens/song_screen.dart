@@ -8,7 +8,7 @@ import '../widgets/greeting_card.dart';
 import '../widgets/native_ad_card.dart';
 
 /// 노래 상세 — 위에 유튜브로 트롯을 재생하며, 아래에서 그 곡의 분위기에
-/// 맞춘 "마음 카드"를 골라 이미지로 공유한다.
+/// 맞춘 "마음 카드"를 한 장씩 넘겨 보고 이미지로 공유한다.
 class SongScreen extends StatefulWidget {
   final Song song;
   final List<SongSummary> playlist;
@@ -29,15 +29,25 @@ class SongScreen extends StatefulWidget {
 
 class _SongScreenState extends State<SongScreen> {
   late final YoutubePlayerController _player;
+  late final PageController _pageController;
   late Song _song;
   late int _index;
   bool _advancing = false;
+
+  /// 현재 보이는 카드 인덱스.
+  int _currentCard = 0;
+
+  /// 공유 캡처용 — 카드마다 RepaintBoundary 키 하나.
+  late List<GlobalKey> _cardKeys;
+  bool _sharing = false;
 
   @override
   void initState() {
     super.initState();
     _song = widget.song;
     _index = widget.index;
+    _cardKeys = _makeKeys(_song.cards.length);
+    _pageController = PageController(viewportFraction: 0.82);
     _player = YoutubePlayerController.fromVideoId(
       videoId: _song.youtubeId,
       autoPlay: true,
@@ -52,6 +62,9 @@ class _SongScreenState extends State<SongScreen> {
     });
   }
 
+  List<GlobalKey> _makeKeys(int n) =>
+      List.generate(n, (_) => GlobalKey());
+
   /// 영상이 끝나면 목록의 다음 곡으로 자동 이동.
   Future<void> _playNext() async {
     if (_advancing) return;
@@ -64,30 +77,44 @@ class _SongScreenState extends State<SongScreen> {
       setState(() {
         _index += 1;
         _song = song;
+        _currentCard = 0;
+        _cardKeys = _makeKeys(song.cards.length);
       });
+      if (_pageController.hasClients) _pageController.jumpToPage(0);
       await _player.loadVideoById(videoId: song.youtubeId);
     } finally {
       _advancing = false;
     }
   }
 
-  void _openCard(GreetingCard card) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (_) => FullCardScreen(card: card, songTitle: _song.title),
-      ),
-    );
+  /// 현재 보이는 카드를 이미지로 공유.
+  Future<void> _shareCurrent() async {
+    if (_sharing || _song.cards.isEmpty) return;
+    setState(() => _sharing = true);
+    try {
+      await shareCardImage(_cardKeys[_currentCard]);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('공유에 실패했어요. 다시 시도해 주세요.')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _sharing = false);
+    }
   }
 
   @override
   void dispose() {
     _player.close();
+    _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = songThemeFor(_song.id);
+    final cards = _song.cards;
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(gradient: theme.gradient),
@@ -135,15 +162,14 @@ class _SongScreenState extends State<SongScreen> {
               ),
               // 안내
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
                 child: Row(
                   children: [
-                    Icon(Icons.favorite_rounded,
-                        color: theme.accent, size: 20),
+                    Icon(Icons.swipe_rounded, color: theme.accent, size: 20),
                     const SizedBox(width: 6),
                     const Expanded(
                       child: Text(
-                        '마음에 드는 카드를 눌러 친구에게 보내보세요',
+                        '옆으로 넘겨 마음에 드는 카드를 고르세요',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 15,
@@ -154,36 +180,90 @@ class _SongScreenState extends State<SongScreen> {
                   ],
                 ),
               ),
-              // 카드 그리드
+              // 카드 한 장씩 (좌우 스와이프)
               Expanded(
-                child: _song.cards.isEmpty
+                child: cards.isEmpty
                     ? const Center(
                         child: Text('준비된 카드가 없어요',
                             style: TextStyle(color: Colors.white54)),
                       )
-                    : GridView.builder(
-                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 12,
-                          mainAxisSpacing: 12,
-                          childAspectRatio: 1,
-                        ),
-                        itemCount: _song.cards.length,
+                    : PageView.builder(
+                        controller: _pageController,
+                        itemCount: cards.length,
+                        onPageChanged: (i) =>
+                            setState(() => _currentCard = i),
                         itemBuilder: (context, i) {
-                          final card = _song.cards[i];
-                          return GestureDetector(
-                            onTap: () => _openCard(card),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(16),
-                              child: GreetingCardView(
-                                  card: card, showBrand: false),
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 8),
+                            child: Center(
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                // 이 RepaintBoundary 안이 곧 공유 이미지.
+                                child: RepaintBoundary(
+                                  key: _cardKeys[i],
+                                  child: GreetingCardView(card: cards[i]),
+                                ),
+                              ),
                             ),
                           );
                         },
                       ),
               ),
+              // 페이지 인디케이터
+              if (cards.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(cards.length, (i) {
+                      final active = i == _currentCard;
+                      return AnimatedContainer(
+                        duration: const Duration(milliseconds: 250),
+                        width: active ? 22 : 8,
+                        height: 8,
+                        margin: const EdgeInsets.symmetric(horizontal: 3),
+                        decoration: BoxDecoration(
+                          color: active
+                              ? Colors.white
+                              : Colors.white.withValues(alpha: 0.35),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
+              // 공유 버튼 (현재 카드)
+              if (cards.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 60,
+                    child: FilledButton.icon(
+                      onPressed: _sharing ? null : _shareCurrent,
+                      style: FilledButton.styleFrom(
+                        backgroundColor: const Color(0xFFE11D48),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(18),
+                        ),
+                      ),
+                      icon: _sharing
+                          ? const SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: CircularProgressIndicator(
+                                  strokeWidth: 2.5, color: Colors.white),
+                            )
+                          : const Icon(Icons.ios_share_rounded, size: 24),
+                      label: const Text(
+                        '이미지로 보내기',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w800),
+                      ),
+                    ),
+                  ),
+                ),
               const NativeAdCard(),
               const SizedBox(height: 8),
             ],
