@@ -215,14 +215,14 @@ class _FeedScreenState extends State<FeedScreen> {
                           onTap: () => _openSong(s),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 4, vertical: 6),
+                                horizontal: 4, vertical: 10),
                             child: Row(
                               children: [
                                 ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
+                                  borderRadius: BorderRadius.circular(12),
                                   child: SizedBox(
-                                    width: 136,
-                                    height: 76,
+                                    width: 176,
+                                    height: 99,
                                     child: Stack(
                                       fit: StackFit.expand,
                                       children: [
@@ -242,14 +242,14 @@ class _FeedScreenState extends State<FeedScreen> {
                                           child: Icon(
                                             Icons.play_circle_fill_rounded,
                                             color: Colors.white70,
-                                            size: 30,
+                                            size: 42,
                                           ),
                                         ),
                                       ],
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 12),
+                                const SizedBox(width: 14),
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
@@ -261,25 +261,27 @@ class _FeedScreenState extends State<FeedScreen> {
                                         overflow: TextOverflow.ellipsis,
                                         style: TextStyle(
                                           color: onSurface,
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w700,
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w800,
+                                          height: 1.2,
                                         ),
                                       ),
-                                      const SizedBox(height: 3),
+                                      const SizedBox(height: 5),
                                       Text(
                                         s.artist,
                                         style: TextStyle(
                                             color: onSurface.withValues(
-                                                alpha: 0.65),
-                                            fontSize: 14),
+                                                alpha: 0.7),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
                                       ),
-                                      const SizedBox(height: 3),
+                                      const SizedBox(height: 4),
                                       Text(
                                         '💌 카드 ${s.cardCount}장',
                                         style: TextStyle(
                                             color: onSurface.withValues(
-                                                alpha: 0.45),
-                                            fontSize: 12.5),
+                                                alpha: 0.5),
+                                            fontSize: 14),
                                       ),
                                     ],
                                   ),
