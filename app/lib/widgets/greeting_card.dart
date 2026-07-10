@@ -1,19 +1,62 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' as ui;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../config/app_config.dart';
 import '../models/song.dart';
 import '../utils/card_gradients.dart';
 
-/// 분위기 키별 배경 사진 풀 개수 (`assets/bg/{key}_1..N.jpg`).
-const _bgPoolCount = {
+/// 이 APK 번들에 실제로 들어있는 분위기별 사진 수 (`assets/bg/{key}_1..N.jpg`).
+/// 이 값 이하 인덱스는 번들 asset, 초과 인덱스는 GitHub raw에서 받아 캐시(OTA).
+const _bundledBgCount = {
   'warm': 24, 'sunrise': 21, 'spring': 22, 'calm': 25,
   'sunset': 25, 'night': 21, 'rose': 24, 'lavender': 27,
 };
+
+/// 원격 bg_manifest.json 로 갱신되는 분위기별 사진 수. 세션 중에는 고정
+/// (같은 카드=항상 같은 사진). 최신값은 prefs 에 캐시돼 다음 실행에 반영된다.
+final bgCountsNotifier =
+    ValueNotifier<Map<String, int>>(Map.of(_bundledBgCount));
+
+const _bgCountsPrefsKey = 'bg_counts';
+
+/// 앱 시작 시 호출: prefs 캐시된 원격 장수를 즉시 적용(세션 안정)하고,
+/// 백그라운드로 최신 bg_manifest.json 을 받아 prefs 만 갱신(다음 실행 반영).
+Future<void> loadBgCounts() async {
+  final prefs = await SharedPreferences.getInstance();
+  final cached = prefs.getString(_bgCountsPrefsKey);
+  if (cached != null) {
+    try {
+      final m = (jsonDecode(cached) as Map)
+          .map((k, v) => MapEntry(k as String, (v as num).toInt()));
+      bgCountsNotifier.value = {..._bundledBgCount, ...m};
+    } catch (_) {}
+  }
+  _refreshBgManifest(prefs); // 대기하지 않음
+}
+
+Future<void> _refreshBgManifest(SharedPreferences prefs) async {
+  try {
+    final res = await http
+        .get(Uri.parse('${appConfig.bgRemoteBase}/bg_manifest.json'))
+        .timeout(const Duration(seconds: 8));
+    if (res.statusCode == 200) {
+      final m = (jsonDecode(res.body) as Map)
+          .map((k, v) => MapEntry(k as String, (v as num).toInt()));
+      await prefs.setString(_bgCountsPrefsKey, jsonEncode(m));
+    }
+  } catch (_) {
+    // 오프라인 등 실패 시 조용히 무시(번들/이전 캐시 유지).
+  }
+}
 
 /// 문자열 안정 해시 (Dart String.hashCode는 런마다 달라질 수 있어 직접 계산).
 int _stableHash(String s) {
@@ -24,12 +67,40 @@ int _stableHash(String s) {
   return h;
 }
 
-/// 카드마다 분위기 풀에서 고정된 사진 하나를 고른다(같은 카드=항상 같은 사진).
-String bgAssetFor(GreetingCard card) {
-  final key = card.gradient;
-  final n = _bgPoolCount[key] ?? 1;
-  final idx = _stableHash(card.text) % n + 1;
-  return 'assets/bg/${key}_$idx.jpg';
+/// 카드마다 분위기 풀에서 고정된 사진 인덱스(1..N)를 고른다. N은 원격 장수.
+int bgIndexFor(GreetingCard card) {
+  final n = bgCountsNotifier.value[card.gradient] ??
+      _bundledBgCount[card.gradient] ??
+      1;
+  return _stableHash(card.text) % n + 1;
+}
+
+/// 배경 사진 위젯: 번들 범위면 asset, 넘으면 GitHub raw(디스크 캐시).
+Widget bgImage(String gradientKey, int idx, {BoxFit fit = BoxFit.cover}) {
+  final bundled = _bundledBgCount[gradientKey] ?? 0;
+  if (idx <= bundled) {
+    return Image.asset('assets/bg/${gradientKey}_$idx.jpg',
+        fit: fit, errorBuilder: (_, _, _) => const SizedBox.shrink());
+  }
+  return CachedNetworkImage(
+    imageUrl: '${appConfig.bgRemoteBase}/${gradientKey}_$idx.jpg',
+    fit: fit,
+    fadeInDuration: const Duration(milliseconds: 200),
+    placeholder: (_, _) => const SizedBox.shrink(),
+    errorWidget: (_, _, _) => const SizedBox.shrink(),
+  );
+}
+
+/// 원격 사진의 공유 캡처 전 미리 로드(캐시). 번들 범위면 즉시 반환.
+Future<void> precacheBg(BuildContext context, String gradientKey, int idx) async {
+  if (idx <= (_bundledBgCount[gradientKey] ?? 0)) return;
+  try {
+    await precacheImage(
+      CachedNetworkImageProvider(
+          '${appConfig.bgRemoteBase}/${gradientKey}_$idx.jpg'),
+      context,
+    );
+  } catch (_) {}
 }
 
 /// 마음 카드의 순수 비주얼. 그리드 타일·전체보기·공유 캡처에 공통으로 쓴다.
@@ -40,15 +111,15 @@ class GreetingCardView extends StatelessWidget {
   /// 하단 브랜드 워터마크 표시 여부 (공유 이미지엔 표시, 필요 시 숨김).
   final bool showBrand;
 
-  /// 배경 사진 경로 고정용(문구 편집 미리보기에서 사진이 안 바뀌게). null이면
+  /// 배경 사진 인덱스 고정용(편집 미리보기에서 사진이 안 바뀌게). null이면
   /// 카드 텍스트 해시로 자동 선택.
-  final String? bgAsset;
+  final int? bgIndex;
 
   const GreetingCardView({
     super.key,
     required this.card,
     this.showBrand = true,
-    this.bgAsset,
+    this.bgIndex,
   });
 
   @override
@@ -70,11 +141,7 @@ class GreetingCardView extends StatelessWidget {
               fit: StackFit.expand,
               children: [
                 // 실사 자연/꽃 배경 사진 (분위기 풀에서 카드별 고정 선택)
-                Image.asset(
-                  bgAsset ?? bgAssetFor(card),
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => const SizedBox.shrink(),
-                ),
+                bgImage(card.gradient, bgIndex ?? bgIndexFor(card)),
                 // 가독성 스크림: 전체 살짝 + 가운데만 은은하게 (배경 잘 보이게)
                 Container(color: const Color(0x1A000000)),
                 DecoratedBox(
@@ -183,7 +250,7 @@ class EditShareScreen extends StatefulWidget {
 class _EditShareScreenState extends State<EditShareScreen> {
   final _boundaryKey = GlobalKey();
   late final TextEditingController _controller;
-  late final String _bgAsset;
+  late final int _bgIdx;
   final List<_Sticker> _stickers = [];
   int? _selected;
   bool _sharing = false;
@@ -202,7 +269,7 @@ class _EditShareScreenState extends State<EditShareScreen> {
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.card.text);
-    _bgAsset = bgAssetFor(widget.card);
+    _bgIdx = bgIndexFor(widget.card);
     // 카드 원래 이모지도 스티커로 시작 → 이동·크기·삭제 가능.
     if (widget.card.emoji.isNotEmpty) {
       _stickers.add(_Sticker(widget.card.emoji, const Offset(0.5, 0.24), 1.2));
@@ -247,6 +314,8 @@ class _EditShareScreenState extends State<EditShareScreen> {
       _selected = null; // 선택 테두리 제거 후 캡처
       _sharing = true;
     });
+    // 원격 배경이면 캡처 전에 로드(캐시)해 이미지가 빠지지 않게.
+    await precacheBg(context, widget.card.gradient, _bgIdx);
     await Future.delayed(const Duration(milliseconds: 150));
     try {
       await shareCardImage(_boundaryKey);
@@ -301,10 +370,7 @@ class _EditShareScreenState extends State<EditShareScreen> {
                                           BoxDecoration(gradient: g.gradient)),
                                 ),
                                 Positioned.fill(
-                                  child: Image.asset(_bgAsset,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (_, _, _) =>
-                                          const SizedBox.shrink()),
+                                  child: bgImage(widget.card.gradient, _bgIdx),
                                 ),
                                 Positioned.fill(
                                   child: Container(

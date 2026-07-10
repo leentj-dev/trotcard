@@ -34,6 +34,10 @@ class AppConfig {
   /// Local cache subdir name, derived from [assetDir] (e.g. 'songs_jpop').
   String get localDirName => assetDir.split('/').last;
 
+  /// 카드 배경 사진의 원격 base URL (`.../songs` → `.../bg`). 번들 장수를 넘는
+  /// 인덱스는 여기서 받아 캐시(OTA). bg_manifest.json 도 여기에 있다.
+  String get bgRemoteBase => remoteBase.replaceFirst(RegExp(r'/songs/?$'), '/bg');
+
   /// Store page URL for the current platform (used by the force-update prompt).
   String get storeUrl => Platform.isIOS
       ? 'https://apps.apple.com/app/id$iosAppId'

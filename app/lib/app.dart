@@ -6,6 +6,7 @@ import 'config/app_config.dart';
 import 'config/remote_config.dart';
 import 'config/theme_controller.dart';
 import 'screens/feed_screen.dart';
+import 'widgets/greeting_card.dart';
 
 /// Shared entrypoint used by every flavor. Set [appConfig] first, then call.
 Future<void> bootstrap(AppConfig config) async {
@@ -13,6 +14,8 @@ Future<void> bootstrap(AppConfig config) async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
   loadThemeMode();
+  await loadBgCounts(); // 원격 배경 사진 장수(OTA) 적용
+
   try {
     await Firebase.initializeApp();
     await initRemoteConfig();
