@@ -255,6 +255,7 @@ class _EditShareScreenState extends State<EditShareScreen>
   final List<_Sticker> _stickers = [];
   int? _selected;
   bool _sharing = false;
+  bool _capturing = false; // 공유 캡처 순간엔 정지된 단일 카드로 렌더
 
   // 배경 캐러셀: 드래그 오프셋(px)과 카드 간격(px, build에서 갱신).
   late final AnimationController _anim;
@@ -362,6 +363,8 @@ class _EditShareScreenState extends State<EditShareScreen>
     setState(() {
       _selected = null; // 선택 테두리 제거 후 캡처
       _sharing = true;
+      _drag = 0; // 가운데 정렬
+      _capturing = true; // 정지된 단일 카드로 캡처
     });
     // 원격 배경이면 캡처 전에 로드(캐시)해 이미지가 빠지지 않게.
     await precacheBg(context, widget.card.gradient, _bgIdx);
@@ -375,7 +378,12 @@ class _EditShareScreenState extends State<EditShareScreen>
         );
       }
     } finally {
-      if (mounted) setState(() => _sharing = false);
+      if (mounted) {
+        setState(() {
+          _sharing = false;
+          _capturing = false;
+        });
+      }
     }
   }
 
@@ -395,7 +403,7 @@ class _EditShareScreenState extends State<EditShareScreen>
                     color: Colors.white, size: 30),
               ),
             ),
-            // ── 배경 캐러셀 (좌우로 넘겨 선택, 양옆에 이전/다음 미리보기) ──
+            // ── 배경 캐러셀: 글씨는 고정, 배경 이미지만 뒤로 흘러감 ──
             Expanded(
               child: LayoutBuilder(
                 builder: (context, c) {
@@ -403,6 +411,15 @@ class _EditShareScreenState extends State<EditShareScreen>
                   final cardW = math.min(w * 0.74, h - 8);
                   _step = cardW * 1.05;
                   final n = bgPoolSize(widget.card.gradient);
+                  // 공유 캡처 순간: 정지된 단일 카드(이미지+글씨) 하나만.
+                  if (_capturing) {
+                    return Center(
+                      child: SizedBox(
+                          width: cardW,
+                          height: cardW,
+                          child: _cardStack(cardW, capture: true)),
+                    );
+                  }
                   return GestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onHorizontalDragUpdate: (d) => setState(() =>
@@ -411,17 +428,25 @@ class _EditShareScreenState extends State<EditShareScreen>
                     child: Stack(
                       clipBehavior: Clip.none,
                       children: [
+                        // 뒤로 흐르는 배경 이미지 필름(가운데 것 포함 모두 이동)
                         for (int k = -2; k <= 2; k++)
                           Positioned(
                             left: w / 2 + k * _step + _drag - cardW / 2,
                             top: 4,
                             width: cardW,
                             height: cardW,
-                            child: k == 0
-                                ? _editableCard(cardW)
-                                : _peekCard(
-                                    ((_bgIdx - 1 + k) % n + n) % n + 1, cardW),
+                            child: _imageTile(
+                                ((_bgIdx - 1 + k) % n + n) % n + 1,
+                                (k * _step + _drag).abs() / _step),
                           ),
+                        // 가운데 고정 오버레이(스크림+글씨+스티커) — 움직이지 않음
+                        Positioned(
+                          left: w / 2 - cardW / 2,
+                          top: 4,
+                          width: cardW,
+                          height: cardW,
+                          child: _cardStack(cardW, capture: false),
+                        ),
                       ],
                     ),
                   );
@@ -523,108 +548,106 @@ class _EditShareScreenState extends State<EditShareScreen>
     );
   }
 
-  /// 가운데 편집 카드(문구·스티커 수정 + 공유 캡처 대상).
-  Widget _editableCard(double side) {
-    final g = cardGradientFor(widget.card.gradient);
+  /// 뒤로 흐르는 배경 이미지 타일(사진만). dist: 가운데서 떨어진 정도(0~1↑) → 멀수록 어둡게.
+  Widget _imageTile(int img, double dist) {
+    final dim = (dist.clamp(0.0, 1.0)) * 0.35; // 가운데 0 → 가장자리 0.35 어둡게
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),
-      child: RepaintBoundary(
-        key: _boundaryKey,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: DecoratedBox(
-                  decoration: BoxDecoration(gradient: g.gradient)),
-            ),
-            Positioned.fill(child: bgImage(widget.card.gradient, _bgIdx)),
-            Positioned.fill(
-                child: Container(color: const Color(0x1A000000))),
-            const Positioned.fill(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(radius: 0.9, colors: [
-                    Color(0x55000000),
-                    Color(0x00000000),
-                  ]),
-                ),
-              ),
-            ),
-            // 빈 곳 탭 → 선택 해제
-            Positioned.fill(
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => setState(() => _selected = null),
-              ),
-            ),
-            // 문구(제자리 편집) — 카드 가운데
-            Padding(
-              padding: EdgeInsets.all(side * 0.09),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: side * 0.82),
-                  child: TextField(
-                    controller: _controller,
-                    maxLines: null,
-                    textAlign: TextAlign.center,
-                    cursorColor: Colors.white,
-                    onTap: () => setState(() => _selected = null),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: side * 0.078,
-                      fontWeight: FontWeight.w800,
-                      height: 1.35,
-                      shadows: _shadow,
-                    ),
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      isDense: true,
-                      contentPadding: EdgeInsets.zero,
-                      hintText: '문구 입력',
-                      hintStyle: TextStyle(color: Colors.white38),
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            // 브랜드 — 카드 맨 하단
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: side * 0.06,
-              child: Text('💌 트로트 카드',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.85),
-                    fontSize: side * 0.036,
-                    fontWeight: FontWeight.w700,
-                    shadows: _shadow,
-                  )),
-            ),
-            for (int i = 0; i < _stickers.length; i++)
-              _stickerWidget(i, side),
-          ],
-        ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          DecoratedBox(
+              decoration: BoxDecoration(
+                  gradient: cardGradientFor(widget.card.gradient).gradient)),
+          bgImage(widget.card.gradient, img),
+          Container(color: Color.fromRGBO(0, 0, 0, dim)),
+        ],
       ),
     );
   }
 
-  /// 양옆 미리보기 카드(배경 사진만, 살짝 어둡게).
-  Widget _peekCard(int img, double side) {
-    return Opacity(
-      opacity: 0.7,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            DecoratedBox(
-                decoration: BoxDecoration(
-                    gradient: cardGradientFor(widget.card.gradient).gradient)),
-            bgImage(widget.card.gradient, img),
-            Container(color: const Color(0x33000000)),
-          ],
+  /// 카드 오버레이 스택. capture=true면 배경 이미지까지 포함해 캡처 대상(RepaintBoundary),
+  /// capture=false면 배경 없이 스크림+글씨만(뒤 필름이 비쳐 보임) — 가운데 고정 레이어.
+  Widget _cardStack(double side, {required bool capture}) {
+    final children = <Widget>[
+      if (capture) ...[
+        Positioned.fill(
+          child: DecoratedBox(
+              decoration: BoxDecoration(
+                  gradient: cardGradientFor(widget.card.gradient).gradient)),
+        ),
+        Positioned.fill(child: bgImage(widget.card.gradient, _bgIdx)),
+      ],
+      // 가독성 스크림(글씨 뒤 어둡게) — 고정 레이어에도 있어 글씨가 늘 잘 보임
+      Positioned.fill(child: Container(color: const Color(0x33000000))),
+      const Positioned.fill(
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            gradient: RadialGradient(
+                radius: 0.9,
+                colors: [Color(0x66000000), Color(0x00000000)]),
+          ),
         ),
       ),
+      // 빈 곳 탭 → 선택 해제
+      Positioned.fill(
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => setState(() => _selected = null),
+        ),
+      ),
+      // 문구(제자리 편집) — 카드 가운데, 고정
+      Padding(
+        padding: EdgeInsets.all(side * 0.09),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: side * 0.82),
+            child: TextField(
+              controller: _controller,
+              maxLines: null,
+              textAlign: TextAlign.center,
+              cursorColor: Colors.white,
+              onTap: () => setState(() => _selected = null),
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: side * 0.078,
+                fontWeight: FontWeight.w800,
+                height: 1.35,
+                shadows: _shadow,
+              ),
+              decoration: const InputDecoration(
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
+                hintText: '문구 입력',
+                hintStyle: TextStyle(color: Colors.white38),
+              ),
+            ),
+          ),
+        ),
+      ),
+      // 브랜드 — 카드 맨 하단
+      Positioned(
+        left: 0,
+        right: 0,
+        bottom: side * 0.06,
+        child: Text('💌 트로트 카드',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.85),
+              fontSize: side * 0.036,
+              fontWeight: FontWeight.w700,
+              shadows: _shadow,
+            )),
+      ),
+      for (int i = 0; i < _stickers.length; i++) _stickerWidget(i, side),
+    ];
+    final stack = Stack(children: children);
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: capture
+          ? RepaintBoundary(key: _boundaryKey, child: stack)
+          : stack,
     );
   }
 
