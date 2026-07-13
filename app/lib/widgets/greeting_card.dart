@@ -354,6 +354,8 @@ class _EditShareScreenState extends State<EditShareScreen>
 
   // 문구 위치(정규화 0~1, 카드 기준). 손잡이로 옮긴다. 기본 가운데.
   Offset _textPos = const Offset(0.5, 0.5);
+  // 글자 이동 핸들 펼침 여부. 기본 접힘(작은 아이콘) → 카드 깔끔.
+  bool _moveOpen = false;
 
   static const _palette = [
     '🌸','❤️','🎉','😊','👍','🌷','🌹','✨','🥰','💐',
@@ -755,14 +757,23 @@ class _EditShareScreenState extends State<EditShareScreen>
           ),
         ),
       ),
-      // 글자 이동 손잡이 — 글자 오른쪽 아래(글자 안 가림). 드래그로 문구 이동. 캡처엔 미표시.
+      // 글자 이동 — 글자 오른쪽 아래. 접힘=작은 아이콘, 펼침=드래그 핸들. 캡처엔 미표시.
       if (!capture)
         Positioned(
           left: (_textPos.dx * side + side * 0.17)
-              .clamp(0.0, side - side * 0.16),
+              .clamp(0.0, side - (_moveOpen ? side * 0.46 : side * 0.13)),
           top: (_textPos.dy * side + side * 0.085)
-              .clamp(0.0, side - side * 0.11),
-          child: _textMoveHandle(side),
+              .clamp(0.0, side - side * 0.12),
+          child: _moveOpen
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _textMoveHandle(side),
+                    const SizedBox(width: 4),
+                    _moveToggle(false, Icons.close_rounded),
+                  ],
+                )
+              : _moveToggle(true, Icons.open_with_rounded),
         ),
       // 브랜드 — 카드 맨 하단
       Positioned(
@@ -786,6 +797,25 @@ class _EditShareScreenState extends State<EditShareScreen>
       child: capture
           ? RepaintBoundary(key: _boundaryKey, child: stack)
           : stack,
+    );
+  }
+
+  /// 글자 이동 접기/펴기 버튼.
+  Widget _moveToggle(bool open, IconData icon) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => setState(() => _moveOpen = open),
+      child: Container(
+        width: 34,
+        height: 34,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: const Color(0xE6303030),
+          borderRadius: BorderRadius.circular(9),
+          boxShadow: const [BoxShadow(color: Color(0x55000000), blurRadius: 4)],
+        ),
+        child: Icon(icon, color: Colors.white, size: 18),
+      ),
     );
   }
 

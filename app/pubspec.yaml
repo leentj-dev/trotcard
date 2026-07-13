@@ -2,7 +2,7 @@ name: trotcard
 description: "트로트 카드 — 트롯을 들으며 마음 카드를 나누는 시니어용 앱."
 publish_to: 'none'
 
-version: 1.0.0+18
+version: 1.0.0+19
 
 environment:
   sdk: ^3.11.1
