@@ -356,6 +356,8 @@ class _EditShareScreenState extends State<EditShareScreen>
   Offset _textPos = const Offset(0.5, 0.5);
   // 문구 정렬(왼쪽/가운데/오른쪽).
   TextAlign _textAlign = TextAlign.center;
+  // 글자 도구(정렬·이동) 펼침 여부. 기본은 접힘 → 글자가 잘 보이게.
+  bool _textToolsOpen = false;
 
   static const _palette = [
     '🌸','❤️','🎉','😊','👍','🌷','🌹','✨','🥰','💐',
@@ -757,7 +759,7 @@ class _EditShareScreenState extends State<EditShareScreen>
           ),
         ),
       ),
-      // 글자 정렬 버튼 + 이동 손잡이 — 카드 본체 레이어(터치가 잡히도록). 캡처엔 미표시.
+      // 글자 도구(정렬·이동) — 접고 펴기. 접히면 작은 버튼만 → 글자가 잘 보임. 캡처엔 미표시.
       if (!capture)
         Positioned(
           left: 0,
@@ -765,18 +767,25 @@ class _EditShareScreenState extends State<EditShareScreen>
           top: (_textPos.dy * side - side * 0.145).clamp(0.0, side * 0.88),
           child: Align(
             alignment: Alignment(_textPos.dx * 2 - 1, 0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _alignBtn(TextAlign.left, Icons.format_align_left_rounded),
-                const SizedBox(width: 4),
-                _alignBtn(TextAlign.center, Icons.format_align_center_rounded),
-                const SizedBox(width: 4),
-                _alignBtn(TextAlign.right, Icons.format_align_right_rounded),
-                const SizedBox(width: 8),
-                _textMoveHandle(side),
-              ],
-            ),
+            child: _textToolsOpen
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _alignBtn(
+                          TextAlign.left, Icons.format_align_left_rounded),
+                      const SizedBox(width: 4),
+                      _alignBtn(
+                          TextAlign.center, Icons.format_align_center_rounded),
+                      const SizedBox(width: 4),
+                      _alignBtn(
+                          TextAlign.right, Icons.format_align_right_rounded),
+                      const SizedBox(width: 8),
+                      _textMoveHandle(side),
+                      const SizedBox(width: 6),
+                      _toolToggle(false, Icons.close_rounded),
+                    ],
+                  )
+                : _toolToggle(true, Icons.text_format_rounded),
           ),
         ),
       // 브랜드 — 카드 맨 하단
@@ -801,6 +810,25 @@ class _EditShareScreenState extends State<EditShareScreen>
       child: capture
           ? RepaintBoundary(key: _boundaryKey, child: stack)
           : stack,
+    );
+  }
+
+  /// 글자 도구 접기/펴기 버튼.
+  Widget _toolToggle(bool open, IconData icon) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => setState(() => _textToolsOpen = open),
+      child: Container(
+        width: 36,
+        height: 36,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: const Color(0xFF00704A),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: const [BoxShadow(color: Color(0x66000000), blurRadius: 5)],
+        ),
+        child: Icon(icon, color: Colors.white, size: 20),
+      ),
     );
   }
 
