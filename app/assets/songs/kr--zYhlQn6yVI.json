@@ -1,0 +1,129 @@
+{
+  "id": "kr--zYhlQn6yVI",
+  "title": "내 이름 아시죠",
+  "artist": "장민호",
+  "youtubeId": "-zYhlQn6yVI",
+  "mood": "",
+  "cards": [
+    {
+      "text": "오늘도\n당신의 이름을\n가만히 불러봅니다",
+      "emoji": "�· ",
+      "gradient": "warm",
+      "category": "인사"
+    },
+    {
+      "text": "잊지 않았습니다\n늘 마음 한켠에\n당신이 있어요",
+      "emoji": "💛",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "멀리 있어도\n그 얼굴\n또렷이 떠오릅니다",
+      "emoji": "🌸",
+      "gradient": "rose",
+      "category": "위로"
+    },
+    {
+      "text": "보고 싶은 마음은\n말없이도\n전해집니다",
+      "emoji": "🕊️",
+      "gradient": "lavender",
+      "category": "위로"
+    },
+    {
+      "text": "세월이 흘러도\n변하지 않는 건\n당신을 향한 마음",
+      "emoji": "🌿",
+      "gradient": "spring",
+      "category": "명언"
+    },
+    {
+      "text": "이름을 불러주는\n사람이 있어\n삶은 따뜻합니다",
+      "emoji": "✨",
+      "gradient": "sunrise",
+      "category": "명언"
+    },
+    {
+      "text": "고마웠습니다\n말은 못 했지만\n늘 감사했어요",
+      "emoji": "🙏",
+      "gradient": "warm",
+      "category": "감사"
+    },
+    {
+      "text": "당신 덕분에\n오늘의 제가\n여기 있습니다",
+      "emoji": "🌷",
+      "gradient": "rose",
+      "category": "감사"
+    },
+    {
+      "text": "부디 오래오래\n건강하시고\n곁에 계셔주세요",
+      "emoji": "🍀",
+      "gradient": "spring",
+      "category": "건강"
+    },
+    {
+      "text": "밥은 잘 챙기시고\n몸도 마음도\n따뜻하게 지내세요",
+      "emoji": "🍚",
+      "gradient": "warm",
+      "category": "건강"
+    },
+    {
+      "text": "당신의 하루가\n햇살처럼\n환하기를 바랍니다",
+      "emoji": "🌞",
+      "gradient": "sunrise",
+      "category": "축복"
+    },
+    {
+      "text": "가시는 길마다\n좋은 일들만\n가득하길 빕니다",
+      "emoji": "🌟",
+      "gradient": "sunset",
+      "category": "축복"
+    },
+    {
+      "text": "바람이 선선해졌어요\n감기 조심하시고\n따뜻하게 입으세요",
+      "emoji": "🍂",
+      "gradient": "sunset",
+      "category": "계절"
+    },
+    {
+      "text": "꽃 피는 계절에\n당신 생각이\n제일 먼저 납니다",
+      "emoji": "🌺",
+      "gradient": "spring",
+      "category": "계절"
+    },
+    {
+      "text": "그리운 사람일수록\n마음에\n더 오래 머뭅니다",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "명언"
+    },
+    {
+      "text": "오늘 하루도\n무탈하셨나요\n늘 궁금합니다",
+      "emoji": "📮",
+      "gradient": "calm",
+      "category": "인사"
+    },
+    {
+      "text": "힘든 날엔\n혼자가 아니라는 걸\n기억해 주세요",
+      "emoji": "🤍",
+      "gradient": "calm",
+      "category": "위로"
+    },
+    {
+      "text": "당신이 있어\n이 세상이\n덜 외롭습니다",
+      "emoji": "💫",
+      "gradient": "lavender",
+      "category": "위로"
+    },
+    {
+      "text": "살아온 날들\n참 잘 견뎌오셨어요\n애쓰셨습니다",
+      "emoji": "🌾",
+      "gradient": "warm",
+      "category": "위로"
+    },
+    {
+      "text": "오늘 밤도\n편안히 주무시고\n좋은 꿈 꾸세요",
+      "emoji": "🌛",
+      "gradient": "night",
+      "category": "축복"
+    }
+  ]
+}

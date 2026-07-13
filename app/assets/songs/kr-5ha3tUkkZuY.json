@@ -1,0 +1,129 @@
+{
+  "id": "kr-5ha3tUkkZuY",
+  "title": "옆집누나",
+  "artist": "장윤정",
+  "youtubeId": "5ha3tUkkZuY",
+  "mood": "",
+  "cards": [
+    {
+      "text": "오래된 골목처럼\n정겨운 당신,\n오늘도 잘 지내시죠",
+      "emoji": "🏡",
+      "gradient": "warm",
+      "category": "인사"
+    },
+    {
+      "text": "보고 싶은 얼굴이\n떠오르는 날엔\n먼저 안부를 전합니다",
+      "emoji": "💌",
+      "gradient": "sunrise",
+      "category": "인사"
+    },
+    {
+      "text": "함께 웃던 그 시절이\n오늘따라\n참 그립습니다",
+      "emoji": "🌾",
+      "gradient": "sunset",
+      "category": "위로"
+    },
+    {
+      "text": "곁에 있어 주어\n고마웠던 사람,\n그 마음 잊지 않아요",
+      "emoji": "🤍",
+      "gradient": "lavender",
+      "category": "감사"
+    },
+    {
+      "text": "세월이 흘러도\n변치 않는 정,\n그것이 참 복입니다",
+      "emoji": "🌸",
+      "gradient": "spring",
+      "category": "명언"
+    },
+    {
+      "text": "봄볕처럼 따뜻한\n하루 되시길\n마음 담아 빕니다",
+      "emoji": "🌷",
+      "gradient": "spring",
+      "category": "계절"
+    },
+    {
+      "text": "밥은 잘 챙겨 드시고\n건강히\n지내고 계신가요",
+      "emoji": "🍚",
+      "gradient": "warm",
+      "category": "건강"
+    },
+    {
+      "text": "멀리 있어도\n마음은 늘\n당신 곁에 있습니다",
+      "emoji": "🌙",
+      "gradient": "night",
+      "category": "위로"
+    },
+    {
+      "text": "정든 사람과 나눈\n웃음 한 조각이\n평생을 데워 줍니다",
+      "emoji": "☕",
+      "gradient": "warm",
+      "category": "명언"
+    },
+    {
+      "text": "오늘 하루도\n좋은 일만\n가득하시길 바랍니다",
+      "emoji": "🍀",
+      "gradient": "sunrise",
+      "category": "축복"
+    },
+    {
+      "text": "철 따라 피는 꽃처럼\n당신 마음에도\n좋은 날 피어나길",
+      "emoji": "🌼",
+      "gradient": "rose",
+      "category": "계절"
+    },
+    {
+      "text": "어릴 적 그 골목,\n그 웃음소리가\n아직도 정겹습니다",
+      "emoji": "🎈",
+      "gradient": "warm",
+      "category": "위로"
+    },
+    {
+      "text": "고운 정 나눈 인연\n오래오래\n이어 가고 싶어요",
+      "emoji": "🌻",
+      "gradient": "sunrise",
+      "category": "감사"
+    },
+    {
+      "text": "무릎도 허리도\n살살 아끼시고\n오래 건강하세요",
+      "emoji": "💪",
+      "gradient": "spring",
+      "category": "건강"
+    },
+    {
+      "text": "당신이 있어\n이 세상 한 켠이\n참 따뜻합니다",
+      "emoji": "❤️",
+      "gradient": "rose",
+      "category": "감사"
+    },
+    {
+      "text": "지나간 날은 곱게 접고\n오는 날은\n웃으며 맞이해요",
+      "emoji": "🌅",
+      "gradient": "sunrise",
+      "category": "명언"
+    },
+    {
+      "text": "밤하늘 별을 보며\n당신의 평안을\n조용히 빕니다",
+      "emoji": "⭐",
+      "gradient": "night",
+      "category": "축복"
+    },
+    {
+      "text": "오늘도 편안한 저녁,\n따뜻한 잠자리\n되시길 바랍니다",
+      "emoji": "🌆",
+      "gradient": "sunset",
+      "category": "인사"
+    },
+    {
+      "text": "가끔은 술 한잔\n생각나는 사람,\n그게 바로 정입니다",
+      "emoji": "🍶",
+      "gradient": "sunset",
+      "category": "위로"
+    },
+    {
+      "text": "늘 건강하시고\n웃음 잃지 마세요,\n그것이 제 소원입니다",
+      "emoji": "🙏",
+      "gradient": "lavender",
+      "category": "축복"
+    }
+  ]
+}
