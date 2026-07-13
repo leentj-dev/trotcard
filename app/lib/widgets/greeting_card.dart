@@ -251,6 +251,19 @@ class _EditShareScreenState extends State<EditShareScreen>
   final _boundaryKey = GlobalKey();
   late final TextEditingController _controller;
   late int _bgIdx;
+  late String _bgCategory; // 배경을 고를 분위기 풀(카드 기본값에서 시작, 변경 가능)
+
+  // 배경 분위기(카테고리) 목록 — 시니어용 한글 이름.
+  static const _bgCats = [
+    ('warm', '따뜻함'),
+    ('sunset', '노을'),
+    ('sunrise', '해돋이'),
+    ('spring', '봄꽃'),
+    ('rose', '붉은꽃'),
+    ('lavender', '보라꽃'),
+    ('calm', '바다·호수'),
+    ('night', '밤·달'),
+  ];
   final List<_Sticker> _stickers = [];
   int? _selected;
   bool _sharing = false;
@@ -277,13 +290,14 @@ class _EditShareScreenState extends State<EditShareScreen>
     super.initState();
     _controller = TextEditingController(text: widget.card.text);
     _bgIdx = bgIndexFor(widget.card);
+    _bgCategory = _bgCategory;
     _anim = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 240));
   }
 
   /// 배경을 한 칸 넘긴다. dir: +1 다음 / -1 이전. (캐러셀 애니메이션 후 확정)
   void _advance(int dir) {
-    final n = bgPoolSize(widget.card.gradient);
+    final n = bgPoolSize(_bgCategory);
     if (n <= 1) {
       _animateDrag(0);
       return;
@@ -291,6 +305,17 @@ class _EditShareScreenState extends State<EditShareScreen>
     final next =
         dir > 0 ? (_bgIdx % n) + 1 : ((_bgIdx - 2) % n + n) % n + 1;
     _animateDrag(dir > 0 ? -_step : _step, commit: next);
+  }
+
+  /// 배경 분위기(카테고리) 변경 → 그 풀의 첫 사진부터.
+  void _setCategory(String key) {
+    if (key == _bgCategory) return;
+    _anim.stop();
+    setState(() {
+      _bgCategory = key;
+      _drag = 0;
+      _bgIdx = 1;
+    });
   }
 
   void _onDragEnd(DragEndDetails d) {
@@ -366,7 +391,7 @@ class _EditShareScreenState extends State<EditShareScreen>
       _capturing = true; // 정지된 단일 카드로 캡처
     });
     // 원격 배경이면 캡처 전에 로드(캐시)해 이미지가 빠지지 않게.
-    await precacheBg(context, widget.card.gradient, _bgIdx);
+    await precacheBg(context, _bgCategory, _bgIdx);
     await Future.delayed(const Duration(milliseconds: 150));
     try {
       await shareCardImage(_boundaryKey);
@@ -409,7 +434,7 @@ class _EditShareScreenState extends State<EditShareScreen>
                   final w = c.maxWidth, h = c.maxHeight;
                   final cardW = math.min(w * 0.74, h - 8);
                   _step = cardW * 1.05;
-                  final n = bgPoolSize(widget.card.gradient);
+                  final n = bgPoolSize(_bgCategory);
                   // 공유 캡처 순간: 정지된 단일 카드(이미지+글씨) 하나만.
                   if (_capturing) {
                     return Center(
@@ -447,6 +472,35 @@ class _EditShareScreenState extends State<EditShareScreen>
                 },
               ),
             ),
+            // ── 배경 분위기(카테고리) 선택 ──
+            SizedBox(
+              height: 44,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: _bgCats.length,
+                separatorBuilder: (_, _) => const SizedBox(width: 8),
+                itemBuilder: (context, i) {
+                  final (key, label) = _bgCats[i];
+                  final sel = key == _bgCategory;
+                  return ChoiceChip(
+                    label: Text(label,
+                        style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: sel ? Colors.white : Colors.white70)),
+                    selected: sel,
+                    onSelected: (_) => _setCategory(key),
+                    showCheckmark: false,
+                    backgroundColor: Colors.white.withValues(alpha: 0.10),
+                    selectedColor: const Color(0xFF00704A),
+                    side: BorderSide.none,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20)),
+                  );
+                },
+              ),
+            ),
             // ── 배경 넘기기(화살표) + 위치 표시 ──
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
@@ -455,7 +509,7 @@ class _EditShareScreenState extends State<EditShareScreen>
                 children: [
                   _bgArrow(Icons.chevron_left_rounded, () => _advance(-1)),
                   const SizedBox(width: 18),
-                  Text('$_bgIdx / ${bgPoolSize(widget.card.gradient)}',
+                  Text('$_bgIdx / ${bgPoolSize(_bgCategory)}',
                       style: const TextStyle(
                           color: Colors.white70,
                           fontSize: 15,
@@ -552,8 +606,8 @@ class _EditShareScreenState extends State<EditShareScreen>
         children: [
           DecoratedBox(
               decoration: BoxDecoration(
-                  gradient: cardGradientFor(widget.card.gradient).gradient)),
-          bgImage(widget.card.gradient, img),
+                  gradient: cardGradientFor(_bgCategory).gradient)),
+          bgImage(_bgCategory, img),
           Container(color: Color.fromRGBO(0, 0, 0, dim)),
         ],
       ),
@@ -568,9 +622,9 @@ class _EditShareScreenState extends State<EditShareScreen>
         Positioned.fill(
           child: DecoratedBox(
               decoration: BoxDecoration(
-                  gradient: cardGradientFor(widget.card.gradient).gradient)),
+                  gradient: cardGradientFor(_bgCategory).gradient)),
         ),
-        Positioned.fill(child: bgImage(widget.card.gradient, _bgIdx)),
+        Positioned.fill(child: bgImage(_bgCategory, _bgIdx)),
       ],
       // 아주 옅은 가독성 스크림(글씨 뒤에만 살짝) — 배경이 밝게 보이도록 대폭 축소
       const Positioned.fill(
