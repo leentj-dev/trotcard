@@ -15,7 +15,10 @@ class SongRepository {
 
   final Map<String, Song> _cache = {};
   List<SongSummary> _bundled = [];
-  List<SongSummary> _downloaded = [];
+  // 동기화된(또는 캐시된) 원격 manifest 전체. 있으면 이게 "어떤 곡이 있는지"의
+  // 기준이 된다(추가·삭제·교체 모두 OTA 반영). null이면 번들만 사용(오프라인).
+  List<SongSummary>? _remoteManifest;
+  final Set<String> _downloadedIds = {};
   Directory? _dir;
 
   Future<Directory> _songsDir() async {
@@ -32,7 +35,7 @@ class SongRepository {
           .map((e) => SongSummary.fromJson(e as Map<String, dynamic>))
           .toList();
 
-  /// Bundled songs + previously downloaded songs, synced first.
+  /// Bundled songs, or the synced remote roster once available.
   Future<List<SongSummary>> loadManifest() async {
     _bundled = _parseManifest(
         await rootBundle.loadString('${appConfig.assetDir}/manifest.json'));
@@ -41,24 +44,38 @@ class SongRepository {
     final cached = File('${dir.path}/manifest.json');
     if (cached.existsSync()) {
       try {
-        final remote = _parseManifest(cached.readAsStringSync());
-        _downloaded = remote
-            .where((s) => File('${dir.path}/${s.id}.json').existsSync())
-            .toList();
+        _remoteManifest = _parseManifest(cached.readAsStringSync());
+        _refreshDownloadedIds(dir);
       } on FormatException {
-        _downloaded = [];
+        _remoteManifest = null;
       }
     }
-    return _merged();
+    return _roster();
   }
 
-  /// Downloaded entries override bundled ones with the same id.
-  List<SongSummary> _merged() {
-    final map = {for (final s in _bundled) s.id: s};
-    for (final s in _downloaded) {
-      map[s.id] = s;
+  void _refreshDownloadedIds(Directory dir) {
+    _downloadedIds
+      ..clear()
+      ..addAll((_remoteManifest ?? const <SongSummary>[])
+          .where((s) => File('${dir.path}/${s.id}.json').existsSync())
+          .map((s) => s.id));
+  }
+
+  /// 원격 manifest가 있으면 그것이 곡 목록의 기준(삭제된 곡은 사라진다).
+  /// 실제로 불러올 수 있는 곡만 노출(로컬 다운로드됨 또는 같은 id의 번들 존재).
+  List<SongSummary> _roster() {
+    final remote = _remoteManifest;
+    if (remote != null && remote.isNotEmpty) {
+      final bundledIds = {for (final s in _bundled) s.id};
+      final list = remote
+          .where((s) => _downloadedIds.contains(s.id) || bundledIds.contains(s.id))
+          .toList();
+      if (list.isNotEmpty) return _sorted(list);
     }
-    final list = map.values.toList();
+    return _sorted(List<SongSummary>.of(_bundled));
+  }
+
+  List<SongSummary> _sorted(List<SongSummary> list) {
     // Most recently added first; fall back to artist for equal/absent order.
     list.sort((a, b) {
       if (a.order != b.order) return b.order.compareTo(a.order);
@@ -91,7 +108,7 @@ class SongRepository {
       final dir = await _songsDir();
       final local = {
         for (final s in _bundled) s.id: s,
-        for (final s in _downloaded) s.id: s,
+        for (final s in (_remoteManifest ?? const <SongSummary>[])) s.id: s,
       };
       var fetched = 0;
       for (final summary in remote) {
@@ -107,14 +124,18 @@ class SongRepository {
         _cache.remove(summary.id);
         fetched++;
       }
-      if (fetched == 0) return null;
-
+      // manifest는 곡 목록이 바뀌면(추가·삭제·순서·조회수) 항상 갱신해야 하므로
+      // fetched 여부와 무관하게 로컬 캐시를 최신 원격으로 덮어쓴다.
       File('${dir.path}/manifest.json')
           .writeAsStringSync(utf8.decode(res.bodyBytes));
-      _downloaded = remote
-          .where((s) => File('${dir.path}/${s.id}.json').existsSync())
-          .toList();
-      return _merged();
+      final prevIds = {for (final s in (_remoteManifest ?? const <SongSummary>[])) s.id};
+      _remoteManifest = remote;
+      _refreshDownloadedIds(dir);
+      // 목록 구성/순서/곡 내용 중 하나라도 바뀌었으면 갱신된 목록 반환.
+      final changed = fetched > 0 || prevIds.length != remote.length ||
+          remote.any((s) => !prevIds.contains(s.id));
+      if (!changed) return null;
+      return _roster();
     } on Exception {
       return null; // offline or GitHub unreachable — bundled songs still work
     }
