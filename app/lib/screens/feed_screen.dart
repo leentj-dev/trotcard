@@ -7,6 +7,7 @@ import '../config/theme_controller.dart';
 import '../data/song_repository.dart';
 import '../models/song.dart';
 import '../utils/themes.dart';
+import '../widgets/greeting_card.dart';
 import '../widgets/native_ad_card.dart';
 import '../widgets/song_request_sheet.dart';
 import 'song_screen.dart';
@@ -83,6 +84,7 @@ class _FeedScreenState extends State<FeedScreen> {
 
   /// GitHub 에서 최신 곡을 받아온다. [showUpToDate] 는 당겨서 새로고침 시 true.
   Future<void> _syncRemote({bool showUpToDate = false}) async {
+    syncRemoteBgImages(); // 배경도 비교 후 없는 사진만 로컬로 받음(백그라운드)
     final before = _songs.length;
     final updated = await _repo.syncRemote();
     if (!mounted) return;
@@ -251,6 +253,35 @@ class _FeedScreenState extends State<FeedScreen> {
                     Expanded(child: _programChips(onSurface)),
                     _sortButton(onSurface),
                   ],
+                ),
+                // 새 배경 사진을 로컬로 받는 중 표시
+                ValueListenableBuilder<bool>(
+                  valueListenable: bgDownloadingNotifier,
+                  builder: (context, downloading, _) => downloading
+                      ? Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          color: onSurface.withValues(alpha: 0.06),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(
+                                      strokeWidth: 2)),
+                              const SizedBox(width: 10),
+                              Text('새 배경 사진 받는 중…',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w700,
+                                      color:
+                                          onSurface.withValues(alpha: 0.7))),
+                            ],
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                 ),
                 Expanded(
                   child: ValueListenableBuilder<int>(

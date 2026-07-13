@@ -23,16 +23,36 @@ const _bundledBgCount = {
   'animal': 11, 'cafe': 15, 'library': 11,
 };
 
-/// 원격 bg_manifest.json 로 갱신되는 분위기별 사진 수. 세션 중에는 고정
-/// (같은 카드=항상 같은 사진). 최신값은 prefs 에 캐시돼 다음 실행에 반영된다.
+/// 원격 bg_manifest.json 로 갱신되는 분위기별 사진 수. (같은 카드=항상 같은 사진)
 final bgCountsNotifier =
     ValueNotifier<Map<String, int>>(Map.of(_bundledBgCount));
 
+/// 원격 배경 사진을 로컬로 내려받는 중인지 — 피드에서 "사진 받는 중" 표시용.
+final bgDownloadingNotifier = ValueNotifier<bool>(false);
+
 const _bgCountsPrefsKey = 'bg_counts';
 
-/// 앱 시작 시 호출: prefs 캐시된 원격 장수를 즉시 적용(세션 안정)하고,
-/// 백그라운드로 최신 bg_manifest.json 을 받아 prefs 만 갱신(다음 실행 반영).
+// 다운로드된 원격 배경 저장 폴더 + 보유 목록('key_idx'). 존재 여부로 비교.
+Directory? _bgDir;
+final Set<String> _localBg = {};
+
+Future<Directory> _ensureBgDir() async {
+  if (_bgDir != null) return _bgDir!;
+  final docs = await getApplicationDocumentsDirectory();
+  final d = Directory('${docs.path}/bg');
+  if (!d.existsSync()) d.createSync(recursive: true);
+  // 이미 받아둔 파일을 메모리 목록에 적재(빠른 존재 확인).
+  for (final f in d.listSync()) {
+    final n = f.uri.pathSegments.last;
+    if (n.endsWith('.jpg')) _localBg.add(n.substring(0, n.length - 4));
+  }
+  _bgDir = d;
+  return d;
+}
+
+/// 앱 시작 시: 로컬 폴더 준비 + prefs 캐시 개수 즉시 적용, 백그라운드로 동기화.
 Future<void> loadBgCounts() async {
+  await _ensureBgDir();
   final prefs = await SharedPreferences.getInstance();
   final cached = prefs.getString(_bgCountsPrefsKey);
   if (cached != null) {
@@ -42,21 +62,57 @@ Future<void> loadBgCounts() async {
       bgCountsNotifier.value = {..._bundledBgCount, ...m};
     } catch (_) {}
   }
-  _refreshBgManifest(prefs); // 대기하지 않음
+  syncRemoteBgImages(); // 대기하지 않음(백그라운드)
 }
 
-Future<void> _refreshBgManifest(SharedPreferences prefs) async {
+/// 원격 bg_manifest 와 비교해 **로컬에 없는 사진만** 내려받아 로컬에 저장한다.
+/// 개수 차이가 아니라 '파일이 있나 없나'로 판단 → 앞으로 사진을 추가하면 자동 반영.
+/// 한 번 받으면 이후엔 로컬에서 로드(매번 네트워크 조회 아님).
+Future<void> syncRemoteBgImages() async {
+  Map<String, int> counts;
   try {
     final res = await http
         .get(Uri.parse('${appConfig.bgRemoteBase}/bg_manifest.json'))
-        .timeout(const Duration(seconds: 8));
-    if (res.statusCode == 200) {
-      final m = (jsonDecode(res.body) as Map)
-          .map((k, v) => MapEntry(k as String, (v as num).toInt()));
-      await prefs.setString(_bgCountsPrefsKey, jsonEncode(m));
-    }
+        .timeout(const Duration(seconds: 10));
+    if (res.statusCode != 200) return;
+    counts = (jsonDecode(res.body) as Map)
+        .map((k, v) => MapEntry(k as String, (v as num).toInt()));
   } catch (_) {
-    // 오프라인 등 실패 시 조용히 무시(번들/이전 캐시 유지).
+    return; // 오프라인 등 → 번들/기존 캐시 유지
+  }
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.setString(_bgCountsPrefsKey, jsonEncode(counts));
+  bgCountsNotifier.value = {..._bundledBgCount, ...counts};
+
+  // 번들 초과 인덱스 중 로컬에 없는 파일만 목록화.
+  final dir = await _ensureBgDir();
+  final missing = <String>[];
+  counts.forEach((key, n) {
+    final bundled = _bundledBgCount[key] ?? 0;
+    for (var idx = bundled + 1; idx <= n; idx++) {
+      final name = '${key}_$idx';
+      if (!_localBg.contains(name)) missing.add(name);
+    }
+  });
+  if (missing.isEmpty) return;
+
+  bgDownloadingNotifier.value = true;
+  try {
+    for (final name in missing) {
+      try {
+        final r = await http
+            .get(Uri.parse('${appConfig.bgRemoteBase}/$name.jpg'))
+            .timeout(const Duration(seconds: 20));
+        if (r.statusCode == 200 && r.bodyBytes.isNotEmpty) {
+          File('${dir.path}/$name.jpg').writeAsBytesSync(r.bodyBytes);
+          _localBg.add(name);
+        }
+      } catch (_) {}
+    }
+  } finally {
+    bgDownloadingNotifier.value = false;
+    // 새로 받은 사진이 화면에 반영되도록 리빌드 트리거.
+    bgCountsNotifier.value = Map.of(bgCountsNotifier.value);
   }
 }
 
@@ -81,15 +137,21 @@ int bgIndexFor(GreetingCard card) {
 int bgPoolSize(String gradientKey) =>
     bgCountsNotifier.value[gradientKey] ?? _bundledBgCount[gradientKey] ?? 1;
 
-/// 배경 사진 위젯: 번들 범위면 asset, 넘으면 GitHub raw(디스크 캐시).
+/// 배경 사진 위젯: 번들이면 asset, 받아둔 원격은 로컬 파일, 아직이면 원격 폴백.
 Widget bgImage(String gradientKey, int idx, {BoxFit fit = BoxFit.cover}) {
   final bundled = _bundledBgCount[gradientKey] ?? 0;
   if (idx <= bundled) {
     return Image.asset('assets/bg/${gradientKey}_$idx.jpg',
         fit: fit, errorBuilder: (_, _, _) => const SizedBox.shrink());
   }
+  final name = '${gradientKey}_$idx';
+  if (_bgDir != null && _localBg.contains(name)) {
+    return Image.file(File('${_bgDir!.path}/$name.jpg'),
+        fit: fit, errorBuilder: (_, _, _) => const SizedBox.shrink());
+  }
+  // 아직 안 받았으면 원격 스트리밍(캐시) 폴백.
   return CachedNetworkImage(
-    imageUrl: '${appConfig.bgRemoteBase}/${gradientKey}_$idx.jpg',
+    imageUrl: '${appConfig.bgRemoteBase}/$name.jpg',
     fit: fit,
     fadeInDuration: const Duration(milliseconds: 200),
     placeholder: (_, _) => const SizedBox.shrink(),
@@ -100,12 +162,15 @@ Widget bgImage(String gradientKey, int idx, {BoxFit fit = BoxFit.cover}) {
 /// 원격 사진의 공유 캡처 전 미리 로드(캐시). 번들 범위면 즉시 반환.
 Future<void> precacheBg(BuildContext context, String gradientKey, int idx) async {
   if (idx <= (_bundledBgCount[gradientKey] ?? 0)) return;
+  final name = '${gradientKey}_$idx';
   try {
-    await precacheImage(
-      CachedNetworkImageProvider(
-          '${appConfig.bgRemoteBase}/${gradientKey}_$idx.jpg'),
-      context,
-    );
+    if (_bgDir != null && _localBg.contains(name)) {
+      await precacheImage(FileImage(File('${_bgDir!.path}/$name.jpg')), context);
+    } else {
+      await precacheImage(
+          CachedNetworkImageProvider('${appConfig.bgRemoteBase}/$name.jpg'),
+          context);
+    }
   } catch (_) {}
 }
 
