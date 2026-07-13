@@ -354,6 +354,8 @@ class _EditShareScreenState extends State<EditShareScreen>
 
   // 문구 위치(정규화 0~1, 카드 기준). 손잡이로 옮긴다. 기본 가운데.
   Offset _textPos = const Offset(0.5, 0.5);
+  // 문구 정렬(왼쪽/가운데/오른쪽).
+  TextAlign _textAlign = TextAlign.center;
 
   static const _palette = [
     '🌸','❤️','🎉','😊','👍','🌷','🌹','✨','🥰','💐',
@@ -735,7 +737,7 @@ class _EditShareScreenState extends State<EditShareScreen>
           child: TextField(
             controller: _controller,
             maxLines: null,
-            textAlign: TextAlign.center,
+            textAlign: _textAlign,
             cursorColor: Colors.white,
             onTap: () => setState(() => _selected = null),
             style: TextStyle(
@@ -755,15 +757,26 @@ class _EditShareScreenState extends State<EditShareScreen>
           ),
         ),
       ),
-      // 글자 이동 손잡이 — 카드 본체 레이어(터치가 잡히도록). 캡처엔 미표시.
+      // 글자 정렬 버튼 + 이동 손잡이 — 카드 본체 레이어(터치가 잡히도록). 캡처엔 미표시.
       if (!capture)
         Positioned(
           left: 0,
           right: 0,
-          top: (_textPos.dy * side - side * 0.135).clamp(0.0, side * 0.9),
+          top: (_textPos.dy * side - side * 0.145).clamp(0.0, side * 0.88),
           child: Align(
             alignment: Alignment(_textPos.dx * 2 - 1, 0),
-            child: _textMoveHandle(side),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _alignBtn(TextAlign.left, Icons.format_align_left_rounded),
+                const SizedBox(width: 4),
+                _alignBtn(TextAlign.center, Icons.format_align_center_rounded),
+                const SizedBox(width: 4),
+                _alignBtn(TextAlign.right, Icons.format_align_right_rounded),
+                const SizedBox(width: 8),
+                _textMoveHandle(side),
+              ],
+            ),
           ),
         ),
       // 브랜드 — 카드 맨 하단
@@ -788,6 +801,26 @@ class _EditShareScreenState extends State<EditShareScreen>
       child: capture
           ? RepaintBoundary(key: _boundaryKey, child: stack)
           : stack,
+    );
+  }
+
+  /// 글자 정렬 버튼(왼쪽/가운데/오른쪽). 현재 정렬이면 초록 강조.
+  Widget _alignBtn(TextAlign a, IconData icon) {
+    final on = _textAlign == a;
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => setState(() => _textAlign = a),
+      child: Container(
+        width: 34,
+        height: 34,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: on ? const Color(0xFF00704A) : const Color(0xE6303030),
+          borderRadius: BorderRadius.circular(9),
+          boxShadow: const [BoxShadow(color: Color(0x55000000), blurRadius: 4)],
+        ),
+        child: Icon(icon, color: Colors.white, size: 18),
+      ),
     );
   }
 
