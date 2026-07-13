@@ -75,6 +75,10 @@ int bgIndexFor(GreetingCard card) {
   return _stableHash(card.text) % n + 1;
 }
 
+/// 분위기 풀 크기(1..N). 편집 화면에서 배경을 좌우로 넘겨 고를 때 상한.
+int bgPoolSize(String gradientKey) =>
+    bgCountsNotifier.value[gradientKey] ?? _bundledBgCount[gradientKey] ?? 1;
+
 /// 배경 사진 위젯: 번들 범위면 asset, 넘으면 GitHub raw(디스크 캐시).
 Widget bgImage(String gradientKey, int idx, {BoxFit fit = BoxFit.cover}) {
   final bundled = _bundledBgCount[gradientKey] ?? 0;
@@ -163,11 +167,6 @@ class GreetingCardView extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            if (card.emoji.isNotEmpty)
-                              Text(card.emoji,
-                                  style: const TextStyle(fontSize: 52)),
-                            if (card.emoji.isNotEmpty)
-                              const SizedBox(height: 16),
                             Text(
                               card.text,
                               textAlign: TextAlign.center,
@@ -250,7 +249,7 @@ class EditShareScreen extends StatefulWidget {
 class _EditShareScreenState extends State<EditShareScreen> {
   final _boundaryKey = GlobalKey();
   late final TextEditingController _controller;
-  late final int _bgIdx;
+  late int _bgIdx;
   final List<_Sticker> _stickers = [];
   int? _selected;
   bool _sharing = false;
@@ -270,10 +269,13 @@ class _EditShareScreenState extends State<EditShareScreen> {
     super.initState();
     _controller = TextEditingController(text: widget.card.text);
     _bgIdx = bgIndexFor(widget.card);
-    // 카드 원래 이모지도 스티커로 시작 → 이동·크기·삭제 가능.
-    if (widget.card.emoji.isNotEmpty) {
-      _stickers.add(_Sticker(widget.card.emoji, const Offset(0.5, 0.24), 1.2));
-    }
+  }
+
+  /// 배경 사진을 좌우로 넘겨 다른 사진과 조합. dir: +1 다음 / -1 이전.
+  void _cycleBg(int dir) {
+    final n = bgPoolSize(widget.card.gradient);
+    if (n <= 1) return;
+    setState(() => _bgIdx = ((_bgIdx - 1 + dir) % n + n) % n + 1);
   }
 
   @override
@@ -389,12 +391,17 @@ class _EditShareScreenState extends State<EditShareScreen> {
                                     ),
                                   ),
                                 ),
-                                // 빈 곳 탭 → 선택 해제
+                                // 빈 곳 탭 → 선택 해제 / 좌우로 밀면 배경 교체
                                 Positioned.fill(
                                   child: GestureDetector(
                                     behavior: HitTestBehavior.opaque,
                                     onTap: () =>
                                         setState(() => _selected = null),
+                                    onHorizontalDragEnd: (d) {
+                                      final v = d.primaryVelocity ?? 0;
+                                      if (v.abs() < 100) return;
+                                      _cycleBg(v < 0 ? 1 : -1);
+                                    },
                                   ),
                                 ),
                                 // 문구(제자리 편집) — 카드 가운데
@@ -456,6 +463,27 @@ class _EditShareScreenState extends State<EditShareScreen> {
                     ),
                   ),
                 ),
+              ),
+            ),
+            // ── 배경 사진 넘기기 (좌우로 골라 조합) ──
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _bgArrow(Icons.chevron_left_rounded, () => _cycleBg(-1)),
+                  const SizedBox(width: 14),
+                  const Icon(Icons.image_rounded,
+                      color: Colors.white54, size: 18),
+                  const SizedBox(width: 6),
+                  const Text('배경 바꾸기',
+                      style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700)),
+                  const SizedBox(width: 14),
+                  _bgArrow(Icons.chevron_right_rounded, () => _cycleBg(1)),
+                ],
               ),
             ),
             // ── 스티커 팔레트 (기존 문구 자리, 가로 스크롤) ──
@@ -531,6 +559,22 @@ class _EditShareScreenState extends State<EditShareScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _bgArrow(IconData icon, VoidCallback onTap) {
+    return InkResponse(
+      onTap: onTap,
+      radius: 30,
+      child: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.12),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: Colors.white, size: 32),
       ),
     );
   }
