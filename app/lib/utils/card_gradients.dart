@@ -85,6 +85,33 @@ const _presets = <String, CardGradient>{
     ),
     Color(0xFF3A2A55),
   ),
+  // 동물 — 포근한 크림빛 (사진 로딩 폴백)
+  'animal': CardGradient(
+    LinearGradient(
+      colors: [Color(0xFFFAD9A0), Color(0xFFF6B98A), Color(0xFFE8A87C)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    Colors.white,
+  ),
+  // 카페 — 따뜻한 커피빛
+  'cafe': CardGradient(
+    LinearGradient(
+      colors: [Color(0xFFC9A27E), Color(0xFFA9754F), Color(0xFF7B4B2A)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    Colors.white,
+  ),
+  // 도서관 — 고요한 우드빛
+  'library': CardGradient(
+    LinearGradient(
+      colors: [Color(0xFFD8B98C), Color(0xFFB08850), Color(0xFF6E4A2A)],
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+    ),
+    Colors.white,
+  ),
 };
 
 /// 키로 프리셋을 찾고, 없으면 warm 으로 폴백.

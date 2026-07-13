@@ -18,8 +18,9 @@ import '../utils/card_gradients.dart';
 /// 이 APK 번들에 실제로 들어있는 분위기별 사진 수 (`assets/bg/{key}_1..N.jpg`).
 /// 이 값 이하 인덱스는 번들 asset, 초과 인덱스는 GitHub raw에서 받아 캐시(OTA).
 const _bundledBgCount = {
-  'warm': 24, 'sunrise': 21, 'spring': 22, 'calm': 25,
-  'sunset': 25, 'night': 21, 'rose': 24, 'lavender': 27,
+  'warm': 35, 'sunrise': 24, 'spring': 22, 'calm': 38,
+  'sunset': 34, 'night': 24, 'rose': 24, 'lavender': 27,
+  'animal': 11, 'cafe': 15, 'library': 11,
 };
 
 /// 원격 bg_manifest.json 로 갱신되는 분위기별 사진 수. 세션 중에는 고정
@@ -263,6 +264,9 @@ class _EditShareScreenState extends State<EditShareScreen>
     ('lavender', '보라꽃'),
     ('calm', '바다·호수'),
     ('night', '밤·달'),
+    ('animal', '동물'),
+    ('cafe', '카페'),
+    ('library', '도서관'),
   ];
   final List<_Sticker> _stickers = [];
   int? _selected;
