@@ -147,13 +147,12 @@ class GreetingCardView extends StatelessWidget {
               children: [
                 // 실사 자연/꽃 배경 사진 (분위기 풀에서 카드별 고정 선택)
                 bgImage(card.gradient, bgIndex ?? bgIndexFor(card)),
-                // 가독성 스크림: 전체 살짝 + 가운데만 은은하게 (배경 잘 보이게)
-                Container(color: const Color(0x1A000000)),
+                // 아주 옅은 가독성 스크림(글씨 뒤에만 살짝) — 배경이 밝게 보이게
                 DecoratedBox(
                   decoration: const BoxDecoration(
                     gradient: RadialGradient(
-                      radius: 0.9,
-                      colors: [Color(0x55000000), Color(0x00000000)],
+                      radius: 0.85,
+                      colors: [Color(0x1F000000), Color(0x00000000)],
                     ),
                   ),
                 ),
@@ -420,35 +419,30 @@ class _EditShareScreenState extends State<EditShareScreen>
                           child: _cardStack(cardW, capture: true)),
                     );
                   }
-                  return GestureDetector(
-                    behavior: HitTestBehavior.opaque,
-                    onHorizontalDragUpdate: (d) => setState(() =>
-                        _drag = (_drag + d.delta.dx).clamp(-_step, _step)),
-                    onHorizontalDragEnd: _onDragEnd,
-                    child: Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        // 뒤로 흐르는 배경 이미지 필름(가운데 것 포함 모두 이동)
-                        for (int k = -2; k <= 2; k++)
-                          Positioned(
-                            left: w / 2 + k * _step + _drag - cardW / 2,
-                            top: 4,
-                            width: cardW,
-                            height: cardW,
-                            child: _imageTile(
-                                ((_bgIdx - 1 + k) % n + n) % n + 1,
-                                (k * _step + _drag).abs() / _step),
-                          ),
-                        // 가운데 고정 오버레이(스크림+글씨+스티커) — 움직이지 않음
+                  // 드래그는 가운데 오버레이 안의 빈 곳에서 처리(스티커/글씨가 우선).
+                  return Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      // 뒤로 흐르는 배경 이미지 필름(가운데 것 포함 모두 이동)
+                      for (int k = -2; k <= 2; k++)
                         Positioned(
-                          left: w / 2 - cardW / 2,
+                          left: w / 2 + k * _step + _drag - cardW / 2,
                           top: 4,
                           width: cardW,
                           height: cardW,
-                          child: _cardStack(cardW, capture: false),
+                          child: _imageTile(
+                              ((_bgIdx - 1 + k) % n + n) % n + 1,
+                              (k * _step + _drag).abs() / _step),
                         ),
-                      ],
-                    ),
+                      // 가운데 고정 오버레이(스크림+글씨+스티커) — 움직이지 않음
+                      Positioned(
+                        left: w / 2 - cardW / 2,
+                        top: 4,
+                        width: cardW,
+                        height: cardW,
+                        child: _cardStack(cardW, capture: false),
+                      ),
+                    ],
                   );
                 },
               ),
@@ -578,24 +572,27 @@ class _EditShareScreenState extends State<EditShareScreen>
         ),
         Positioned.fill(child: bgImage(widget.card.gradient, _bgIdx)),
       ],
-      // 가독성 스크림(글씨 뒤 어둡게) — 고정 레이어에도 있어 글씨가 늘 잘 보임
-      Positioned.fill(child: Container(color: const Color(0x33000000))),
+      // 아주 옅은 가독성 스크림(글씨 뒤에만 살짝) — 배경이 밝게 보이도록 대폭 축소
       const Positioned.fill(
         child: DecoratedBox(
           decoration: BoxDecoration(
             gradient: RadialGradient(
-                radius: 0.9,
-                colors: [Color(0x66000000), Color(0x00000000)]),
+                radius: 0.85,
+                colors: [Color(0x1F000000), Color(0x00000000)]),
           ),
         ),
       ),
-      // 빈 곳 탭 → 선택 해제
-      Positioned.fill(
-        child: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => setState(() => _selected = null),
+      // 빈 곳: 탭 → 선택 해제 / 좌우로 밀면 배경만 흐름 (스티커·글씨가 우선)
+      if (!capture)
+        Positioned.fill(
+          child: GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => setState(() => _selected = null),
+            onHorizontalDragUpdate: (d) => setState(() =>
+                _drag = (_drag + d.delta.dx).clamp(-_step, _step)),
+            onHorizontalDragEnd: _onDragEnd,
+          ),
         ),
-      ),
       // 문구(제자리 편집) — 카드 가운데, 고정
       Padding(
         padding: EdgeInsets.all(side * 0.09),
@@ -698,6 +695,7 @@ class _EditShareScreenState extends State<EditShareScreen>
       left: s.pos.dx * side - fs * 0.62,
       top: s.pos.dy * side - fs * 0.62,
       child: GestureDetector(
+        behavior: HitTestBehavior.opaque, // 스티커 전체를 잡을 수 있게 + 캐러셀 드래그보다 우선
         onTap: () => setState(() => _selected = i),
         onPanStart: (_) {
           if (_selected != i) setState(() => _selected = i);
