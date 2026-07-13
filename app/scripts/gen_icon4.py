@@ -12,9 +12,9 @@ RED = (225, 29, 72, 255)      # 하트/글씨 크림슨
 INK = (150, 22, 48, 255)      # 글씨 진한 자주
 
 # ── 카드(라운드 사각) + 그림자를 그려 넣는 함수 ──
-CARD_L, CARD_T, CARD_R, CARD_B = 196, 214, 828, 810
-RAD = 60
-BORDER = 22
+CARD_L, CARD_T, CARD_R, CARD_B = 150, 168, 874, 856
+RAD = 66
+BORDER = 24
 
 
 def draw_heart(d, cx, cy, w, color):
@@ -44,19 +44,17 @@ def draw_card(base):
 
     d = ImageDraw.Draw(base)
     cx = (CARD_L + CARD_R) // 2
+    cy = (CARD_T + CARD_B) // 2
 
-    # 작은 하트 (상단 포인트)
-    draw_heart(d, cx, CARD_T + 130, 150, RED)
-
-    # '트로트' / '안부' 두 줄, 크게
-    def line(text, cy, size, color):
+    # '트로트' / '안부' 두 줄, 크게 (하트 제거 → 편지 가득)
+    def line(text, cy_, size, color):
         f = ImageFont.truetype(FONT, size, index=6)  # Bold
         bb = d.textbbox((0, 0), text, font=f)
         w, h = bb[2] - bb[0], bb[3] - bb[1]
-        d.text((cx - w / 2 - bb[0], cy - h / 2 - bb[1]), text, font=f, fill=color)
+        d.text((cx - w / 2 - bb[0], cy_ - h / 2 - bb[1]), text, font=f, fill=color)
 
-    line("트로트", CARD_T + 320, 205, INK)
-    line("안부", CARD_T + 500, 205, RED)
+    line("트로트", cy - 155, 255, INK)
+    line("안부", cy + 155, 255, RED)
 
 
 # ── icon.png (iOS 풀 아이콘): 보라 배경 위에 카드+글씨 ──
