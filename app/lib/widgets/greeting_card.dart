@@ -290,7 +290,7 @@ class _EditShareScreenState extends State<EditShareScreen>
     super.initState();
     _controller = TextEditingController(text: widget.card.text);
     _bgIdx = bgIndexFor(widget.card);
-    _bgCategory = _bgCategory;
+    _bgCategory = widget.card.gradient;
     _anim = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 240));
   }
