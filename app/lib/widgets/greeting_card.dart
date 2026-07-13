@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -246,13 +247,20 @@ class EditShareScreen extends StatefulWidget {
   State<EditShareScreen> createState() => _EditShareScreenState();
 }
 
-class _EditShareScreenState extends State<EditShareScreen> {
+class _EditShareScreenState extends State<EditShareScreen>
+    with SingleTickerProviderStateMixin {
   final _boundaryKey = GlobalKey();
   late final TextEditingController _controller;
   late int _bgIdx;
   final List<_Sticker> _stickers = [];
   int? _selected;
   bool _sharing = false;
+
+  // 배경 캐러셀: 드래그 오프셋(px)과 카드 간격(px, build에서 갱신).
+  late final AnimationController _anim;
+  VoidCallback? _animListener;
+  double _drag = 0;
+  double _step = 1;
 
   static const _palette = [
     '🌸','❤️','🎉','😊','👍','🌷','🌹','✨','🥰','💐',
@@ -269,17 +277,56 @@ class _EditShareScreenState extends State<EditShareScreen> {
     super.initState();
     _controller = TextEditingController(text: widget.card.text);
     _bgIdx = bgIndexFor(widget.card);
+    _anim = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 240));
   }
 
-  /// 배경 사진을 좌우로 넘겨 다른 사진과 조합. dir: +1 다음 / -1 이전.
-  void _cycleBg(int dir) {
+  /// 배경을 한 칸 넘긴다. dir: +1 다음 / -1 이전. (캐러셀 애니메이션 후 확정)
+  void _advance(int dir) {
     final n = bgPoolSize(widget.card.gradient);
-    if (n <= 1) return;
-    setState(() => _bgIdx = ((_bgIdx - 1 + dir) % n + n) % n + 1);
+    if (n <= 1) {
+      _animateDrag(0);
+      return;
+    }
+    final next =
+        dir > 0 ? (_bgIdx % n) + 1 : ((_bgIdx - 2) % n + n) % n + 1;
+    _animateDrag(dir > 0 ? -_step : _step, commit: next);
+  }
+
+  void _onDragEnd(DragEndDetails d) {
+    final v = d.primaryVelocity ?? 0;
+    if (_drag <= -_step * 0.25 || v < -350) {
+      _advance(1); // 왼쪽으로 밀었다 → 다음
+    } else if (_drag >= _step * 0.25 || v > 350) {
+      _advance(-1); // 오른쪽으로 밀었다 → 이전
+    } else {
+      _animateDrag(0); // 살짝 → 제자리로
+    }
+  }
+
+  /// _drag 를 target 까지 애니메이션. commit 이 있으면 끝에서 _bgIdx 확정.
+  void _animateDrag(double target, {int? commit}) {
+    if (_animListener != null) _anim.removeListener(_animListener!);
+    _anim.stop();
+    _anim.reset();
+    final from = _drag;
+    _animListener = () => setState(() =>
+        _drag = from + (target - from) * Curves.easeOut.transform(_anim.value));
+    _anim.addListener(_animListener!);
+    _anim.forward().whenComplete(() {
+      if (_animListener != null) _anim.removeListener(_animListener!);
+      _animListener = null;
+      if (!mounted) return;
+      setState(() {
+        if (commit != null) _bgIdx = commit;
+        _drag = 0;
+      });
+    });
   }
 
   @override
   void dispose() {
+    _anim.dispose();
     _controller.dispose();
     super.dispose();
   }
@@ -334,7 +381,6 @@ class _EditShareScreenState extends State<EditShareScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final g = cardGradientFor(widget.card.gradient);
     return Scaffold(
       backgroundColor: Colors.black,
       resizeToAvoidBottomInset: false, // 키보드가 떠도 카드가 안 밀리게
@@ -349,140 +395,54 @@ class _EditShareScreenState extends State<EditShareScreen> {
                     color: Colors.white, size: 30),
               ),
             ),
-            // ── 편집 카드 (맨 위로 붙임 → 키보드 떠도 전체 보임) ──
+            // ── 배경 캐러셀 (좌우로 넘겨 선택, 양옆에 이전/다음 미리보기) ──
             Expanded(
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 4, 20, 0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(24),
-                    child: RepaintBoundary(
-                      key: _boundaryKey,
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: LayoutBuilder(
-                          builder: (context, c) {
-                            final side = c.maxWidth;
-                            return Stack(
-                              children: [
-                                Positioned.fill(
-                                  child: DecoratedBox(
-                                      decoration:
-                                          BoxDecoration(gradient: g.gradient)),
-                                ),
-                                Positioned.fill(
-                                  child: bgImage(widget.card.gradient, _bgIdx),
-                                ),
-                                Positioned.fill(
-                                  child: Container(
-                                      color: const Color(0x1A000000)),
-                                ),
-                                const Positioned.fill(
-                                  child: DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      gradient: RadialGradient(
-                                        radius: 0.9,
-                                        colors: [
-                                          Color(0x55000000),
-                                          Color(0x00000000)
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                // 빈 곳 탭 → 선택 해제 / 좌우로 밀면 배경 교체
-                                Positioned.fill(
-                                  child: GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () =>
-                                        setState(() => _selected = null),
-                                    onHorizontalDragEnd: (d) {
-                                      final v = d.primaryVelocity ?? 0;
-                                      if (v.abs() < 100) return;
-                                      _cycleBg(v < 0 ? 1 : -1);
-                                    },
-                                  ),
-                                ),
-                                // 문구(제자리 편집) — 카드 가운데
-                                Padding(
-                                  padding: EdgeInsets.all(side * 0.09),
-                                  child: Center(
-                                    child: ConstrainedBox(
-                                      constraints: BoxConstraints(
-                                          maxWidth: side * 0.82),
-                                      child: TextField(
-                                        controller: _controller,
-                                        maxLines: null,
-                                        textAlign: TextAlign.center,
-                                        cursorColor: Colors.white,
-                                        onTap: () => setState(
-                                            () => _selected = null),
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: side * 0.078,
-                                          fontWeight: FontWeight.w800,
-                                          height: 1.35,
-                                          shadows: _shadow,
-                                        ),
-                                        decoration: const InputDecoration(
-                                          border: InputBorder.none,
-                                          isDense: true,
-                                          contentPadding: EdgeInsets.zero,
-                                          hintText: '문구 입력',
-                                          hintStyle:
-                                              TextStyle(color: Colors.white38),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                // 브랜드 — 카드 맨 하단
-                                Positioned(
-                                  left: 0,
-                                  right: 0,
-                                  bottom: side * 0.06,
-                                  child: Text('💌 트로트 카드',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Colors.white
-                                            .withValues(alpha: 0.85),
-                                        fontSize: side * 0.036,
-                                        fontWeight: FontWeight.w700,
-                                        shadows: _shadow,
-                                      )),
-                                ),
-                                // 스티커들
-                                for (int i = 0; i < _stickers.length; i++)
-                                  _stickerWidget(i, side),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
+              child: LayoutBuilder(
+                builder: (context, c) {
+                  final w = c.maxWidth, h = c.maxHeight;
+                  final cardW = math.min(w * 0.74, h - 8);
+                  _step = cardW * 1.05;
+                  final n = bgPoolSize(widget.card.gradient);
+                  return GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onHorizontalDragUpdate: (d) => setState(() =>
+                        _drag = (_drag + d.delta.dx).clamp(-_step, _step)),
+                    onHorizontalDragEnd: _onDragEnd,
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        for (int k = -2; k <= 2; k++)
+                          Positioned(
+                            left: w / 2 + k * _step + _drag - cardW / 2,
+                            top: 4,
+                            width: cardW,
+                            height: cardW,
+                            child: k == 0
+                                ? _editableCard(cardW)
+                                : _peekCard(
+                                    ((_bgIdx - 1 + k) % n + n) % n + 1, cardW),
+                          ),
+                      ],
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
             ),
-            // ── 배경 사진 넘기기 (좌우로 골라 조합) ──
+            // ── 배경 넘기기(화살표) + 위치 표시 ──
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  _bgArrow(Icons.chevron_left_rounded, () => _cycleBg(-1)),
-                  const SizedBox(width: 14),
-                  const Icon(Icons.image_rounded,
-                      color: Colors.white54, size: 18),
-                  const SizedBox(width: 6),
-                  const Text('배경 바꾸기',
-                      style: TextStyle(
+                  _bgArrow(Icons.chevron_left_rounded, () => _advance(-1)),
+                  const SizedBox(width: 18),
+                  Text('$_bgIdx / ${bgPoolSize(widget.card.gradient)}',
+                      style: const TextStyle(
                           color: Colors.white70,
                           fontSize: 15,
                           fontWeight: FontWeight.w700)),
-                  const SizedBox(width: 14),
-                  _bgArrow(Icons.chevron_right_rounded, () => _cycleBg(1)),
+                  const SizedBox(width: 18),
+                  _bgArrow(Icons.chevron_right_rounded, () => _advance(1)),
                 ],
               ),
             ),
@@ -557,6 +517,111 @@ class _EditShareScreenState extends State<EditShareScreen> {
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 가운데 편집 카드(문구·스티커 수정 + 공유 캡처 대상).
+  Widget _editableCard(double side) {
+    final g = cardGradientFor(widget.card.gradient);
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(24),
+      child: RepaintBoundary(
+        key: _boundaryKey,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: DecoratedBox(
+                  decoration: BoxDecoration(gradient: g.gradient)),
+            ),
+            Positioned.fill(child: bgImage(widget.card.gradient, _bgIdx)),
+            Positioned.fill(
+                child: Container(color: const Color(0x1A000000))),
+            const Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(radius: 0.9, colors: [
+                    Color(0x55000000),
+                    Color(0x00000000),
+                  ]),
+                ),
+              ),
+            ),
+            // 빈 곳 탭 → 선택 해제
+            Positioned.fill(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () => setState(() => _selected = null),
+              ),
+            ),
+            // 문구(제자리 편집) — 카드 가운데
+            Padding(
+              padding: EdgeInsets.all(side * 0.09),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(maxWidth: side * 0.82),
+                  child: TextField(
+                    controller: _controller,
+                    maxLines: null,
+                    textAlign: TextAlign.center,
+                    cursorColor: Colors.white,
+                    onTap: () => setState(() => _selected = null),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: side * 0.078,
+                      fontWeight: FontWeight.w800,
+                      height: 1.35,
+                      shadows: _shadow,
+                    ),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                      hintText: '문구 입력',
+                      hintStyle: TextStyle(color: Colors.white38),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // 브랜드 — 카드 맨 하단
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: side * 0.06,
+              child: Text('💌 트로트 카드',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.85),
+                    fontSize: side * 0.036,
+                    fontWeight: FontWeight.w700,
+                    shadows: _shadow,
+                  )),
+            ),
+            for (int i = 0; i < _stickers.length; i++)
+              _stickerWidget(i, side),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 양옆 미리보기 카드(배경 사진만, 살짝 어둡게).
+  Widget _peekCard(int img, double side) {
+    return Opacity(
+      opacity: 0.7,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            DecoratedBox(
+                decoration: BoxDecoration(
+                    gradient: cardGradientFor(widget.card.gradient).gradient)),
+            bgImage(widget.card.gradient, img),
+            Container(color: const Color(0x33000000)),
           ],
         ),
       ),
