@@ -307,21 +307,6 @@ class _Sticker {
   _Sticker(this.emoji, this.pos, this.scale);
 }
 
-/// 도구줄의 작은 라벨(정렬/위치).
-class _ToolLabel extends StatelessWidget {
-  final String text;
-  const _ToolLabel(this.text);
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(right: 8),
-        child: Text(text,
-            style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 14,
-                fontWeight: FontWeight.w700)),
-      );
-}
-
 /// 이미지 편집·공유 화면.
 /// - 문구는 카드 위에서 바로 수정(별도 입력칸 없음).
 /// - 아래 가로 스크롤 팔레트에서 스티커를 붙이고, 드래그로 옮기고,
@@ -369,8 +354,6 @@ class _EditShareScreenState extends State<EditShareScreen>
 
   // 문구 위치(정규화 0~1, 카드 기준). 손잡이로 옮긴다. 기본 가운데.
   Offset _textPos = const Offset(0.5, 0.5);
-  // 문구 정렬(왼쪽/가운데/오른쪽).
-  TextAlign _textAlign = TextAlign.center;
 
   static const _palette = [
     '🌸','❤️','🎉','😊','👍','🌷','🌹','✨','🥰','💐',
@@ -569,33 +552,6 @@ class _EditShareScreenState extends State<EditShareScreen>
                 },
               ),
             ),
-            // ── 글자 도구: 정렬 + 위치 이동(방향 버튼) ──
-            SizedBox(
-              height: 46,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 14),
-                child: Row(
-                  children: [
-                  const _ToolLabel('정렬'),
-                  _alignBtn(TextAlign.left, Icons.format_align_left_rounded),
-                  const SizedBox(width: 4),
-                  _alignBtn(TextAlign.center, Icons.format_align_center_rounded),
-                  const SizedBox(width: 4),
-                  _alignBtn(TextAlign.right, Icons.format_align_right_rounded),
-                  const SizedBox(width: 18),
-                  const _ToolLabel('위치'),
-                  _nudgeBtn(-0.06, 0, Icons.chevron_left_rounded),
-                  _nudgeBtn(0, -0.06, Icons.keyboard_arrow_up_rounded),
-                  _nudgeBtn(0, 0.06, Icons.keyboard_arrow_down_rounded),
-                  _nudgeBtn(0.06, 0, Icons.chevron_right_rounded),
-                  const SizedBox(width: 8),
-                  _nudgeBtn(0, 0, Icons.filter_center_focus_rounded,
-                      reset: true), // 가운데로
-                  ],
-                ),
-              ),
-            ),
             // ── 배경 분위기(카테고리) 선택 ──
             SizedBox(
               height: 44,
@@ -779,7 +735,7 @@ class _EditShareScreenState extends State<EditShareScreen>
           child: TextField(
             controller: _controller,
             maxLines: null,
-            textAlign: _textAlign,
+            textAlign: TextAlign.left,
             cursorColor: Colors.white,
             onTap: () => setState(() => _selected = null),
             style: TextStyle(
@@ -799,7 +755,15 @@ class _EditShareScreenState extends State<EditShareScreen>
           ),
         ),
       ),
-      // (글자 정렬·위치 도구는 카드 밖 고정 줄로 이동 → 카드 위엔 아무것도 안 얹음)
+      // 글자 이동 손잡이 — 글자 오른쪽 아래(글자 안 가림). 드래그로 문구 이동. 캡처엔 미표시.
+      if (!capture)
+        Positioned(
+          left: (_textPos.dx * side + side * 0.17)
+              .clamp(0.0, side - side * 0.16),
+          top: (_textPos.dy * side + side * 0.085)
+              .clamp(0.0, side - side * 0.11),
+          child: _textMoveHandle(side),
+        ),
       // 브랜드 — 카드 맨 하단
       Positioned(
         left: 0,
@@ -825,55 +789,38 @@ class _EditShareScreenState extends State<EditShareScreen>
     );
   }
 
-  /// 글자 위치 이동(방향 버튼). reset=true면 가운데로 되돌림.
-  Widget _nudgeBtn(double dx, double dy, IconData icon, {bool reset = false}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 2),
-      child: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: () => setState(() {
-          _textPos = reset
-              ? const Offset(0.5, 0.5)
-              : Offset(
-                  (_textPos.dx + dx).clamp(0.15, 0.85),
-                  (_textPos.dy + dy).clamp(0.12, 0.88),
-                );
-        }),
-        child: Container(
-          width: 38,
-          height: 38,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: const Color(0xE6303030),
-            borderRadius: BorderRadius.circular(9),
-            boxShadow: const [BoxShadow(color: Color(0x55000000), blurRadius: 4)],
-          ),
-          child: Icon(icon, color: Colors.white, size: 20),
-        ),
-      ),
-    );
-  }
-
-  /// 글자 정렬 버튼(왼쪽/가운데/오른쪽). 현재 정렬이면 초록 강조.
-  Widget _alignBtn(TextAlign a, IconData icon) {
-    final on = _textAlign == a;
+  /// 글자 이동 손잡이 — 드래그로 문구 위치(_textPos) 이동. 캡처엔 안 나옴.
+  Widget _textMoveHandle(double side) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () => setState(() => _textAlign = a),
+      onPanUpdate: (d) => setState(() {
+        _textPos = Offset(
+          (_textPos.dx + d.delta.dx / side).clamp(0.14, 0.86),
+          (_textPos.dy + d.delta.dy / side).clamp(0.12, 0.88),
+        );
+      }),
       child: Container(
-        width: 34,
-        height: 34,
-        alignment: Alignment.center,
+        padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 7),
         decoration: BoxDecoration(
-          color: on ? const Color(0xFF00704A) : const Color(0xE6303030),
-          borderRadius: BorderRadius.circular(9),
-          boxShadow: const [BoxShadow(color: Color(0x55000000), blurRadius: 4)],
+          color: const Color(0xFF00704A),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [BoxShadow(color: Color(0x66000000), blurRadius: 6)],
         ),
-        child: Icon(icon, color: Colors.white, size: 18),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.open_with_rounded, color: Colors.white, size: 16),
+            SizedBox(width: 4),
+            Text('글자 이동',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800)),
+          ],
+        ),
       ),
     );
   }
-
 
   Widget _bgArrow(IconData icon, VoidCallback onTap) {
     return InkResponse(
