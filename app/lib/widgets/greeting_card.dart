@@ -18,9 +18,9 @@ import '../utils/card_gradients.dart';
 /// 이 APK 번들에 실제로 들어있는 분위기별 사진 수 (`assets/bg/{key}_1..N.jpg`).
 /// 이 값 이하 인덱스는 번들 asset, 초과 인덱스는 GitHub raw에서 받아 캐시(OTA).
 const _bundledBgCount = {
-  'warm': 35, 'sunrise': 24, 'spring': 22, 'calm': 38,
+  'sunrise': 24, 'spring': 22, 'calm': 38,
   'sunset': 34, 'night': 24, 'rose': 24, 'lavender': 27,
-  'animal': 11, 'cafe': 15, 'library': 11,
+  'animal': 27, 'cafe': 15, 'library': 11,
 };
 
 /// 원격 bg_manifest.json 로 갱신되는 분위기별 사진 수. (같은 카드=항상 같은 사진)
@@ -125,26 +125,34 @@ int _stableHash(String s) {
   return h;
 }
 
+/// 사진이 0장인 분위기(예: 제거된 warm)는 대체 풀로 매핑해 카드가 깨지지 않게 한다.
+String effectiveBgKey(String key) {
+  final n = bgCountsNotifier.value[key] ?? _bundledBgCount[key] ?? 0;
+  return n > 0 ? key : 'sunset';
+}
+
 /// 카드마다 분위기 풀에서 고정된 사진 인덱스(1..N)를 고른다. N은 원격 장수.
 int bgIndexFor(GreetingCard card) {
-  final n = bgCountsNotifier.value[card.gradient] ??
-      _bundledBgCount[card.gradient] ??
-      1;
+  final key = effectiveBgKey(card.gradient);
+  final n = bgCountsNotifier.value[key] ?? _bundledBgCount[key] ?? 1;
   return _stableHash(card.text) % n + 1;
 }
 
 /// 분위기 풀 크기(1..N). 편집 화면에서 배경을 좌우로 넘겨 고를 때 상한.
-int bgPoolSize(String gradientKey) =>
-    bgCountsNotifier.value[gradientKey] ?? _bundledBgCount[gradientKey] ?? 1;
+int bgPoolSize(String gradientKey) {
+  final key = effectiveBgKey(gradientKey);
+  return bgCountsNotifier.value[key] ?? _bundledBgCount[key] ?? 1;
+}
 
 /// 배경 사진 위젯: 번들이면 asset, 받아둔 원격은 로컬 파일, 아직이면 원격 폴백.
 Widget bgImage(String gradientKey, int idx, {BoxFit fit = BoxFit.cover}) {
-  final bundled = _bundledBgCount[gradientKey] ?? 0;
+  final key = effectiveBgKey(gradientKey);
+  final bundled = _bundledBgCount[key] ?? 0;
   if (idx <= bundled) {
-    return Image.asset('assets/bg/${gradientKey}_$idx.jpg',
+    return Image.asset('assets/bg/${key}_$idx.jpg',
         fit: fit, errorBuilder: (_, _, _) => const SizedBox.shrink());
   }
-  final name = '${gradientKey}_$idx';
+  final name = '${key}_$idx';
   if (_bgDir != null && _localBg.contains(name)) {
     return Image.file(File('${_bgDir!.path}/$name.jpg'),
         fit: fit, errorBuilder: (_, _, _) => const SizedBox.shrink());
@@ -161,8 +169,9 @@ Widget bgImage(String gradientKey, int idx, {BoxFit fit = BoxFit.cover}) {
 
 /// 원격 사진의 공유 캡처 전 미리 로드(캐시). 번들 범위면 즉시 반환.
 Future<void> precacheBg(BuildContext context, String gradientKey, int idx) async {
-  if (idx <= (_bundledBgCount[gradientKey] ?? 0)) return;
-  final name = '${gradientKey}_$idx';
+  final key = effectiveBgKey(gradientKey);
+  if (idx <= (_bundledBgCount[key] ?? 0)) return;
+  final name = '${key}_$idx';
   try {
     if (_bgDir != null && _localBg.contains(name)) {
       await precacheImage(FileImage(File('${_bgDir!.path}/$name.jpg')), context);
@@ -321,7 +330,6 @@ class _EditShareScreenState extends State<EditShareScreen>
 
   // 배경 분위기(카테고리) 목록 — 시니어용 한글 이름.
   static const _bgCats = [
-    ('warm', '따뜻함'),
     ('sunset', '노을'),
     ('sunrise', '해돋이'),
     ('spring', '봄꽃'),
@@ -344,6 +352,9 @@ class _EditShareScreenState extends State<EditShareScreen>
   double _drag = 0;
   double _step = 1;
 
+  // 문구 위치(정규화 0~1, 카드 기준). 손잡이로 옮긴다. 기본 가운데.
+  Offset _textPos = const Offset(0.5, 0.5);
+
   static const _palette = [
     '🌸','❤️','🎉','😊','👍','🌷','🌹','✨','🥰','💐',
     '🍀','🎈','🌻','🎁','💕','⭐','🙏','🎶','🌺','💖',
@@ -359,7 +370,7 @@ class _EditShareScreenState extends State<EditShareScreen>
     super.initState();
     _controller = TextEditingController(text: widget.card.text);
     _bgIdx = bgIndexFor(widget.card);
-    _bgCategory = widget.card.gradient;
+    _bgCategory = effectiveBgKey(widget.card.gradient); // warm 제거 대응
     _anim = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 240));
   }
@@ -716,33 +727,44 @@ class _EditShareScreenState extends State<EditShareScreen>
             onHorizontalDragEnd: _onDragEnd,
           ),
         ),
-      // 문구(제자리 편집) — 카드 가운데, 고정
-      Padding(
-        padding: EdgeInsets.all(side * 0.09),
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: side * 0.82),
-            child: TextField(
-              controller: _controller,
-              maxLines: null,
-              textAlign: TextAlign.center,
-              cursorColor: Colors.white,
-              onTap: () => setState(() => _selected = null),
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: side * 0.078,
-                fontWeight: FontWeight.w800,
-                height: 1.35,
-                shadows: _shadow,
+      // 문구 — 이동 가능(손잡이로 옮기고, 글자 탭하면 편집). capture면 손잡이 없이 위치만.
+      Align(
+        alignment: Alignment(_textPos.dx * 2 - 1, _textPos.dy * 2 - 1),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: side * 0.82),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              TextField(
+                controller: _controller,
+                maxLines: null,
+                textAlign: TextAlign.center,
+                cursorColor: Colors.white,
+                onTap: () => setState(() => _selected = null),
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: side * 0.078,
+                  fontWeight: FontWeight.w800,
+                  height: 1.35,
+                  shadows: _shadow,
+                ),
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  isDense: true,
+                  contentPadding: EdgeInsets.zero,
+                  hintText: '문구 입력',
+                  hintStyle: TextStyle(color: Colors.white38),
+                ),
               ),
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                isDense: true,
-                contentPadding: EdgeInsets.zero,
-                hintText: '문구 입력',
-                hintStyle: TextStyle(color: Colors.white38),
-              ),
-            ),
+              // 글자 이동 손잡이(캡처 제외) — 텍스트 위에 살짝, 레이아웃엔 영향 없음
+              if (!capture)
+                Positioned(
+                  top: -side * 0.11,
+                  left: 0,
+                  right: 0,
+                  child: Center(child: _textMoveHandle(side)),
+                ),
+            ],
           ),
         ),
       ),
@@ -768,6 +790,39 @@ class _EditShareScreenState extends State<EditShareScreen>
       child: capture
           ? RepaintBoundary(key: _boundaryKey, child: stack)
           : stack,
+    );
+  }
+
+  /// 글자 블록을 잡고 옮기는 손잡이(편집 화면 표시용, 공유 캡처엔 안 나옴).
+  Widget _textMoveHandle(double side) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onPanUpdate: (d) => setState(() {
+        _textPos = Offset(
+          (_textPos.dx + d.delta.dx / side).clamp(0.18, 0.82),
+          (_textPos.dy + d.delta.dy / side).clamp(0.14, 0.86),
+        );
+      }),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: const Color(0xFF00704A),
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: const [BoxShadow(color: Color(0x66000000), blurRadius: 6)],
+        ),
+        child: const Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.open_with_rounded, color: Colors.white, size: 16),
+            SizedBox(width: 4),
+            Text('글자 이동',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w800)),
+          ],
+        ),
+      ),
     );
   }
 
