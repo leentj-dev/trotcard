@@ -36,7 +36,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        manifestPlaceholders["appLabel"] = "트로트 카드 - 안부카드"
+        manifestPlaceholders["appLabel"] = "트로트안부"
         // AdMob 실제 App ID (Android).
         manifestPlaceholders["admobAppId"] =
             "ca-app-pub-6232115093331648~9989865189"

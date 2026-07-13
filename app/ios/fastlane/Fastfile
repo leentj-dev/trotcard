@@ -1,6 +1,6 @@
 default_platform(:ios)
 
-APP_ID = "dev.leentj.kpopHangul"
+APP_ID = "dev.leentj.trotcard"
 TEAM_ID = "2U6RJTHK3V"
 
 platform :ios do
@@ -10,6 +10,50 @@ platform :ios do
       issuer_id: "940731f5-e618-431d-921d-cc336fd1682a",
       key_filepath: "fastlane/AuthKey_DPCWVWG2NC.p8"
     )
+  end
+
+  desc "Register bundle id + create the App Store Connect app record"
+  lane :create do
+    produce(
+      app_identifier: APP_ID,
+      app_name: "트로트카드-안부카드",
+      language: "Korean",
+      sku: "trotcard",
+      team_id: TEAM_ID,
+      itc_team_id: TEAM_ID
+    )
+  end
+
+  desc "Create bundle id + App Store Connect app via ConnectAPI (API key, no 2FA)"
+  lane :createapi do
+    require 'spaceship'
+    bundle = Spaceship::ConnectAPI::BundleId.all.find { |b| b.identifier == APP_ID }
+    if bundle.nil?
+      bundle = Spaceship::ConnectAPI::BundleId.create(name: "Trotcard", identifier: APP_ID, platform: "IOS")
+      UI.success("번들 ID 생성: #{bundle.identifier}")
+    else
+      UI.message("번들 ID 이미 존재: #{bundle.identifier}")
+    end
+
+    app = Spaceship::ConnectAPI::App.find(APP_ID)
+    if app.nil?
+      app = Spaceship::ConnectAPI::App.create(
+        name: "트로트카드-안부카드",
+        version_string: "1.0.0",
+        sku: "trotcard",
+        primary_locale: "ko",
+        bundle_id: bundle.id,
+        platforms: ["IOS"]
+      )
+      UI.success("앱 생성 완료: #{app.name} (#{app.id})")
+    else
+      UI.message("앱 이미 존재: #{app.name}")
+    end
+  end
+
+  desc "Register bundle id + distribution profile via API key (no 2FA)"
+  lane :prep do
+    get_provisioning_profile(app_identifier: APP_ID, readonly: false)
   end
 
   desc "Build a signed IPA and upload to TestFlight"

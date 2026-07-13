@@ -1,2 +1,2 @@
 json_key_file("fastlane/play-store-key.json")
-package_name("dev.leentj.kpop_hangul")
+package_name("dev.leentj.trotcard")
