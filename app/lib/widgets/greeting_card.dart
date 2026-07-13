@@ -727,47 +727,45 @@ class _EditShareScreenState extends State<EditShareScreen>
             onHorizontalDragEnd: _onDragEnd,
           ),
         ),
-      // 문구 — 이동 가능(손잡이로 옮기고, 글자 탭하면 편집). capture면 손잡이 없이 위치만.
+      // 문구 — 위치 이동 가능(손잡이로 옮기고, 글자 탭하면 편집).
       Align(
         alignment: Alignment(_textPos.dx * 2 - 1, _textPos.dy * 2 - 1),
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: side * 0.82),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              TextField(
-                controller: _controller,
-                maxLines: null,
-                textAlign: TextAlign.center,
-                cursorColor: Colors.white,
-                onTap: () => setState(() => _selected = null),
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: side * 0.078,
-                  fontWeight: FontWeight.w800,
-                  height: 1.35,
-                  shadows: _shadow,
-                ),
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  isDense: true,
-                  contentPadding: EdgeInsets.zero,
-                  hintText: '문구 입력',
-                  hintStyle: TextStyle(color: Colors.white38),
-                ),
-              ),
-              // 글자 이동 손잡이(캡처 제외) — 텍스트 위에 살짝, 레이아웃엔 영향 없음
-              if (!capture)
-                Positioned(
-                  top: -side * 0.11,
-                  left: 0,
-                  right: 0,
-                  child: Center(child: _textMoveHandle(side)),
-                ),
-            ],
+          child: TextField(
+            controller: _controller,
+            maxLines: null,
+            textAlign: TextAlign.center,
+            cursorColor: Colors.white,
+            onTap: () => setState(() => _selected = null),
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: side * 0.078,
+              fontWeight: FontWeight.w800,
+              height: 1.35,
+              shadows: _shadow,
+            ),
+            decoration: const InputDecoration(
+              border: InputBorder.none,
+              isDense: true,
+              contentPadding: EdgeInsets.zero,
+              hintText: '문구 입력',
+              hintStyle: TextStyle(color: Colors.white38),
+            ),
           ),
         ),
       ),
+      // 글자 이동 손잡이 — 카드 본체 레이어(터치가 잡히도록). 캡처엔 미표시.
+      if (!capture)
+        Positioned(
+          left: 0,
+          right: 0,
+          top: (_textPos.dy * side - side * 0.135).clamp(0.0, side * 0.9),
+          child: Align(
+            alignment: Alignment(_textPos.dx * 2 - 1, 0),
+            child: _textMoveHandle(side),
+          ),
+        ),
       // 브랜드 — 카드 맨 하단
       Positioned(
         left: 0,

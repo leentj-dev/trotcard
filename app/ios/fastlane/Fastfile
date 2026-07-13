@@ -57,6 +57,22 @@ platform :ios do
   end
 
   desc "Build a signed IPA and upload to TestFlight"
+  # flutter build 는 셸에서 미리 돌린 뒤 서명·아카이브·업로드만 (fastlane 환경 pod 오판 회피)
+  lane :ship do
+    get_provisioning_profile(app_identifier: APP_ID, readonly: false)
+    update_code_signing_settings(
+      use_automatic_signing: false, path: "Runner.xcodeproj",
+      team_id: TEAM_ID, bundle_identifier: APP_ID,
+      code_sign_identity: "Apple Distribution",
+      profile_name: lane_context[SharedValues::SIGH_NAME]
+    )
+    build_app(
+      workspace: "Runner.xcworkspace", scheme: "Runner", export_method: "app-store",
+      export_options: { provisioningProfiles: { APP_ID => lane_context[SharedValues::SIGH_NAME] } }
+    )
+    upload_to_testflight(skip_waiting_for_build_processing: true)
+  end
+
   lane :beta do
     sh("cd .. && flutter build ios --release --no-codesign --config-only")
     get_provisioning_profile(app_identifier: APP_ID, readonly: false)
