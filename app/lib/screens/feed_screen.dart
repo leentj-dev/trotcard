@@ -8,6 +8,7 @@ import '../data/song_repository.dart';
 import '../models/song.dart';
 import '../utils/themes.dart';
 import '../widgets/native_ad_card.dart';
+import '../widgets/song_request_sheet.dart';
 import 'song_screen.dart';
 
 /// 노래 목록. 곡을 누르면 상세(유튜브 재생 + 마음 카드)로 이동한다.
@@ -198,6 +199,15 @@ class _FeedScreenState extends State<FeedScreen> {
           ],
         ),
         actions: [
+          TextButton.icon(
+            onPressed: () => showSongRequestSheet(context),
+            style: TextButton.styleFrom(
+              foregroundColor: const Color(0xFF00704A),
+            ),
+            icon: const Icon(Icons.library_music_rounded, size: 20),
+            label: const Text('신청곡',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800)),
+          ),
           IconButton(
             onPressed: toggleThemeMode,
             tooltip: isDark ? '밝게' : '어둡게',
@@ -206,7 +216,7 @@ class _FeedScreenState extends State<FeedScreen> {
               color: onSurface.withValues(alpha: 0.85),
             ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 4),
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(56),

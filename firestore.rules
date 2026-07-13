@@ -1,0 +1,19 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 신청곡: 앱에서 누구나 "쓰기(생성)"만 가능. 읽기/수정/삭제는 콘솔에서만.
+    match /requests/{id} {
+      allow create: if request.resource.data.title is string
+                    && request.resource.data.title.size() > 0
+                    && request.resource.data.title.size() <= 100
+                    && (!('artist' in request.resource.data)
+                        || request.resource.data.artist.size() <= 60)
+                    && (!('note' in request.resource.data)
+                        || request.resource.data.note.size() <= 300);
+      allow read, update, delete: if false;
+    }
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
