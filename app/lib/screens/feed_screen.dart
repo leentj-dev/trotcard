@@ -1,5 +1,3 @@
-import 'dart:ui' as ui;
-
 import 'package:flutter/material.dart';
 
 import '../config/app_config.dart';
@@ -431,11 +429,9 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 
-  /// 리스트 썸네일. 옛 4:3 뮤직비디오는 유튜브 썸네일(`hqdefault`)이 곡을 꽉
-  /// 채우므로 좌우 검은 여백이 안 생기고, 요즘 16:9 영상은 위아래가 살짝 남는데
-  /// 그 여백을 같은 썸네일의 흐린 배경(cover+blur)으로 채워 카드가 꽉 차 보인다.
+  /// 리스트 썸네일. 유튜브 `mqdefault`(16:9)를 cover 로 꽉 채운다. 요즘 16:9
+  /// 영상은 완벽히 채워지고, 옛 4:3 무대영상만 좌우에 약간 여백이 남는다.
   Widget _thumbnail(String youtubeId, SongTheme theme) {
-    final url = 'https://img.youtube.com/vi/$youtubeId/hqdefault.jpg';
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
       child: SizedBox(
@@ -445,19 +441,9 @@ class _FeedScreenState extends State<FeedScreen> {
           fit: StackFit.expand,
           children: [
             Container(decoration: BoxDecoration(gradient: theme.gradient)),
-            // 여백을 메우는 흐린 배경.
-            ImageFiltered(
-              imageFilter: ui.ImageFilter.blur(sigmaX: 14, sigmaY: 14),
-              child: Image.network(
-                url,
-                fit: BoxFit.cover,
-                errorBuilder: (_, _, _) => const SizedBox.shrink(),
-              ),
-            ),
-            // 잘리지 않은 원본(가운데 맞춤).
             Image.network(
-              url,
-              fit: BoxFit.contain,
+              'https://img.youtube.com/vi/$youtubeId/mqdefault.jpg',
+              fit: BoxFit.cover,
               errorBuilder: (_, _, _) => Center(
                 child: Icon(Icons.music_note_rounded,
                     color: theme.accent, size: 32),
