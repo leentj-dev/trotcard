@@ -39,31 +39,10 @@ class CardNativeAdLoader extends ChangeNotifier {
     // 새 광고가 로드되면 그때 교체(로드 전까진 기존 광고 유지).
     NativeAd(
       adUnitId: Ads.cardNativeUnitId,
+      // 커스텀 네이티브 레이아웃(미디어+제목+설명+그린 CTA). 구글 기본 medium
+      // 템플릿이 글자 뒤에 검은 박스를 그리던 문제를 없앤다.
+      factoryId: 'cardMedia',
       request: const AdRequest(),
-      nativeTemplateStyle: NativeTemplateStyle(
-        templateType: TemplateType.medium,
-        mainBackgroundColor: const Color(0xFF241019),
-        cornerRadius: 20,
-        callToActionTextStyle: NativeTemplateTextStyle(
-          textColor: Colors.white,
-          backgroundColor: const Color(0xFF00704A),
-          style: NativeTemplateFontStyle.bold,
-          size: 16,
-        ),
-        primaryTextStyle: NativeTemplateTextStyle(
-          textColor: Colors.white,
-          style: NativeTemplateFontStyle.bold,
-          size: 18,
-        ),
-        secondaryTextStyle: NativeTemplateTextStyle(
-          textColor: Colors.white.withValues(alpha: 0.75),
-          size: 14,
-        ),
-        tertiaryTextStyle: NativeTemplateTextStyle(
-          textColor: Colors.white.withValues(alpha: 0.55),
-          size: 12,
-        ),
-      ),
       listener: NativeAdListener(
         onAdLoaded: (ad) {
           if (_disposed) {
@@ -112,27 +91,19 @@ class CardNativeAdView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 배너가 떠서 공간이 좁아지면 카드 광고가 잘리지 않도록 통째로 축소한다
+    // (scaleDown: 공간이 넉넉하면 원래 크기, 좁으면 비율 유지하며 줄임).
+    // 카드 모서리·"광고" 뱃지는 커스텀 네이티브 레이아웃 안에서 그린다.
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text('광고',
-                style: TextStyle(
-                    color: Colors.white54,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700)),
-            const SizedBox(height: 8),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: SizedBox(
-                width: 330,
-                height: 340,
-                child: AdWidget(key: ValueKey(ad), ad: ad),
-              ),
-            ),
-          ],
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: SizedBox(
+            width: 330,
+            height: 340,
+            child: AdWidget(key: ValueKey(ad), ad: ad),
+          ),
         ),
       ),
     );

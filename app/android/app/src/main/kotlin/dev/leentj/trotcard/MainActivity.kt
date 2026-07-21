@@ -10,10 +10,14 @@ class MainActivity : FlutterActivity() {
         GoogleMobileAdsPlugin.registerNativeAdFactory(
             flutterEngine, "songCard", SongCardNativeAdFactory(layoutInflater)
         )
+        GoogleMobileAdsPlugin.registerNativeAdFactory(
+            flutterEngine, "cardMedia", CardMediaNativeAdFactory(layoutInflater)
+        )
     }
 
     override fun cleanUpFlutterEngine(flutterEngine: FlutterEngine) {
         GoogleMobileAdsPlugin.unregisterNativeAdFactory(flutterEngine, "songCard")
+        GoogleMobileAdsPlugin.unregisterNativeAdFactory(flutterEngine, "cardMedia")
         super.cleanUpFlutterEngine(flutterEngine)
     }
 }

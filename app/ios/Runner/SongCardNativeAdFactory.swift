@@ -46,11 +46,11 @@ class SongCardNativeAdFactory: NSObject, FLTNativeAdFactory {
     container.addSubview(icon)
     adView.iconView = icon
 
-    // Headline: big bold, theme color, up to 2 lines.
+    // Headline: bold, theme color, up to 2 lines.
     let headline = UILabel()
     headline.text = nativeAd.headline
     headline.textColor = titleColor
-    headline.font = .systemFont(ofSize: 26, weight: .bold)
+    headline.font = .systemFont(ofSize: 17, weight: .bold)
     headline.numberOfLines = 2
     headline.setContentHuggingPriority(.defaultLow, for: .horizontal)
     headline.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
@@ -76,7 +76,7 @@ class SongCardNativeAdFactory: NSObject, FLTNativeAdFactory {
     let body = UILabel()
     body.text = nativeAd.body
     body.textColor = subColor
-    body.font = .systemFont(ofSize: 17, weight: .semibold)
+    body.font = .systemFont(ofSize: 14, weight: .semibold)
     body.numberOfLines = 1
     body.isHidden = (nativeAd.body?.isEmpty ?? true)
     adView.bodyView = body
@@ -103,10 +103,10 @@ class SongCardNativeAdFactory: NSObject, FLTNativeAdFactory {
 
       icon.leadingAnchor.constraint(equalTo: container.leadingAnchor),
       icon.centerYAnchor.constraint(equalTo: container.centerYAnchor),
-      icon.widthAnchor.constraint(equalToConstant: 176),
-      icon.heightAnchor.constraint(equalToConstant: 99),
+      icon.widthAnchor.constraint(equalToConstant: 120),
+      icon.heightAnchor.constraint(equalToConstant: 68),
 
-      column.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 14),
+      column.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 12),
       column.trailingAnchor.constraint(equalTo: container.trailingAnchor),
       column.centerYAnchor.constraint(equalTo: container.centerYAnchor),
       column.topAnchor.constraint(greaterThanOrEqualTo: container.topAnchor, constant: 8),

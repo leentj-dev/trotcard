@@ -1,0 +1,69 @@
+package dev.leentj.trotcard
+
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import com.google.android.gms.ads.nativead.MediaView
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdView
+import io.flutter.plugins.googlemobileads.GoogleMobileAdsPlugin
+
+/**
+ * "Pretty card" native ad for the between-cards pager. Big media + icon/headline/
+ * body + green CTA in the app's maroon tone. factoryId = "cardMedia".
+ */
+class CardMediaNativeAdFactory(private val inflater: LayoutInflater) :
+    GoogleMobileAdsPlugin.NativeAdFactory {
+
+    override fun createNativeAd(
+        nativeAd: NativeAd,
+        customOptions: MutableMap<String, Any>?
+    ): NativeAdView {
+        val adView =
+            inflater.inflate(R.layout.native_ad_card_media, null) as NativeAdView
+
+        val media = adView.findViewById<MediaView>(R.id.ad_media)
+        val headline = adView.findViewById<TextView>(R.id.ad_headline)
+        val body = adView.findViewById<TextView>(R.id.ad_body)
+        val cta = adView.findViewById<TextView>(R.id.ad_cta)
+        val icon = adView.findViewById<ImageView>(R.id.ad_icon)
+
+        media.setImageScaleType(ImageView.ScaleType.CENTER_CROP)
+        nativeAd.mediaContent?.let { media.mediaContent = it }
+        adView.mediaView = media
+
+        headline.text = nativeAd.headline
+        adView.headlineView = headline
+
+        val bodyText = nativeAd.body
+        if (bodyText.isNullOrEmpty()) {
+            body.visibility = View.GONE
+        } else {
+            body.visibility = View.VISIBLE
+            body.text = bodyText
+        }
+        adView.bodyView = body
+
+        val ctaText = nativeAd.callToAction
+        if (ctaText.isNullOrEmpty()) {
+            cta.visibility = View.GONE
+        } else {
+            cta.visibility = View.VISIBLE
+            cta.text = ctaText
+        }
+        adView.callToActionView = cta
+
+        val ic = nativeAd.icon
+        if (ic != null) {
+            icon.setImageDrawable(ic.drawable)
+            icon.visibility = View.VISIBLE
+        } else {
+            icon.visibility = View.GONE
+        }
+        adView.iconView = icon
+
+        adView.setNativeAd(nativeAd)
+        return adView
+    }
+}

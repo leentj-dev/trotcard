@@ -16,11 +16,12 @@
         android:paddingBottom="10dp"
         android:gravity="center_vertical">
 
-        <!-- thumbnail (ad icon): same size as the song row thumbnail -->
+        <!-- thumbnail (ad icon): compact — the ad icon is a small logo, blowing
+             it up to the full row size just pixelates it. -->
         <ImageView
             android:id="@+id/ad_icon"
-            android:layout_width="176dp"
-            android:layout_height="99dp"
+            android:layout_width="120dp"
+            android:layout_height="68dp"
             android:scaleType="centerCrop"
             android:background="@drawable/native_ad_thumb_bg"
             android:clipToOutline="true"
@@ -30,7 +31,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="14dp"
+            android:layout_marginStart="12dp"
             android:orientation="vertical">
 
             <!-- title row: headline + AD badge -->
@@ -47,9 +48,9 @@
                     android:layout_weight="1"
                     android:maxLines="2"
                     android:ellipsize="end"
-                    android:textSize="26sp"
+                    android:textSize="17sp"
                     android:textStyle="bold"
-                    android:lineSpacingMultiplier="1.1" />
+                    android:lineSpacingMultiplier="1.05" />
 
                 <TextView
                     android:id="@+id/ad_badge"
@@ -70,10 +71,10 @@
                 android:id="@+id/ad_body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
+                android:layout_marginTop="4dp"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:textSize="17sp" />
+                android:textSize="14sp" />
 
             <!-- CTA kept in the tree (registered for clicks) but hidden so the ad
                  reads like a plain song row. -->

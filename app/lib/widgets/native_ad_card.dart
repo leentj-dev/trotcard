@@ -24,8 +24,8 @@ class _NativeAdCardState extends State<NativeAdCard> {
   bool _loaded = false;
   Timer? _refreshTimer;
 
-  // 리스트 행(썸네일 99 + 상하 여백)과 같은 높이.
-  static const _height = 120.0;
+  // 광고 아이콘은 작은 로고라 행만큼 키우면 깨진다 → 컴팩트한 높이.
+  static const _height = 92.0;
 
   @override
   void initState() {

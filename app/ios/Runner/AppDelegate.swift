@@ -17,5 +17,9 @@ import google_mobile_ads
       engineBridge.pluginRegistry,
       factoryId: "songCard",
       nativeAdFactory: SongCardNativeAdFactory())
+    FLTGoogleMobileAdsPlugin.registerNativeAdFactory(
+      engineBridge.pluginRegistry,
+      factoryId: "cardMedia",
+      nativeAdFactory: CardMediaNativeAdFactory())
   }
 }
