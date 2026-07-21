@@ -3,8 +3,9 @@ import GoogleMobileAds
 import UIKit
 import google_mobile_ads
 
-/// Builds a native ad styled like a song list row (thumbnail + title + artist),
-/// mirroring the Android `native_ad_song.xml` layout. factoryId = "songCard".
+/// Builds a native ad styled like a song list row (thumbnail 176x99 + big title
+/// + artist), mirroring the Android `native_ad_song.xml` layout. Text colors
+/// follow the app theme passed in customOptions["dark"]. factoryId = "songCard".
 class SongCardNativeAdFactory: NSObject, FLTNativeAdFactory {
 
   private static func hex(_ value: UInt32, alpha: CGFloat = 1) -> UIColor {
@@ -22,43 +23,45 @@ class SongCardNativeAdFactory: NSObject, FLTNativeAdFactory {
     let adView = GADNativeAdView()
     adView.translatesAutoresizingMaskIntoConstraints = false
 
-    // Card background: #14101B fill, #251E30 border, radius 14.
-    let card = UIView()
-    card.translatesAutoresizingMaskIntoConstraints = false
-    card.backgroundColor = Self.hex(0x14101B)
-    card.layer.cornerRadius = 14
-    card.layer.borderWidth = 1
-    card.layer.borderColor = Self.hex(0x251E30).cgColor
-    card.clipsToBounds = true
-    adView.addSubview(card)
+    // 리스트 행 글자색(onSurface)에 맞춰 라이트/다크 색 결정.
+    let dark = (customOptions?["dark"] as? Bool) ?? true
+    let titleColor: UIColor = dark ? .white : Self.hex(0x1B1B1B)
+    let subColor: UIColor = dark ? UIColor.white.withAlphaComponent(0.7)
+      : Self.hex(0x1B1B1B, alpha: 0.7)
 
-    // Thumbnail (ad icon): 118x66, rounded 10.
+    // Transparent container — no card, reads like a song row.
+    let container = UIView()
+    container.translatesAutoresizingMaskIntoConstraints = false
+    container.backgroundColor = .clear
+    adView.addSubview(container)
+
+    // Thumbnail (ad icon): 176x99, rounded 12 — same as the song row.
     let icon = UIImageView()
     icon.translatesAutoresizingMaskIntoConstraints = false
     icon.contentMode = .scaleAspectFill
     icon.clipsToBounds = true
-    icon.layer.cornerRadius = 10
+    icon.layer.cornerRadius = 12
     icon.backgroundColor = Self.hex(0x251E30)
     icon.image = nativeAd.icon?.image
-    card.addSubview(icon)
+    container.addSubview(icon)
     adView.iconView = icon
 
-    // Headline: white bold 15, single line.
+    // Headline: big bold, theme color, up to 2 lines.
     let headline = UILabel()
     headline.text = nativeAd.headline
-    headline.textColor = .white
-    headline.font = .systemFont(ofSize: 15, weight: .bold)
-    headline.numberOfLines = 1
+    headline.textColor = titleColor
+    headline.font = .systemFont(ofSize: 26, weight: .bold)
+    headline.numberOfLines = 2
     headline.setContentHuggingPriority(.defaultLow, for: .horizontal)
     headline.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     adView.headlineView = headline
 
-    // "광고" badge: #33FFFFFF bg, radius 4, text #CFC8DA 9 bold.
-    let badge = PaddingLabel(insets: UIEdgeInsets(top: 1, left: 5, bottom: 1, right: 5))
+    // "광고" badge: subtle pill so the ad stays distinguishable (policy).
+    let badge = PaddingLabel(insets: UIEdgeInsets(top: 2, left: 6, bottom: 2, right: 6))
     badge.text = "광고"
-    badge.textColor = Self.hex(0xCFC8DA)
-    badge.font = .systemFont(ofSize: 9, weight: .bold)
-    badge.backgroundColor = UIColor.white.withAlphaComponent(0.2)
+    badge.textColor = subColor
+    badge.font = .systemFont(ofSize: 10, weight: .bold)
+    badge.backgroundColor = (dark ? UIColor.white : UIColor.black).withAlphaComponent(0.12)
     badge.layer.cornerRadius = 4
     badge.clipsToBounds = true
     badge.setContentHuggingPriority(.required, for: .horizontal)
@@ -69,54 +72,44 @@ class SongCardNativeAdFactory: NSObject, FLTNativeAdFactory {
     titleRow.alignment = .center
     titleRow.spacing = 6
 
-    // Body: #C4B5FD 12.5, single line.
+    // Body (advertiser / store), like the artist line.
     let body = UILabel()
     body.text = nativeAd.body
-    body.textColor = Self.hex(0xC4B5FD)
-    body.font = .systemFont(ofSize: 12.5)
+    body.textColor = subColor
+    body.font = .systemFont(ofSize: 17, weight: .semibold)
     body.numberOfLines = 1
     body.isHidden = (nativeAd.body?.isEmpty ?? true)
     adView.bodyView = body
 
-    // Call to action: #7C3AED bg, radius 8, white bold 12. Non-tappable itself —
-    // the GADNativeAdView handles the tap.
-    let cta = PaddingLabel(insets: UIEdgeInsets(top: 5, left: 12, bottom: 5, right: 12))
+    // CTA registered for clicks but hidden, so the ad reads like a song row.
+    let cta = UILabel()
     cta.text = nativeAd.callToAction
-    cta.textColor = .white
-    cta.font = .systemFont(ofSize: 12, weight: .bold)
-    cta.backgroundColor = Self.hex(0x7C3AED)
-    cta.layer.cornerRadius = 8
-    cta.clipsToBounds = true
-    cta.isHidden = (nativeAd.callToAction?.isEmpty ?? true)
+    cta.isHidden = true
     cta.isUserInteractionEnabled = false
     adView.callToActionView = cta
 
-    let ctaRow = UIStackView(arrangedSubviews: [cta, UIView()])
-    ctaRow.axis = .horizontal
-
-    let column = UIStackView(arrangedSubviews: [titleRow, body, ctaRow])
+    let column = UIStackView(arrangedSubviews: [titleRow, body])
     column.axis = .vertical
     column.alignment = .fill
-    column.spacing = 3
-    column.setCustomSpacing(7, after: body)
+    column.spacing = 6
     column.translatesAutoresizingMaskIntoConstraints = false
-    card.addSubview(column)
+    container.addSubview(column)
 
     NSLayoutConstraint.activate([
-      card.leadingAnchor.constraint(equalTo: adView.leadingAnchor),
-      card.trailingAnchor.constraint(equalTo: adView.trailingAnchor),
-      card.topAnchor.constraint(equalTo: adView.topAnchor),
-      card.bottomAnchor.constraint(equalTo: adView.bottomAnchor),
+      container.leadingAnchor.constraint(equalTo: adView.leadingAnchor, constant: 4),
+      container.trailingAnchor.constraint(equalTo: adView.trailingAnchor, constant: -4),
+      container.topAnchor.constraint(equalTo: adView.topAnchor),
+      container.bottomAnchor.constraint(equalTo: adView.bottomAnchor),
 
-      icon.leadingAnchor.constraint(equalTo: card.leadingAnchor, constant: 10),
-      icon.centerYAnchor.constraint(equalTo: card.centerYAnchor),
-      icon.widthAnchor.constraint(equalToConstant: 118),
-      icon.heightAnchor.constraint(equalToConstant: 66),
+      icon.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+      icon.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+      icon.widthAnchor.constraint(equalToConstant: 176),
+      icon.heightAnchor.constraint(equalToConstant: 99),
 
-      column.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 12),
-      column.trailingAnchor.constraint(equalTo: card.trailingAnchor, constant: -10),
-      column.centerYAnchor.constraint(equalTo: card.centerYAnchor),
-      column.topAnchor.constraint(greaterThanOrEqualTo: card.topAnchor, constant: 8),
+      column.leadingAnchor.constraint(equalTo: icon.trailingAnchor, constant: 14),
+      column.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+      column.centerYAnchor.constraint(equalTo: container.centerYAnchor),
+      column.topAnchor.constraint(greaterThanOrEqualTo: container.topAnchor, constant: 8),
     ])
 
     adView.nativeAd = nativeAd
@@ -124,7 +117,7 @@ class SongCardNativeAdFactory: NSObject, FLTNativeAdFactory {
   }
 }
 
-/// UILabel with content insets, used for the badge and CTA pills.
+/// UILabel with content insets, used for the badge pill.
 private class PaddingLabel: UILabel {
   private let insets: UIEdgeInsets
   init(insets: UIEdgeInsets) {

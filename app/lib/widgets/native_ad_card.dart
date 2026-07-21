@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 import '../config/remote_config.dart';
+import '../config/theme_controller.dart';
 import '../utils/ads.dart';
 
 /// A native AdMob ad rendered by the platform "songCard" factory, styled to
@@ -23,7 +24,8 @@ class _NativeAdCardState extends State<NativeAdCard> {
   bool _loaded = false;
   Timer? _refreshTimer;
 
-  static const _height = 92.0;
+  // 리스트 행(썸네일 99 + 상하 여백)과 같은 높이.
+  static const _height = 120.0;
 
   @override
   void initState() {
@@ -31,6 +33,8 @@ class _NativeAdCardState extends State<NativeAdCard> {
     _loadAd();
     _startRefreshTimer();
     nativeAdRefreshSecNotifier.addListener(_startRefreshTimer);
+    // 라이트/다크 전환 시 글자색이 따라오도록 광고를 다시 로드한다.
+    themeModeNotifier.addListener(_loadAd);
   }
 
   void _startRefreshTimer() {
@@ -46,6 +50,10 @@ class _NativeAdCardState extends State<NativeAdCard> {
       adUnitId: Ads.feedNativeUnitId,
       factoryId: 'songCard',
       request: const AdRequest(),
+      // 네이티브 팩토리가 리스트 행 글자색에 맞추도록 현재 테마를 전달.
+      customOptions: {
+        'dark': themeModeNotifier.value == ThemeMode.dark,
+      },
       listener: NativeAdListener(
         onAdLoaded: (ad) {
           if (!mounted) {
@@ -67,6 +75,7 @@ class _NativeAdCardState extends State<NativeAdCard> {
   @override
   void dispose() {
     nativeAdRefreshSecNotifier.removeListener(_startRefreshTimer);
+    themeModeNotifier.removeListener(_loadAd);
     _refreshTimer?.cancel();
     _ad?.dispose();
     super.dispose();
@@ -83,7 +92,7 @@ class _NativeAdCardState extends State<NativeAdCard> {
         // The native layout (native_ad_song.xml) draws its own rounded
         // background/border, so this just reserves height.
         return Container(
-          margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+          margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
           height: _height,
           child: AdWidget(ad: _ad!),
         );

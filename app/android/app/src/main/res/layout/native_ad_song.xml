@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Native ad styled to match a song list row (thumbnail + title + artist). -->
+<!-- Native ad styled to match a song list row (thumbnail 176x99 + big title + artist).
+     Text colors are set at runtime in SongCardNativeAdFactory from the app theme. -->
 <com.google.android.gms.ads.nativead.NativeAdView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -9,15 +10,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@drawable/native_ad_bg"
-        android:padding="10dp"
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:gravity="center_vertical">
 
-        <!-- thumbnail (ad icon) -->
+        <!-- thumbnail (ad icon): same size as the song row thumbnail -->
         <ImageView
             android:id="@+id/ad_icon"
-            android:layout_width="118dp"
-            android:layout_height="66dp"
+            android:layout_width="176dp"
+            android:layout_height="99dp"
             android:scaleType="centerCrop"
             android:background="@drawable/native_ad_thumb_bg"
             android:clipToOutline="true"
@@ -27,7 +30,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="14dp"
             android:orientation="vertical">
 
             <!-- title row: headline + AD badge -->
@@ -42,24 +45,24 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:maxLines="1"
+                    android:maxLines="2"
                     android:ellipsize="end"
-                    android:textColor="#FFFFFF"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:lineSpacingMultiplier="1.1" />
 
                 <TextView
+                    android:id="@+id/ad_badge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
                     android:background="@drawable/native_ad_badge_bg"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="5dp"
-                    android:paddingTop="1dp"
-                    android:paddingBottom="1dp"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:text="광고"
-                    android:textColor="#CFC8DA"
-                    android:textSize="9sp"
+                    android:textSize="10sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -67,25 +70,18 @@
                 android:id="@+id/ad_body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="6dp"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:textColor="#C4B5FD"
-                android:textSize="12.5sp" />
+                android:textSize="17sp" />
 
+            <!-- CTA kept in the tree (registered for clicks) but hidden so the ad
+                 reads like a plain song row. -->
             <TextView
                 android:id="@+id/ad_cta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:background="@drawable/native_ad_cta_bg"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
-                android:textColor="#FFFFFF"
-                android:textSize="12sp"
-                android:textStyle="bold" />
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 </com.google.android.gms.ads.nativead.NativeAdView>
