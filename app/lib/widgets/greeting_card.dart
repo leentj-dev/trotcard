@@ -294,8 +294,20 @@ Future<void> shareCardImage(GlobalKey boundaryKey, {String? text}) async {
       '${dir.path}/trotcard_${DateTime.now().millisecondsSinceEpoch}.png');
   await file.writeAsBytes(bytes.buffer.asUint8List());
 
+  // iPad 공유 시트는 팝오버라 앵커(sharePositionOrigin)가 없으면 오류가 난다.
+  // 캡처한 카드의 화면상 위치를 앵커로 넘겨 iPhone·iPad 모두 정상 동작하게 한다.
+  Rect? origin;
+  if (boundary.hasSize && boundary.attached) {
+    final topLeft = boundary.localToGlobal(Offset.zero);
+    origin = topLeft & boundary.size;
+  }
+
   await SharePlus.instance.share(
-    ShareParams(files: [XFile(file.path)], text: text),
+    ShareParams(
+      files: [XFile(file.path)],
+      text: text,
+      sharePositionOrigin: origin,
+    ),
   );
 }
 
