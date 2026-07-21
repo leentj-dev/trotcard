@@ -32,7 +32,7 @@ LRC가 확인된 곡은 아래 node 스크립트로 한번에 처리합니다:
 1. lrclib.net에서 LRC 파싱 → 1마디(4박) 간격 그리드로 곡 전체에 촘촘히 단어 배치 (간격초 = 4×60/BPM)
 2. YouTube MV ID를 WebSearch로 검색
 3. 7개국어 번역 + romanization + emoji + example 생성
-4. `app/assets/songs/`에 JSON 파일 저장 → `python3 app/scripts/build_manifest.py` 실행(manifest 해시 자동 갱신)
+4. `app/assets/songs/`에 JSON 파일 저장 → `python3 app/scripts/build_manifest_cards.py` 실행(manifest 해시 자동 갱신)
 5. 사용자 확인 없이 자동으로 모두 추가 (MV 오프셋은 0으로, 나중에 조정)
 
 ## LRC 확인 방법

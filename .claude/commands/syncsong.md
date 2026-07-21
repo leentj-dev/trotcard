@@ -49,7 +49,7 @@ process.stdin.on('end', () => {
 - 각 단어에 대해 7개국어 번역을 생성합니다
 - 타임스탬프 = LRC시간 + 오프셋
 - `app/assets/songs/` 디렉토리에 JSON 파일을 저장합니다
-- **저장 후 `python3 app/scripts/build_manifest.py` 실행** → `manifest.json`(wordCount·synced·해시 포함)을 자동 재생성. manifest는 직접 편집 금지 — 반드시 이 스크립트로 생성해야 유저 앱이 변경을 감지해 자동 동기화함
+- **저장 후 `python3 app/scripts/build_manifest_cards.py` 실행** → `manifest.json`(cardCount·해시 포함)을 자동 재생성. manifest는 직접 편집 금지 — 반드시 이 스크립트로 생성해야 유저 앱이 변경을 감지해 자동 동기화함
 
 ```json
 {
