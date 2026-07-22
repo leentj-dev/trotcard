@@ -1,36 +1,19 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 트로트카드 (trotcard)
 
-## Getting Started
+트롯을 들으며 "마음 카드"를 나누는 **시니어(노년층) 대상** 앱 (Flutter).
+카톡에 도는 "좋은 아침이에요 🌸" 감성 안부 이미지 문화를 앱으로 옮긴 것 — 유튜브로
+트롯을 들으면서 곡 분위기에 맞는 카드를 골라 **이미지(PNG)로 친구에게 공유**한다.
 
-First, run the development server:
+- 학습 앱이 아니라 **보내는** 앱. 시니어 대상이라 글자·버튼이 크고 조작이 단순하다.
+- 저작권 없는 콘텐츠만 사용 (가사 직접 인용 금지).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 구조
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- `app/` — Flutter 앱 (본체). 자세한 내용은 [`CLAUDE.md`](CLAUDE.md) 및 [`app/README.md`](app/README.md).
+- `landing/` — 랜딩/개인정보 페이지 (trotcard.twothree.app).
+- `firestore.rules` / `firebase.json` — 신청곡 수집용 Firestore 설정.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 곡·카드 추가 (OTA)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+곡과 카드는 `app/assets/songs/<id>.json`. 수정 후 `app/scripts/build_manifest_cards.py`로
+매니페스트를 재생성해 push 하면 앱이 자동 동기화한다(재빌드 불필요). `/newsong` 커맨드 참고.

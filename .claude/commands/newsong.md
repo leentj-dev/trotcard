@@ -1,89 +1,52 @@
-K-pop Hangul 앱에 새 곡을 추가하는 커맨드입니다.
+트로트카드 앱에 새 곡(+ 마음 카드 20장)을 추가하는 커맨드입니다.
 
 ## 인자: $ARGUMENTS
+곡 제목/아티스트, 또는 "list"(현재 곡 목록), 또는 비움.
 
 ## 핵심 규칙
-- **lrclib.net에 syncedLyrics가 있는 곡만 추가합니다**
-- LRC가 없는 곡은 추가하지 않고 사용자에게 "LRC 없음"으로 알립니다
-- 곡 추가 시 반드시 `/syncsong` 커맨드를 사용합니다
+- **학습 앱이 아니라 "보내는" 앱** — 곡마다 저작권 없는 **마음 카드 20장**(인사말/축복/명언)을 만든다.
+- **가사 직접 인용·번역·변형 금지** (CLAUDE.md). 가사의 낱말은 "재료"로만 참고해 완전히 새로운 문장을 창작한다.
+- 곡 데이터는 `app/assets/songs/<id>.json`. 추가/수정 후 반드시 `build_manifest_cards.py`로 매니페스트 재생성 → git push (OTA, 재빌드 불필요).
 
 ## 동작
 
-### `$ARGUMENTS`가 비어있거나 "chart"인 경우:
-1. Billboard Korea Hot 100 차트를 WebFetch로 가져옵니다
-2. Supabase에서 기존 곡 목록을 확인합니다 (`npx dotenv -e .env.local -- npx tsx scripts/newsong.ts list`)
-3. 차트의 각 곡에 대해 `https://lrclib.net/api/search?q={artist}+{title}` 로 LRC 존재 여부를 확인합니다
-4. **LRC가 있고** DB에 없는 곡만 목록으로 보여줍니다 (LRC 없는 곡은 ❌ 표시)
-5. 사용자에게 어떤 곡을 추가할지 물어봅니다
+### `$ARGUMENTS`가 "list"인 경우
+- `app/assets/songs/manifest.json`을 읽어 현재 곡(id/title/artist/cardCount)을 보여준다.
 
-### `$ARGUMENTS`가 "list"인 경우:
-- `npx dotenv -e .env.local -- npx tsx scripts/newsong.ts list` 실행하여 DB의 곡 목록을 보여줍니다
-
-### `$ARGUMENTS`가 곡 이름/아티스트인 경우:
-1. `https://lrclib.net/api/search?q={곡 이름}` 에서 syncedLyrics 존재 여부를 확인합니다
-2. **syncedLyrics가 없으면**: "이 곡은 LRC 싱크 가사가 없어서 추가할 수 없습니다" 안내 후 중단
-3. **syncedLyrics가 있으면**: 아래 일괄 추가 스크립트 방식으로 바로 추가합니다
-
-### `$ARGUMENTS`가 "all"인 경우:
-- 차트에서 LRC가 있는 새 곡을 모두 찾아서 일괄 추가합니다
-
-## 일괄 추가 방식 (사용자 확인 없이 바로 실행)
-LRC가 확인된 곡은 아래 node 스크립트로 한번에 처리합니다:
-1. lrclib.net에서 LRC 파싱 → 1마디(4박) 간격 그리드로 곡 전체에 촘촘히 단어 배치 (간격초 = 4×60/BPM)
-2. YouTube MV ID를 WebSearch로 검색
-3. 7개국어 번역 + romanization + emoji + example 생성
-4. `app/assets/songs/`에 JSON 파일 저장 → `python3 app/scripts/build_manifest_cards.py` 실행(manifest 해시 자동 갱신)
-5. 사용자 확인 없이 자동으로 모두 추가 (MV 오프셋은 0으로, 나중에 조정)
-
-## LRC 확인 방법
-```bash
-curl -s "https://lrclib.net/api/search?q={artist}+{title}" | node -e "
-const chunks=[];
-process.stdin.on('data',c=>chunks.push(c));
-process.stdin.on('end',()=>{
-  const d=JSON.parse(Buffer.concat(chunks).toString());
-  const match=d.find(x=>x.syncedLyrics);
-  if(match) console.log('LRC_OK|'+match.id+'|'+match.artistName+' - '+match.trackName);
-  else console.log('NO_LRC');
-});
-"
-```
+### `$ARGUMENTS`가 곡 이름/아티스트인 경우
+1. **YouTube 영상 ID**를 WebSearch로 찾는다 (공식 무대·음원 영상 우선, 조회수 높은 것).
+2. 곡 분위기(mood)를 정한다 — 아래 gradient 키 중 하나로 매핑.
+3. **마음 카드 20장**을 창작한다 (아래 카드 규칙).
+4. `app/assets/songs/<id>.json` 저장 → `python3 app/scripts/build_manifest_cards.py` 실행 → 결과 확인 후 사용자에게 보고.
 
 ## JSON 파일 형식
-
-songs/ 디렉토리에 저장하는 JSON 형식:
 ```json
 {
   "id": "artist-title-slug",
   "title": "곡 제목",
   "artist": "아티스트",
   "youtubeId": "YouTube_Video_ID",
-  "words": [
-    {
-      "korean": "단어",
-      "romanization": "ro-ma-ni-za-tion",
-      "english": "English",
-      "spanish": "Spanish",
-      "portuguese": "Portuguese",
-      "indonesian": "Indonesian",
-      "japanese": "Japanese",
-      "thai": "Thai",
-      "french": "French",
-      "partOfSpeech": "noun",
-      "emoji": "🎵",
-      "example": "한국어 예문",
-      "exampleTranslation": "English translation",
-      "timestamp": 46
-    }
+  "mood": "sunset",
+  "program": "미스터트롯",
+  "cards": [
+    { "text": "오늘도\n웃음 가득한\n하루 되세요", "emoji": "🌸", "gradient": "spring", "category": "인사" }
   ]
 }
 ```
+- `program`은 선택(프로그램 소속 곡만; 미지정이면 키 생략).
+- `order`는 넣지 않는다 — `build_manifest_cards.py`가 신규 곡에 자동 부여.
 
-## 단어 규칙 (1마디 그리드)
-- **1마디(measure)마다 단어 1개** — 곡 박자(보통 4/4 → 1마디 4박)에 맞춰 1마디=4박마다 카드 하나씩. 간격(초) = 4 × 60 / BPM (부르는 거의 모든 한국어 가사 줄에 카드)
-- BPM은 웹에서 `{artist} {title} BPM` 조회(songbpm.com/tunebat), 박자표는 특별한 경우 아니면 4/4 가정
-- 곡 처음부터 끝까지 **균등 배치** (앞쪽 몰림 금지): 첫 가사 줄부터 시작해, "직전 선택 시각 + 간격" 이상인 다음 가사 줄을 차례로 선택
-- 각 지점에서 그때 불리는 의미 있는 한국어 단어 1개 선택 (다른 지점에서 같은 단어가 또 나오는 중복은 허용)
-- LRC 가사에서 실제로 나오는 한국어 단어만 사용
-- 7개국어 번역을 모두 채움: english, spanish, portuguese, indonesian, japanese, thai, french (빈 문자열 금지 — 각 언어로 단어 뜻을 번역)
-- timestamp는 lrclib.net의 LRC 타이밍 기반 + MV 오프셋
+## 카드 규칙 (20장)
+- **카드 = 저작권 없는 짧은 인사말/축복/명언.** 가사 구절을 옮기지 말 것.
+- `text`: 2~3줄(줄바꿈 `\n`), 시니어가 읽기 쉬운 큰 글씨용 짧은 문장. 따뜻하고 긍정적인 안부.
+- `emoji`: 내용에 맞는 이모지 1개.
+- `gradient`: 배경 분위기 키 — `sunrise` `spring` `calm` `sunset` `night` `rose` `lavender` `animal` `cafe` `library` 중 하나(곡 mood와 어울리게 분산).
+- `category`: `인사` `축복` `명언` `응원` 등 짧은 분류.
+- 20장은 서로 다른 문구로 다양하게. 특정 인물·종교·정치 색채는 피하고 보편적 안부로.
+
+## 완료 후
+```bash
+python3 app/scripts/build_manifest_cards.py   # manifest.json(해시·cardCount) 재생성
+git add app/assets/songs/ && git commit -m "feat: 곡 추가 ..." && git push
+```
+push 하면 유저 앱이 manifest 해시 변화를 감지해 자동 동기화(OTA). 곡/카드 추가는 앱 재빌드 불필요.
