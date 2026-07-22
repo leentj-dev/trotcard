@@ -89,6 +89,29 @@ platform :ios do
     upload_to_testflight(skip_waiting_for_build_processing: true)
   end
 
+  desc "Attach build 24 and submit the existing App Store version for review"
+  lane :submit do
+    deliver(
+      app_identifier: APP_ID,
+      build_number: "24",
+      submit_for_review: true,
+      automatic_release: false,
+      force: true,
+      run_precheck_before_submit: false,
+      skip_binary_upload: true,
+      skip_screenshots: true,
+      skip_metadata: true,
+      submission_information: {
+        export_compliance_uses_encryption: false,
+        add_id_info_uses_idfa: true,
+        add_id_info_serves_ads: true,
+        add_id_info_tracks_action: false,
+        add_id_info_tracks_install: false,
+        add_id_info_limits_tracking: true
+      }
+    )
+  end
+
   desc "Upload only screenshots"
   lane :shots do
     deliver(
